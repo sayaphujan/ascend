@@ -38,7 +38,7 @@
 function step_containerinfo(container) {
 	 
 	var stepper = new Stepper(document.querySelector('.bs-stepper'))
-	stepper.to(2);
+	stepper.to(1);
 	
 	$('#information-part').load('<?php  echo root();?>inc/exec.php?act=schedule_repack&repack_type=sport&page=container_info&container='+container);
 }
@@ -46,7 +46,7 @@ function step_containerinfo(container) {
 function step_schedule(container) {
 	
 	var stepper = new Stepper(document.querySelector('.bs-stepper'))
-	stepper.to(3);
+	stepper.to(2);
 	
 	$('#schedule-part').load('<?php  echo root();?>inc/exec.php?act=schedule_repack&repack_type=sport&page=schedule&container='+container);
 	
@@ -55,7 +55,7 @@ function step_schedule(container) {
 function step_payment(container) {
     
     var stepper = new Stepper(document.querySelector('.bs-stepper'))
-    stepper.to(4);
+    stepper.to(3);
     
     $('#finalize-part').load('<?php  echo root();?>inc/exec.php?act=schedule_repack&repack_type=sport&page=payment&container='+container);
     

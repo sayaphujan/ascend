@@ -1,13 +1,5 @@
 <?php
-    if(isset($_SESSION['repack_container_id'])){
-        $_SESSION['repack_container_id'] = $_SESSION['repack_container_id'];   
-    }else if(isset($_GET['id'])){
-        $_SESSION['repack_container_id'] = $_GET['id'];
-    }else{
-        $_SESSION['repack_container_id'] = 0;
-    }
-    
-    
+       
     $uid = $_SESSION['uid'];
     $url = (isset($_GET['id'])) ? 'container_info' : $_GET['act'];  
 ?>

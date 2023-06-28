@@ -44,7 +44,7 @@
                     <input type="text" class="form-control" id="mpline" name="line" placeholder="Line Type" />
                 </div>
     		<button  class="btn btn-primary" id="prev_step" style="float: left;" onclick="step_aad(<?php echo $_SESSION['repack_container_id'];?>);  return false;">Back to AAD</button>  
-    		<button  class="btn btn-primary" id="next_step" style="float: right;" onclick="add_main_parachute();  return false;">Verified</button>	   	
+    		<button  class="btn btn-primary" id="next_step" style="float: right;" onclick="add_main_parachute();  return false;">Confirmation</button>	   	
             </div>
     </div>
 </form>

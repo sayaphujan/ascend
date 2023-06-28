@@ -337,7 +337,7 @@ if (isset($_SESSION['adminid'])) {
                                   <li class="dropdown-toggle" type="button" data-toggle="dropdown" style="margin-top:10px;margin-right:10px;">Schedule a Service
                                   <span class="caret"></span></li>
                                   <ul class="dropdown-menu" style="background-color:#a51522;border:transparent;">
-                                    <li><a class="nav-link" href="<?php echo root()?>container_information/">Schedule Sport Repack</a></li>
+                                    <li><a class="nav-link" href="<?php echo root()?>Schedule_sport_repack/">Schedule Sport Repack</a></li>
                                     <!--<li><a class="nav-link" href="<?php echo root()?>schedule_tandem_repack/">Tandem</a></li>-->
                                     <li><a class="nav-link" href="container_information/">Assemblies, Repacks, Inspections</a></li>
                                     <li><a class="nav-link" href="container_information/">Canopy Sewing</a></li>

@@ -9,7 +9,14 @@
             
 			<a href="/schedule_tandem_repack/" class="btn btn-large btn-standard d-block text-center mb-2">Schedule Tandem Repack</a>
 			<a href="" class="btn btn-large btn-standard d-block text-center">Other Maintenance</a>-->
-            <a href="<?php echo root();?>/container_information/" class="btn btn-large btn-standard d-block text-center mb-2">Schedule Sport Repack</a>
+            <?php 
+            if(isset($_SESSION['adminid']) && $_SESSION['adminid'] > 0) { 
+                echo '<a href="'.root().'Schedule_sport_repack/" class="btn btn-large btn-standard d-block text-center mb-2">Schedule Sport Repack</a>';
+            }else{
+                echo '<a href="'.root().'container_information/" class="btn btn-large btn-standard d-block text-center mb-2">Schedule Sport Repack</a>';
+            } 
+            ?>
+            
 			<a href="<?php echo root();?>/container_information/" class="btn btn-large btn-standard d-block text-center mb-2">Assemblies, Repacks, Inspections</a>
 			<a href="<?php echo root();?>/container_information/" class="btn btn-large btn-standard d-block text-center mb-2">Canopy Sewing</a>
 			<a href="<?php echo root();?>/container_information/" class="btn btn-large btn-standard d-block text-center mb-2">Harness Work</a>

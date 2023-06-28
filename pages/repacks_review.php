@@ -1,5 +1,5 @@
 <?php 
-$url_id = (isset($_GET['id'])) ? sf($_GET['id']) : '';
+$url_id = (isset($_GET['id'])) ? sf($_GET['id']) : 0;
 
 if($_SESSION['type'] == 'customer'){
     $que ='SELECT * FROM containers LEFT JOIN repacks ON repacks.container = containers.id WHERE containers.customer=\''.sf($_SESSION['uid']).'\' AND  containers.next_repack IS NOT NULL AND repacks.status!=\'pending\' AND repacks.status!=\'In-Progress\' ORDER BY containers.next_repack DESC LIMIT 1';

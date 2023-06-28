@@ -1,3 +1,13 @@
+<?php
+    if(isset($_SESSION['repack_container_id']) && $_SESSION['repack_container_id'] > 0) {
+        $_SESSION['repack_container_id'] = $_SESSION['repack_container_id'];   
+    }else if(isset($_GET['id']) && $_GET['id'] > 0) {
+        $_SESSION['repack_container_id'] = $_GET['id'];
+    }else{
+        $_SESSION['repack_container_id'] = 0;
+    }
+    
+?>
 <div class="container">
     <div class="row">
         <div class="col-md-12">
@@ -38,12 +48,12 @@
 </div>
 <script>
 
-function step_harness() {
+function step_harness(container) {
 	 
 	var stepper = new Stepper(document.querySelector('.bs-stepper'))
 	stepper.to(2);
 	
-	$('#harness-part').load('<?php  echo root();?>inc/exec.php?act=container_info&page=harness');
+	$('#harness-part').load('<?php  echo root();?>inc/exec.php?act=container_info&page=harness&container='+container);
 }
 
 function step_reserve_parachute(container) {
@@ -55,7 +65,7 @@ function step_reserve_parachute(container) {
 	
 }
 
-function step_aad_info() {
+function step_aad_info(container) {
 	
 	var stepper = new Stepper(document.querySelector('.bs-stepper'))
 	stepper.to(4);
@@ -68,7 +78,7 @@ function step_aad_info() {
 $(document).ready(function () {
   var stepper = new Stepper($('.bs-stepper')[0]);
   <?php  
-  if($_SESSION['uid']>0) {
+  if(isset($_GET['id']) || $_SESSION['uid']>0) {
 	//if($_SESSION['repack_container_id']) {
 		echo 'step_harness('.$_SESSION['repack_container_id'].');';
 	//}

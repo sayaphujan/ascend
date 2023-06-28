@@ -169,7 +169,8 @@ case 'update_staff':
 		case 'schedule_repack':
 		    
 			if($_GET['page']=='container_info') {
-				include '../pages/schedule_repack/container_info.php';
+				//include '../pages/schedule_repack/container_info.php';
+				include '../pages/schedule_repack/container_summary.php';
 			}
 		
 			if($_GET['page']=='schedule') {
@@ -212,7 +213,7 @@ case 'update_staff':
 		$a   = unserialize($cq['aad_info']);
 		$mp  = unserialize($cq['main_parachute']);
 
-		$cq = array(
+		$data = array(
 					'aad_install' 			=> date('m-d-Y', strtotime($cq['aad_install'])),
 					'aad_eol'				=> date('m-d-Y', strtotime($cq['aad_eol'])),
 					'aad_next_maintenance'  => date('m-d-Y', strtotime($cq['aad_next_maintenance'])),
@@ -244,8 +245,8 @@ case 'update_staff':
 					'mpfabric' 	=> $mp['fabric'],
 					'mpline' 	=> $mp['line'],
 				);
-		
-		echo json_encode($cq);
+		$new = array_merge($cq, $data);
+		echo json_encode($new);
 		break;
 		
 		case 'work_order_list':
@@ -405,10 +406,10 @@ case 'update_staff':
             }
             
             $query = 'SELECT containers.*
-                            , ANY_VALUE(CONCAT(containers.manufacturer,\' \',containers.model)) as container_name
+                            , CONCAT(containers.manufacturer,\' \',containers.model) as container_name
                             , containers.serial
                             , containers.next_repack
-                            , ANY_VALUE(CONCAT(users.first_name,\' \',users.last_name)) as name
+                            , CONCAT(customers.first_name,\' \',customers.last_name) as name
                             , repacks.id as repack_id
                             , repacks.speed as speed
                             , repacks.type as repack_type
@@ -419,7 +420,7 @@ case 'update_staff':
                             , work_orders.estimated_pickup as wo_estimated_pickup
                             FROM `containers` 
                             LEFT JOIN work_orders ON containers.id = work_orders.container
-                            LEFT JOIN users ON containers.customer = users.id 
+                            LEFT JOIN customers ON containers.customer = customers.id 
                             JOIN repacks ON containers.id = repacks.container 
                             '.$id.' AND repacks.work_order>0 '.$where.' ';
             //echo json_encode($query);
@@ -1341,6 +1342,69 @@ case 'update_staff':
 		
 		
 		break;
+
+		case 'add_container_summary':
+			$harness = serialize($_POST);
+		
+			if($_SESSION['type']=='customer' || $_SESSION['type']=='admin' ) {
+			
+				if($_GET['ajax']) echo '$("#containeralert").removeClass("d-flex").addClass("d-none");'; 
+				
+				$_POST['aad_install'] 			= date('Y-m-d H:i:s');
+					    
+				$_POST['aad_next_maintenance'] 	= date('Y-m-d H:i:s');
+					    
+				$_POST['aad_eol'] 				= date('Y-m-d H:i:s');
+
+				$_POST['amfr'] = dbdate($_POST['amfr']);
+				
+					    
+				if($_POST['existing_container']>0) {
+				
+					//check stuff
+					$cq = mysqli_query($link, 'SELECT * FROM containers WHERE customer=\''.sf($_POST['uid']).'\' AND id=\''.sf($_POST['existing_container']).'\'');
+
+					if(mysqli_num_rows($cq)>0) {
+					   				    
+					    $query = 'UPDATE containers SET 
+					                    `manufacturer`=\''.sf($_POST['hmake']).'\'
+					                    ,`model`=\''.sf($_POST['hmodel']).'\'
+					                    ,`serial`=\''.sf($_POST['hserial']).'\'
+					                    ,`aad`=\''.sf($_POST['amake']).'\'
+					                    , `reserve`=\''.sf($_POST['rmake']).'\'
+					                    , `reserve_size`=\''.sf($_POST['rsize']).'\'
+					                    ,`main`=\''.sf($_POST['mmake']).'\'
+					                    ,`main_size`=\''.sf($_POST['msize']).'\'
+					                    ,`reserve_serial`=\''.sf($_POST['rserial']).'\'
+					                    ,`aad_serial`=\''.sf($_POST['aserial']).'\'
+					                    ,`aad_install`=\''.sf($_POST['amfr']).'\'
+					                    ,`aad_next_maintenance`=\''.sf($_POST['amfr']).'\'
+					                    ,`aad_eol`=\''.sf($_POST['amfr']).'\' WHERE id=\''.sf($_POST['existing_container']).'\'';
+					    
+					    $update = mysqli_query($link,$query);
+					    //echo $query;
+					
+						$_SESSION['repack_container_id']=sf($_POST['existing_container']);
+						
+						echo 'var stepper = new Stepper(document.querySelector(\'.bs-stepper\'));';
+						echo 'stepper.to(2);';
+						
+						$_POST['url'] = (isset($_POST['url'])) ? $_POST['url'] : $_GET['repack_type'];
+
+						if(sf($_POST['url']) == 'tandem'){
+						    echo '$(\'#schedule-part\').load(\''.root().'/inc/exec.php?act=schedule_repack&page=schedule&repack_type=tandem&container='.sf($_POST['existing_container']).'\');';
+						}else if(sf($_POST['url']) == 'sport'){
+						    echo '$(\'#schedule-part\').load(\''.root().'/inc/exec.php?act=schedule_repack&page=schedule&repack_type=sport&container='.sf($_POST['existing_container']).'\');';
+						}
+						echo '$(\'#container_form input[type="text"]\').val(\'\');';
+					}
+				
+				}
+			}
+		
+		
+		
+		break;
 		
 		case 'add_additional_work':
             $repack_id      = sf($_POST['repack_id']);
@@ -1661,8 +1725,8 @@ case 'update_staff':
 			}
 
 			echo 'var stepper = new Stepper(document.querySelector(\'.bs-stepper\'));';
-			echo 'stepper.to(4);';
-			echo '$(\'#finalize-part\').load(\'/inc/exec.php?act=schedule_repack&page=payment&repack_type='.$type.'&container='.$_SESSION['repack_container_id'].'&speed='.$speed.'&dropoff_date='.$dropoff_date.'&estimated_pickup='.$pickup.'\');';
+			echo 'stepper.to(3);';
+			echo '$(\'#finalize-part\').load(\''.root().'/inc/exec.php?act=schedule_repack&page=payment&repack_type='.$type.'&container='.$_SESSION['repack_container_id'].'&speed='.$speed.'&dropoff_date='.$dropoff_date.'&estimated_pickup='.$pickup.'\');';
 			
 			
 			//echo '$(\'#pickup_date\').val(\''.get_next_pickup_date($speed).'\');';
@@ -1706,7 +1770,7 @@ case 'update_staff':
 			
 			$id = $r['id'];
 			
-			echo 'document.location=\'/repack_order_success/?id='.$id.'\';';
+			echo 'document.location=\''.root().'/repack_order_success/?id='.$id.'\';';
 			
 			//echo $repack_type.'-'.$price;
 		

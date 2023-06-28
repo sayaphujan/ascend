@@ -50,23 +50,23 @@
                         
                         <div class="form-group">
                             <label for="make" class="control-label"><strong>Make:</strong></label>
-                            <input type="text" class="form-control" id="make" name="make" placeholder="Manufacturer" />
+                            <input type="text" class="form-control" id="make" name="hmake" placeholder="Manufacturer" />
                         </div>
                         <div class="form-group">
                             <label for="model" class="control-label"><strong>Model:</strong></label>
-                            <input type="text" class="form-control" id="model" name="model" placeholder="Model" />
+                            <input type="text" class="form-control" id="model" name="hmodel" placeholder="Model" />
                         </div>
                         <div class="form-group">
                             <label for="size" class="control-label"><strong>Size:</strong></label>
-                            <input type="text" class="form-control" id="size" name="size" placeholder="Size" />
+                            <input type="text" class="form-control" id="size" name="hsize" placeholder="Size" />
                         </div>
                         <div class="form-group">
                             <label for="serial" class="control-label"><strong>Serial Number:</strong></label>
-                            <input type="text" class="form-control" id="serial" name="serial" placeholder="Serial Number (located on info card)" />
+                            <input type="text" class="form-control" id="serial" name="hserial" placeholder="Serial Number (located on info card)" />
                         </div>
                         <div class="form-group">
                             <label for="mfr" class="control-label"><strong>Date of Mfr:</strong></label>
-                            <input type="text" class="form-control" id="mfr" name="mfr" placeholder="Date of Mfr" />
+                            <input type="text" class="form-control" id="mfr" name="hmfr" placeholder="Date of Mfr" />
                         </div>
                     </div>
                     <div class="col-md-3">
@@ -74,27 +74,27 @@
                         
                         <div class="form-group">
                             <label for="make" class="control-label"><strong>Make:</strong></label>
-                            <input type="text" class="form-control" id="rpmake" name="make" placeholder="Manufacturer" />
+                            <input type="text" class="form-control" id="rpmake" name="rmake" placeholder="Manufacturer" />
                         </div>
                         <div class="form-group">
                             <label for="model" class="control-label"><strong>Model:</strong></label>
-                            <input type="text" class="form-control" id="rpmodel" name="model" placeholder="Model" />
+                            <input type="text" class="form-control" id="rpmodel" name="rmodel" placeholder="Model" />
                         </div>
                         <div class="form-group">
                             <label for="size" class="control-label"><strong>Size:</strong></label>
-                            <input type="text" class="form-control" id="rpsize" name="size" placeholder="Size" />
+                            <input type="text" class="form-control" id="rpsize" name="rsize" placeholder="Size" />
                         </div>
                         <div class="form-group">
                             <label for="serial" class="control-label"><strong>Serial Number:</strong></label>
-                            <input type="text" class="form-control" id="rpserial" name="serial" placeholder="Serial Number (located on info card)" />
+                            <input type="text" class="form-control" id="rpserial" name="rserial" placeholder="Serial Number (located on info card)" />
                         </div>
                         <div class="form-group">
                             <label for="mfr" class="control-label"><strong>Date of Mfr:</strong></label>
-                            <input type="text" class="form-control" id="rpmfr" name="mfr" placeholder="Date of Mfr" />
+                            <input type="text" class="form-control" id="rpmfr" name="rmfr" placeholder="Date of Mfr" />
                         </div>
                          <div class="form-group">
                             <label for="fabric" class="control-label"><strong>Fabric:</strong></label>
-                            <input type="text" class="form-control" id="rpfabric" name="fabric" placeholder="Fabric" />
+                            <input type="text" class="form-control" id="rpfabric" name="rfabric" placeholder="Fabric" />
                         </div>
                     </div>
                     <div class="col-md-3">
@@ -102,23 +102,23 @@
                         
                         <div class="form-group">
                             <label for="make" class="control-label"><strong>Make:</strong></label>
-                            <input type="text" class="form-control" id="amake" name="make" placeholder="Manufacturer" />
+                            <input type="text" class="form-control" id="amake" name="amake" placeholder="Manufacturer" />
                         </div>
                         <div class="form-group">
                             <label for="model" class="control-label"><strong>Model:</strong></label>
-                            <input type="text" class="form-control" id="amodel" name="model" placeholder="Model" />
+                            <input type="text" class="form-control" id="amodel" name="amodel" placeholder="Model" />
                         </div>
                         <div class="form-group">
                             <label for="size" class="control-label"><strong>Size:</strong></label>
-                            <input type="text" class="form-control" id="asize" name="size" placeholder="Size" />
+                            <input type="text" class="form-control" id="asize" name="asize" placeholder="Size" />
                         </div>
                         <div class="form-group">
                             <label for="serial" class="control-label"><strong>Serial Number:</strong></label>
-                            <input type="text" class="form-control" id="aserial" name="serial" placeholder="Serial Number (located on info card)" />
+                            <input type="text" class="form-control" id="aserial" name="aserial" placeholder="Serial Number (located on info card)" />
                         </div>
                         <div class="form-group">
                             <label for="mfr" class="control-label"><strong>Date of Mfr:</strong></label>
-                            <input type="text" class="form-control" id="amfr" name="mfr" placeholder="Date of Mfr" />
+                            <input type="text" class="form-control" id="amfr" name="amfr" placeholder="Date of Mfr" />
                         </div>
                     </div>
                     <div class="col-md-3">
@@ -126,31 +126,31 @@
                         
                         <div class="form-group">
                             <label for="make" class="control-label"><strong>Make:</strong></label>
-                            <input type="text" class="form-control" id="mpmake" name="make" placeholder="Manufacturer" />
+                            <input type="text" class="form-control" id="mpmake" name="mmake" placeholder="Manufacturer" />
                         </div>
                         <div class="form-group">
                             <label for="model" class="control-label"><strong>Model:</strong></label>
-                            <input type="text" class="form-control" id="mpmodel" name="model" placeholder="Model" />
+                            <input type="text" class="form-control" id="mpmodel" name="mmodel" placeholder="Model" />
                         </div>
                         <div class="form-group">
                             <label for="size" class="control-label"><strong>Size:</strong></label>
-                            <input type="text" class="form-control" id="mpsize" name="size" placeholder="Size" />
+                            <input type="text" class="form-control" id="mpsize" name="msize" placeholder="Size" />
                         </div>
                         <div class="form-group">
                             <label for="serial" class="control-label"><strong>Serial Number:</strong></label>
-                            <input type="text" class="form-control" id="mpserial" name="serial" placeholder="Serial Number (located on info card)" />
+                            <input type="text" class="form-control" id="mpserial" name="mserial" placeholder="Serial Number (located on info card)" />
                         </div>
                         <div class="form-group">
                             <label for="mfr" class="control-label"><strong>Date of Mfr:</strong></label>
-                            <input type="text" class="form-control" id="mpmfr" name="mfr" placeholder="Date of Mfr" />
+                            <input type="text" class="form-control" id="mpmfr" name="mmfr" placeholder="Date of Mfr" />
                         </div>
                          <div class="form-group">
                             <label for="fabric" class="control-label"><strong>Fabric:</strong></label>
-                            <input type="text" class="form-control" id="mpfabric" name="fabric" placeholder="Fabric Type" />
+                            <input type="text" class="form-control" id="mpfabric" name="mfabric" placeholder="Fabric Type" />
                         </div>
                         <div class="form-group">
                             <label for="line" class="control-label"><strong>Line:</strong></label>
-                            <input type="text" class="form-control" id="mpline" name="line" placeholder="Line Type" />
+                            <input type="text" class="form-control" id="mpline" name="mline" placeholder="Line Type" />
                         </div>
                     </div>
                 </div>
@@ -161,6 +161,9 @@
     </form>
 </div>
 <script>
+function add_container() {
+    $.post( "<?php echo root();?>inc/exec.php?act=add_container_summary&repack_type=sport&ajax=1&schedule=1", $('#container_form').serialize(), '', 'script');
+}
 
 function get_data(){
     var id = $('#existing_container').val();
