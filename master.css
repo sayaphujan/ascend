@@ -1,0 +1,109 @@
+@import "https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700";
+html {
+    height: auto;
+    min-height: 100%;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.5) inset;
+}
+body {
+    background: #1d1e22;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    background-position: center center;
+    background-size: cover;
+    background-image: url('images/background.png');
+    height: 100%;
+    font-family: 'Poppins', sans-serif;
+    color: #fff;
+}
+p, ol li {
+    font-family: 'Poppins', sans-serif;
+    font-size: 0.93em;
+    font-weight: 400;
+    line-height: 1.5em;
+}
+header {
+    background-image: url('images/header.jpg');
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    background-position: center;
+}
+hr {
+    color: #888;
+    background: #888;
+}
+.table > tbody > tr > td {
+    vertical-align: middle;
+}
+.table th {
+    text-align: center;
+}
+.container-fluid, .container {
+    min-height: 100%;
+}
+.navbar {
+    background: #a51522;
+}
+.navbar a:hover, .navbar a {
+    color: #fff;
+}
+.navbar-toggler {
+    color: #fff;
+}
+.navbar-brand {
+    color: #fff;
+}
+.btn {
+    border-radius: 5px;
+    padding: 5.5px 20px;
+    font-size: 1rem;
+    text-decoration: none;
+    color: #000;
+    position: relative;
+    display: inline-block;
+    /*background: #50e5b4;*/
+}
+.btn-standard {
+    background: #50e5b4;
+}
+.btn:not(.btn-file):active {
+    -webkit-transform: translate(0px, 5px);
+    transform: translate(0px, 5px);
+    box-shadow: 0px 1px 0px 0px;
+}
+/*.btn:hover {
+    background-color: #a51522;
+    color: #fff;
+}*/
+.btn-file {
+    position: relative;
+    overflow: hidden;
+    border-radius: 5px 0 0 5px;
+    box-shadow: none;
+}
+.btn-file input[type=file] {
+    position: absolute;
+    top: 0;
+    right: 0;
+    display: block;
+    min-width: 100%;
+    min-height: 100%;
+    text-align: right;
+    filter: alpha(opacity=0);
+    opacity: 0;
+    outline: none;
+    background: black;
+    cursor: inherit;
+}
+.mask_style_image {
+    width: 100%;
+    border: 10px solid #343434;
+    cursor: pointer;
+}
+.mask_style_image:hover {
+    border: 10px solid #fff;
+}
+#img-upload {
+    width: 100%;
+    margin: 0 auto 5px auto;
+}
+.infobox { border: 1px dotted #fff; border-radius: 5px; }
