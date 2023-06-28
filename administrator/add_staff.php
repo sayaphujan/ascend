@@ -1,4 +1,4 @@
-<?php
+<?php 
 $id = (isset($_GET['id'])) ? $_GET['id'] : '';
 $title = (isset($_GET['id'])) ? "Edit Data" : 'Add Data';
 $readonly = (isset($_GET['id'])) ? "readonly='readonly'" : '';
@@ -8,10 +8,10 @@ $readonly = (isset($_GET['id'])) ? "readonly='readonly'" : '';
     <div class="col-md-12">
       <div class="container-fluid">
         <div class="row mt-5">
-            <h4><?=$title;?> Staff</h4>
+            <h4><?php  echo $title;?> Staff</h4>
         </div>
         <form id="register_form" onsubmit="register(); return false;">
-		    <input type="hidden" class="form-control" id="acid" name="cid" value="<?=$id;?>"/>
+		    <input type="hidden" class="form-control" id="acid" name="cid" value="<?php  echo $id;?>"/>
 		        <div class="form-group">
                     <label for="first_name" class="control-label"><strong>First Name:</strong></label>
                     <input type="text" class="form-control" id="rfname" name="rfname" autocomplete="off" placeholder="Please enter your first name..." required="required"/>
@@ -26,7 +26,7 @@ $readonly = (isset($_GET['id'])) ? "readonly='readonly'" : '';
     			</div>
                 <div class="form-group">
                     <label for="email" class="control-label"><strong>Email:</strong></label>
-                    <input type="email" class="form-control" id="remail" name="remail" placeholder="Please enter your email..." required="required" <?=$readonly;?>/>
+                    <input type="email" class="form-control" id="remail" name="remail" placeholder="Please enter your email..." required="required" <?php  echo $readonly;?>/>
                 </div>
                 <div class="form-group password">
                     <label for="password" class="control-label"><strong>Password:</strong></label>
@@ -42,7 +42,7 @@ $readonly = (isset($_GET['id'])) ? "readonly='readonly'" : '';
 <script src="https://cdnjs.cloudflare.com/ajax/libs/notify/0.4.2/notify.js"></script>
 <script>
 function register() {
-     $.post('<?=root();?>inc/exec.php?act=update_staff', $('#register_form').serialize(), function(result){
+     $.post('<?php  echo root();?>inc/exec.php?act=update_staff', $('#register_form').serialize(), function(result){
                 if(result == "success"){
                     $.notify('Admin succesfully added!', 'success')
                     setTimeout(function () {
@@ -63,10 +63,10 @@ function register() {
 
 function get_user_data(){
     
-    var id = "<?php echo $_GET['id'];?>";
+    var id = "<?php  echo $_GET['id'];?>";
     
     $.ajax({
-        url: "<?=root();?>do/get_user_data/?id="+id,
+        url: "<?php  echo root();?>do/get_user_data/?id="+id,
         type: 'GET',
         dataType: 'json', // added data type
         success: function(res) {
@@ -88,7 +88,7 @@ var timer;
 */
 
 $( document ).ready(function() {
-    var id = "<?php echo $_GET['id'];?>";
+    var id = "<?php  echo $_GET['id'];?>";
     if(id > 0){
         get_user_data();
     }

@@ -1,4 +1,4 @@
-<?
+<?php
     $uid = $_SESSION['uid'];
     $url = $_SERVER['REQUEST_URI'];  
 ?>

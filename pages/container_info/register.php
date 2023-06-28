@@ -1,8 +1,8 @@
 <?php
   // Append the requested resource location to the URL   
-    $url = $_SERVER['REQUEST_URI'];    
+    $url = explode('/', $_SERVER['REQUEST_URI']);    
       
-  //  echo $url;  
+    //echo $url[3];  
 ?>
 <div class="row">
 	<div class="col-md-5">	
@@ -11,7 +11,7 @@
 		<div class="alert alert-warning d-none align-items-center" role="alert" id="registeralert"></div>
 		
 		<form id="register_form" onsubmit="register();  return false;">
-		    <input type="hidden" name="url" value="<?=$url;?>">
+		    <input type="hidden" name="url" value="<?php echo $url[2];?>">
 		    <div class="form-group">
                     <label for="first_name" class="control-label"><strong>First Name:</strong></label>
                     <input type="text" class="form-control" id="rfname" name="rfname" autocomplete="off" placeholder="Please enter your first name..."/>
@@ -42,7 +42,7 @@
 		<div class="alert alert-warning d-none align-items-center" role="alert" id="loginalert"></div>
 		
 		<form id="login_form" action="" method="post"  onsubmit="login();  return false;">
-		    <input type="hidden" name="url" value="<?=$url;?>">
+		    <input type="hidden" name="url" value="<?php echo $url[2];?>">
 			<div class="form-group">
 				<label for="email" class="control-label"><strong>Email:</strong></label>
 				<input type="email" class="form-control" id="cemail" name="cemail" placeholder="Please enter your email..."/>

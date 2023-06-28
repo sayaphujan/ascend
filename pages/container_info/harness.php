@@ -1,8 +1,8 @@
-<?
+<?php
     $_SESSION['repack_container_id'] = (isset($_SESSION['repack_container_id'])) ? $_SESSION['repack_container_id'] : 0;
     
     $uid = $_SESSION['uid'];
-    $url = $_SERVER['REQUEST_URI'];  
+    $url = $_GET['act'];  
 ?>
 <div class="container-fluid">
 
@@ -16,7 +16,7 @@
     <input type="hidden" class="form-control" id="existing_container" name="existing_container" value="<?php echo $_SESSION['repack_container_id'];?>" placeholder="id"/>
     <div class="row" id="add_new_harness_form">
     	
-    		<div class="col-md-6">	
+    		<div class="col-md-12">	
     			<div class="form-group">
     				<label for="make" class="control-label"><strong>Make:</strong></label>
     				<input type="text" class="form-control" id="make" name="make" placeholder="Manufacturer" />
@@ -37,8 +37,9 @@
     				<label for="mfr" class="control-label"><strong>Date of Mfr:</strong></label>
     				<input type="text" class="form-control" id="mfr" name="mfr" placeholder="Date of Mfr" />
     			</div>
-    		</div>   
-            <button  class="btn btn-primary" id="next_step">Continue to Reserve Parachute</button>	
+    		
+            <button  class="btn btn-primary" id="next_step" style="float: right;">Continue to Reserve Parachute</button>	
+            </div>   
     </div>
     </form>
 </div>

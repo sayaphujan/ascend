@@ -8,7 +8,7 @@
 <!-- ################# SCHEDULED AND DELIVERED TABLE ####################### -->
 <div class="container">
 	<h3 style="margin-top:20px;margin-bottom:20px">Staff</h3>
-	<a href="<?=root('add-staff');?>"><button id="add" type="button" class="btn btn-success" style="float:right;">Add</button></a>
+	<a href="<?php  echo root('add-staff');?>"><button id="add" type="button" class="btn btn-success" style="float:right;">Add</button></a>
 	<div class="row" style="margin-top:60px">
         <div class="customer_list w-100 mt-3">
             <table id="customer_list" class="table table-striped" cellspacing="0" width="100%">
@@ -31,7 +31,7 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/bootbox.js/5.5.2/bootbox.min.js"></script>
 <script>
     var tabel = null;
-    var sesi = "<?=$_SESSION['adminid'];?>";
+    var sesi = "<?php  echo $_SESSION['adminid'];?>";
     
     tabel = $('#customer_list').DataTable({
         "processing": true,
@@ -42,7 +42,7 @@
         "order": [[ 0, 'asc' ]],
         "ajax":
         {
-            "url": "<?=root();?>do/staff_list/",
+            "url": "<?php  echo root();?>do/staff_list/",
             "type": "POST"
         },
         "deferRender": true,
@@ -57,9 +57,9 @@
             },
             { "data": "action", "render": function ( data, type, row, meta ){
                 if(row.id == sesi){
-                    return '<center><div><a href="<?=root();?>add-staff/?id='+row.id+'"><button type="button" class="btn btn-primary">Edit</button></a></div></center>';
+                    return '<center><div><a href="<?php  echo root();?>add-staff/?id='+row.id+'"><button type="button" class="btn btn-primary">Edit</button></a></div></center>';
                 }else{
-                    return '<center><div><a href="<?=root();?>add-staff/?id='+row.id+'"><button type="button" class="btn btn-primary">Edit</button></a>&nbsp;<button type="button" class="delete btn btn-danger" id="del_'+row.id+'" data-id='+row.id+' >Delete</button></div></center>';
+                    return '<center><div><a href="<?php  echo root();?>add-staff/?id='+row.id+'"><button type="button" class="btn btn-primary">Edit</button></a>&nbsp;<button type="button" class="delete btn btn-danger" id="del_'+row.id+'" data-id='+row.id+' >Delete</button></div></center>';
                 }
               }
             }
@@ -81,7 +81,7 @@
          if(result){
             // AJAX Request
             $.ajax({
-                url: '<?=root();?>do/remove-staff/?id='+deleteid,
+                url: '<?php  echo root();?>do/remove-staff/?id='+deleteid,
                 type: 'POST',
                 data: { id:deleteid },
                 success: function(response){

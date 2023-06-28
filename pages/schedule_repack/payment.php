@@ -1,4 +1,4 @@
-<?
+<?php
 $url = $_GET['repack_type'];  
 ?>
 <div class="row">
@@ -16,7 +16,7 @@ $url = $_GET['repack_type'];
 					<div class="col-md-12">
 						<div ><u><strong>Container</strong></u></div>
 						
-						<?
+						<?php
 
 						$cq = mysqli_query($link, 'SELECT * FROM containers WHERE customer=\''.sf($_SESSION['uid']).'\' AND id=\''.sf($_SESSION['repack_container_id']).'\'');
 
@@ -40,7 +40,7 @@ $url = $_GET['repack_type'];
 				<div class="row">
 					<div class="col-md-12">
 						<div ><u><strong>Repack Speed</strong></u></div>
-						<?
+						<?php
                         if($url == 'tandem'){
                             echo $repack_label[$_GET['speed']].' - $'.($repack_pricing[$_GET['speed']]+100.00).'.00 &nbsp;&nbsp; <button type="button" class="btn-sm btn-warning" onclick="goto_step_schedule()">Change</button>';
                         }else if($url == 'sport'){
@@ -56,7 +56,7 @@ $url = $_GET['repack_type'];
 				<div class="row">
 					<div class="col-md-12">
 						<div ><u><strong>Dropoff Date</strong></u></div>
-						<?
+						<?php
 						//&container='.$_SESSION['repack_container_id'].'&speed='.$speed.'&dropoff_date='.$dropoff_date.'&estimated_pickup='.$pickup.'\'
                     
 						echo date('m-d-Y', strtotime($_GET['dropoff_date'])).' &nbsp;&nbsp; <button type="button" class="btn-sm btn-warning" onclick="goto_step_schedule()">Change</button>';
@@ -71,7 +71,7 @@ $url = $_GET['repack_type'];
 				<div class="row">
 					<div class="col-md-12">
 						<div ><u><strong>Estimated Pickup</strong></u></div>
-						<?
+						<?php
 						//&container='.$_SESSION['repack_container_id'].'&speed='.$speed.'&dropoff_date='.$dropoff_date.'&estimated_pickup='.$pickup.'\'
 
 						echo date('m-d-Y', strtotime($_GET['estimated_pickup'])).' ';
@@ -110,14 +110,14 @@ $url = $_GET['repack_type'];
 
 <script>
 function update_pickup(date) {
-	$.post( "<?php echo root();?>inc/exec.php?act=get_estimated_pickup&repack_type=<?=$url;?>&ajax=1&schedule=1", $('#schedule_form').serialize(), '', 'script');
+	$.post( "<?php echo root();?>inc/exec.php?act=get_estimated_pickup&repack_type=<?php echo $url;?>&ajax=1&schedule=1", $('#schedule_form').serialize(), '', 'script');
 }
 
 function finalize_repack() {
 
 	$('#place_order_button').prop('disabled', true);
 
-	$.post( "<?php echo root();?>inc/exec.php?act=submit_repack_order&ajax=1&schedule=1&repack_type=<?=$url;?>", 'container=<?=$_SESSION['repack_container_id']?>&speed=<?=$_GET['speed']?>&dropoff_date=<?=$_GET['dropoff_date']?>&estimated_pickup=<?=$_GET['estimated_pickup']?>', '', 'script');
+	$.post( "<?php echo root();?>inc/exec.php?act=submit_repack_order&ajax=1&schedule=1&repack_type=<?php echo $url;?>", 'container=<?php echo $_SESSION['repack_container_id']?>&speed=<?php echo $_GET['speed']?>&dropoff_date=<?php echo $_GET['dropoff_date']?>&estimated_pickup=<?php echo $_GET['estimated_pickup']?>', '', 'script');
 	
 }
 

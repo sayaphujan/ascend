@@ -36,7 +36,7 @@
         "order": [[ 0, 'asc' ]],
         "ajax":
         {
-            "url": "<?=root();?>do/customer_list/",
+            "url": "<?php  echo root();?>do/customer_list/",
             "type": "POST"
         },
         "deferRender": true,
@@ -50,7 +50,7 @@
               }
             },
             { "data": "action", "render": function ( data, type, row, meta ){
-                return '<center><div><a href="<?=root();?>container-review/?id='+row.id+'"><button type="button" class="btn btn-primary">View</button></a></div></center>';
+                return '<center><div><a href="<?php  echo root();?>container-review/?id='+row.id+'"><button type="button" class="btn btn-primary">View</button></a></div></center>';
               }
             }
         ],

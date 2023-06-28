@@ -130,7 +130,7 @@
         "order": [[ 0, 'asc' ]],
         "ajax":
         {
-            "url": "<?=root();?>do/container_list_review/?id=<?=$_GET['id'];?>",
+            "url": "<?php  echo root();?>do/container_list_review/?id=<?php  echo $_GET['id'];?>",
             "type": "POST"
         },
         "deferRender": true,
@@ -145,7 +145,7 @@
             { "data": "serial" },
             { "data": "aad" },
             { "data": "action", "render": function ( data, type, row, meta ){
-                return '<center><div><a href="<?=root();?>repacks-review/?id='+row.id+'"><button type="button" class="btn btn-primary">View</button></a></div><center>';
+                return '<center><div><a href="<?php  echo root();?>repacks-review/?id='+row.id+'"><button type="button" class="btn btn-primary">View</button></a></div><center>';
               }
             }
         ],

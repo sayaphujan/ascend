@@ -1,4 +1,4 @@
-<?
+<?php 
 if($_SERVER['REMOTE_ADDR']!=='10.0.0.50') {
 /*
 ?>
@@ -14,7 +14,7 @@ if($_SERVER['REMOTE_ADDR']!=='10.0.0.50') {
     </div>
 
    
-<?
+<?php 
 exit();
 */
 
@@ -46,7 +46,7 @@ exit();
 		</thead>
 		<tbody>
 			
-			<?
+			<?php 
 			
 			if(!$_SESSION['cart']) {
 				$_SESSION['cart']=array();
@@ -66,11 +66,11 @@ exit();
 			?>
 		</tbody>
 	</table>
-	<? if (count($cart) > 0) { ?>
+	<?php  if (count($cart) > 0) { ?>
 	 <div class="col-sm-12 text-right">
-		<button type="button" class="btn btn-primary" onclick="document.location='<?=root()?>checkout/';">Checkout</button>
+		<button type="button" class="btn btn-primary" onclick="document.location='<?php  echo root()?>checkout/';">Checkout</button>
 	 </div>
-	<? } ?>
+	<?php  } ?>
 	<br />
 	<br />
 	
@@ -122,7 +122,7 @@ exit();
 				</div>
 				<hr>
 				
-				<?
+				<?php 
 				
 				function show_embroidery_select($name, $allow_none=false) {
 					echo '<select name="'.$name.'" id="'.$name.'" class="ol mask_option" autocomplete="off">';
@@ -146,7 +146,7 @@ exit();
 						Get your mask embroidered with a Peregrine Manufacturing Inc. logo pictured above! <br />
 						<br />
 						
-						Please select a color: <?=show_embroidery_select('mask_embroidery_color')?>
+						Please select a color: <?php  echo show_embroidery_select('mask_embroidery_color')?>
 						
 						
 					
@@ -169,13 +169,13 @@ exit();
 						<input type="file" name="embroidery_art" accept=".dst,.emb" class="mask_option">
 						<br />
 						<br />
-						Color 1: <?=show_embroidery_select('mask_custom_embroidery_color_1')?>
+						Color 1: <?php  echo show_embroidery_select('mask_custom_embroidery_color_1')?>
 						<br />
 						<br />
-						Color 2: <?=show_embroidery_select('mask_custom_embroidery_color_2', true)?>
+						Color 2: <?php  echo show_embroidery_select('mask_custom_embroidery_color_2', true)?>
 						<br />
 						<br />
-						Color 3: <?=show_embroidery_select('mask_custom_embroidery_color_3', true)?>
+						Color 3: <?php  echo show_embroidery_select('mask_custom_embroidery_color_3', true)?>
 						
 					</div>
 				</div>

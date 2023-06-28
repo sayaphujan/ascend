@@ -19,7 +19,7 @@
 		</thead>
 		<tbody>
 			
-			<?
+			<?php 
 			
 			
 			$cart = $_SESSION['cart'];
@@ -188,7 +188,7 @@ No returns are permitted.  All returned items will be refused or discarded prior
 		$('#complete_order_button').prop('disabled', true);
 		
 		
-		$.post( "<?=root()?>inc/exec.php?act=checkout", $('#checkout_form').serialize(), '', 'script');
+		$.post( "<?php  echo root()?>inc/exec.php?act=checkout", $('#checkout_form').serialize(), '', 'script');
 		
 	}
 	

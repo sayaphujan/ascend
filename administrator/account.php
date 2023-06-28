@@ -1,4 +1,4 @@
-<?
+<?php 
     $uid = $_SESSION['adminid'];
 ?>
 <div class="container">
@@ -87,7 +87,7 @@
 <script>
 function user() {
 	//$.post( "/inc/exec.php?act=update_customer&ajax=1&schedule=1", $('#customer_form').serialize(), '', 'script');
-	$.post('<?=root();?>inc/exec.php?act=update_staff', $('#user_form').serialize(), function(result){
+	$.post('<?php  echo root();?>inc/exec.php?act=update_staff', $('#user_form').serialize(), function(result){
                 if(result){
                     $.notify('Success', 'success')
                 }else{
@@ -96,14 +96,14 @@ function user() {
             })
 }
 
-$("#uid").val("<?=$uid;?>");
+$("#uid").val("<?php  echo $uid;?>");
 
 function get_user_data(){
     
-    var id = "<?=$uid;?>";
+    var id = "<?php  echo $uid;?>";
     
     $.ajax({
-        url: "<?=root();?>do/get_user_data/?id="+id,
+        url: "<?php  echo root();?>do/get_user_data/?id="+id,
         type: 'GET',
         dataType: 'json', // added data type
         success: function(res) {

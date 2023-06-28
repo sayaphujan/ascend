@@ -1,4 +1,4 @@
-<?
+<?php 
 
 
 if ( empty( $_SESSION[ 'uid' ] ) )header( 'location: /' );
@@ -9,7 +9,7 @@ if ( empty( $_SESSION[ 'uid' ] ) )header( 'location: /' );
         <p class="display-4">Order Scheduled! </p>
         <p class="lead">Thank you for scheduling your rigging appointment.<br />
             Below is a summary of your order. </p>
-        <?
+        <?php 
         if ( $_GET[ 'page' ] == 'repack_order_success' ) {
 
             $rq = mysqli_query( $link, 'SELECT * FROM repacks WHERE id=\'' . sf( $_GET[ 'id' ] ) . '\'' );
@@ -21,7 +21,7 @@ if ( empty( $_SESSION[ 'uid' ] ) )header( 'location: /' );
             <div class="row">
                 <div class="col-md-6">
                     <div><u><strong>Container</strong></u></div>
-                    <?
+                    <?php 
 
                     $cq = mysqli_query( $link, 'SELECT * FROM containers WHERE customer=\'' . sf( $_SESSION[ 'uid' ] ) . '\' AND id=\'' . sf( $r[ 'container' ] ) . '\'' );
 
@@ -32,7 +32,7 @@ if ( empty( $_SESSION[ 'uid' ] ) )header( 'location: /' );
                 </div>
                 <div class="col-md-6">
                     <div><u><strong>Repack Speed</strong></u></div>
-                    <?
+                    <?php 
                     if($r['type'] == 'tandem'){
                         echo $repack_label[ $r[ 'speed' ] ] . ' - $' . ($repack_pricing[$r[ 'speed' ]]+100) . '.00';
                     
@@ -46,7 +46,7 @@ if ( empty( $_SESSION[ 'uid' ] ) )header( 'location: /' );
             <div class="row pt-3">
                 <div class="col-md-6">
                     <div><u><strong>Dropoff Date</strong></u></div>
-                    <?
+                    <?php 
                     //&container='.$_SESSION['repack_container_id'].'&speed='.$speed.'&dropoff_date='.$dropoff_date.'&estimated_pickup='.$pickup.'\'
 
                     echo '<span class="lead"><strong>' . date( 'm/d/Y', strtotime( $r[ 'dropoff_date' ] ) ) . '</strong></span>';
@@ -55,7 +55,7 @@ if ( empty( $_SESSION[ 'uid' ] ) )header( 'location: /' );
                 </div>
                 <div class="col-md-6">
                     <div><u><strong>Estimated Pickup</strong></u></div>
-                    <?
+                    <?php 
                     //&container='.$_SESSION['repack_container_id'].'&speed='.$speed.'&dropoff_date='.$dropoff_date.'&estimated_pickup='.$pickup.'\'
 
                     echo '<span class="lead"><strong>' . date( 'm/d/Y', strtotime( $r[ 'estimated_pickup' ] ) ) . '</strong></span>';
@@ -64,7 +64,7 @@ if ( empty( $_SESSION[ 'uid' ] ) )header( 'location: /' );
                 </div>
             </div>
         </div>
-        <? } ?>
+        <?php  } ?>
         <p class="lead">Please bring your equipment to our loft during regular business hours. Our loft is located at:</p>
         <div class="p-3 my-3"><strong>Chicagoland Skydiving Center</strong><br />
             1207 E Gurler Rd, Rochelle, IL 61068</div>

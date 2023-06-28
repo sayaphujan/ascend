@@ -21,10 +21,10 @@
                 </div>
                 <div class="bs-stepper-content">
                     <!--<div id="logins-part" class="content" role="tabpanel" aria-labelledby="logins-part-trigger">
-                        <?php //include 'schedule_repack/register.php'; ?>
+                        <?php  //include 'schedule_repack/register.php'; ?>
                     </div>-->
                     <div id="information-part" class="content" role="tabpanel" aria-labelledby="information-part-trigger">
-                        <? include 'schedule_repack/container_info.php'; ?>
+                        <?php  include 'schedule_repack/container_info.php'; ?>
                     </div>
                     <div id="schedule-part" class="content" role="tabpanel" aria-labelledby="schedule-part-trigger">3</div>
 					<div id="finalize-part" class="content" role="tabpanel" aria-labelledby="schedule-part-trigger">3</div>
@@ -40,7 +40,7 @@ function step_containerinfo() {
 	var stepper = new Stepper(document.querySelector('.bs-stepper'))
 	stepper.to(2);
 	
-	$('#information-part').load('<?php echo root();?>inc/exec.php?act=schedule_repack&repack_type=sport&page=container_info');
+	$('#information-part').load('<?php  echo root();?>inc/exec.php?act=schedule_repack&repack_type=sport&page=container_info');
 }
 
 function step_schedule(container) {
@@ -48,7 +48,7 @@ function step_schedule(container) {
 	var stepper = new Stepper(document.querySelector('.bs-stepper'))
 	stepper.to(3);
 	
-	$('#schedule-part').load('<?php echo root();?>inc/exec.php?act=schedule_repack&repack_type=sport&page=schedule&container='+container);
+	$('#schedule-part').load('<?php  echo root();?>inc/exec.php?act=schedule_repack&repack_type=sport&page=schedule&container='+container);
 	
 }
 
@@ -63,7 +63,7 @@ function goto_step_schedule() {
 
 $(document).ready(function () {
   var stepper = new Stepper($('.bs-stepper')[0]);
-  <? 
+  <?php  
   if($_SESSION['uid']>0) {
 	if($_SESSION['repack_container_id']) {
 		echo 'step_schedule('.$_SESSION['repack_container_id'].');';
@@ -72,7 +72,7 @@ $(document).ready(function () {
 	}
   ?>
 	
-<? } ?>
+<?php  } ?>
 })
 
 

@@ -1,4 +1,4 @@
-<?
+<?php
  $uid = $_SESSION['uid'];
  $url = $_SERVER['REQUEST_URI'];  
 ?>
@@ -9,9 +9,9 @@
 <div class="alert alert-warning d-none align-items-center" role="alert" id="schedulealert"></div>
 
 <form id="main_parachute_form	" action="" method="post" onsubmit="add_main_parachute();  return false;">
-    <input type="hidden" name="url" value="<?php echo $url;?>">
-    <input type="hidden" class="form-control" id="uid" name="uid" value="<?php echo $uid;?>" placeholder="id"/>
-    <input type="hidden" class="form-control" id="existing_container" name="existing_container" value="<?php echo $_SESSION['repack_container_id'];?>" placeholder="id"/>
+    <input type="hidden" name="url" value="<?php  echo $url;?>">
+    <input type="hidden" class="form-control" id="uid" name="uid" value="<?php  echo $uid;?>" placeholder="id"/>
+    <input type="hidden" class="form-control" id="existing_container" name="existing_container" value="<?php  echo $_SESSION['repack_container_id'];?>" placeholder="id"/>
     <div class="row" id="add_new_harness_form">
     	
     		<div class="col-md-6">	
@@ -51,13 +51,13 @@
 <script>
 function add_main_parachute() {
 
-	$.post( "<?php echo root();?>inc/exec.php?act=add_main_parachute&ajax=1&schedule=1", $('#main_parachute_form').serialize(), '', 'script');
+	$.post( "<?php  echo root();?>inc/exec.php?act=add_main_parachute&ajax=1&schedule=1", $('#main_parachute_form').serialize(), '', 'script');
 }
 
 function get_data(){
     var id = $('#existing_container').val();
     $.ajax({
-        url: "<?php echo root();?>do/get_container_data/?id="+id,
+        url: "<?php  echo root();?>do/get_container_data/?id="+id,
         type: 'GET',
         dataType: 'json', // added data type
         success: function(res) {
@@ -79,6 +79,6 @@ $( document ).ready(function() {
         get_data();
     }
     
-    $( "#mfr" ).datepicker({ dateFormat: "mm-dd-yy", setDate: '<?php echo date('Y-m-d')?>', altField: "#mfr"});
+    $( "#mfr" ).datepicker({ dateFormat: "mm-dd-yy", setDate: '<?php  echo date('Y-m-d')?>', altField: "#mfr"});
 });
 </script>

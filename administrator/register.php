@@ -1,7 +1,7 @@
 <div class="container-fluid">
     <div class="h-100 row align-items-center mt-5">
         <div class="col-sm-6 mx-auto">
-            <form action="<?=root('do/register/'); ?>" method="post">
+            <form action="<?php echo root('do/register/'); ?>" method="post">
                 <div class="form-group">
                     <label for="first_name" class="control-label"><strong>First Name:</strong></label>
                     <input type="text" class="form-control" id="rfname" name="rfname" autocomplete="off" placeholder="Please enter your first name..."/>
@@ -23,6 +23,6 @@
         </div>
     </div>
 </div>
-<?
+<?php
 unset($_SESSION['forgot']);
 ?>

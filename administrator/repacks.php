@@ -1,4 +1,4 @@
-<?
+<?php 
 if ($_SESSION['type']!=='admin') {
 	header('location: /');
 	exit();
@@ -499,7 +499,7 @@ $( document ).ready(function() {
         "order": [[ 0, 'asc' ]],
         "ajax":
         {
-            "url": "<?=root();?>do/delivered_work_order_list/",
+            "url": "<?php  echo root();?>do/delivered_work_order_list/",
             "type": "POST"
         },
         "deferRender": true,
@@ -544,7 +544,7 @@ $( document ).ready(function() {
         "order": [[ 0, 'asc' ]],
         "ajax":
         {
-            "url": "<?=root();?>do/work_order_list/",
+            "url": "<?php  echo root();?>do/work_order_list/",
             "type": "POST"
         },
         "deferRender": true,
@@ -773,7 +773,7 @@ $( document ).ready(function() {
     function change_status(id,status,wo_id,el){
          
          $.ajax({
-            url: '<?=root();?>do/update_status_repack/',
+            url: '<?php  echo root();?>do/update_status_repack/',
             type: 'POST',
             dataType: 'json', 
             data: {'status':status, 'repack_id': id},
@@ -801,7 +801,7 @@ $( document ).ready(function() {
     	$('#repack_modal').modal({backdrop: 'static', keyboard: false});
     	
     	$.ajax({
-            url: '<?=root();?>do/repack_content/?id='+id+'&load=1',
+            url: '<?php  echo root();?>do/repack_content/?id='+id+'&load=1',
             type: 'GET',
             dataType: 'json', // added data type
             success: function(res) {
@@ -860,7 +860,7 @@ $( document ).ready(function() {
         };
         
         $.ajax({
-            url: '<?=root();?>do/update_work_order/',
+            url: '<?php  echo root();?>do/update_work_order/',
             type: 'POST',
             dataType: 'json', 
             data: formData,
@@ -889,7 +889,7 @@ $( document ).ready(function() {
                                     minDate: 0, 
                                     maxDate: "+12M", 
                                     dateFormat: "mm-dd-yy", 
-                                    setDate: '<?=date('Y-m-d')?>', 
+                                    setDate: '<?php  echo date('Y-m-d')?>', 
                                     altField: "#wo_dropoff_date",
                                     onSelect: function(dateText) {
                                         $(this).val(this.value);
@@ -901,7 +901,7 @@ $( document ).ready(function() {
                                     minDate: 0, 
                                     maxDate: "+12M", 
                                     dateFormat: "mm-dd-yy", 
-                                    setDate: '<?=date('Y-m-d')?>', 
+                                    setDate: '<?php  echo date('Y-m-d')?>', 
                                     altField: "#wo_estimated_pickup",
                                     onSelect: function(dateText) {
                                         $(this).val(this.value);
@@ -918,7 +918,7 @@ $( document ).ready(function() {
     	$('#repack_modal').modal({backdrop: 'static', keyboard: false});
     	
     	$.ajax({
-            url: '<?=root();?>do/repack_info_content/?id='+id+'&load=1',
+            url: '<?php  echo root();?>do/repack_info_content/?id='+id+'&load=1',
             type: 'GET',
             dataType: 'json', // added data type
             success: function(res) {
@@ -975,7 +975,7 @@ $( document ).ready(function() {
         //$.post( "/inc/exec.php?act=update_repacks&ajax=1&schedule=1", formData, '', 'script');
 
         $.ajax({
-            url: '<?=root();?>do/update_repacks/',
+            url: '<?php  echo root();?>do/update_repacks/',
             type: 'POST',
             dataType: 'json', 
             data: formData,
@@ -1003,7 +1003,7 @@ $( document ).ready(function() {
                                     minDate: 0, 
                                     maxDate: "+12M", 
                                     dateFormat: "mm-dd-yy", 
-                                    setDate: '<?=date('Y-m-d')?>', 
+                                    setDate: '<?php  echo date('Y-m-d')?>', 
                                     altField: "#rp_dropoff_date",
                                     onSelect: function(dateText) {
                                         $(this).val(this.value);
@@ -1015,7 +1015,7 @@ $( document ).ready(function() {
                                     minDate: 0, 
                                     maxDate: "+12M", 
                                     dateFormat: "mm-dd-yy", 
-                                    setDate: '<?=date('Y-m-d')?>', 
+                                    setDate: '<?php  echo date('Y-m-d')?>', 
                                     altField: "#rp_estimated_pickup",
                                     onSelect: function(dateText) {
                                         $(this).val(this.value);
@@ -1028,7 +1028,7 @@ $( document ).ready(function() {
                                     minDate: 0, 
                                     maxDate: "+12M", 
                                     dateFormat: "mm-dd-yy", 
-                                    setDate: '<?=date('Y-m-d')?>', 
+                                    setDate: '<?php  echo date('Y-m-d')?>', 
                                     altField: "#rp_schedule_date",
                                     onSelect: function(dateText) {
                                         $(this).val(this.value);
@@ -1047,7 +1047,7 @@ $( document ).ready(function() {
         }
         
         $.ajax({
-            url: '<?=root();?>do/additional_work_content/?id='+repack_id+'&load=1',
+            url: '<?php  echo root();?>do/additional_work_content/?id='+repack_id+'&load=1',
             type: 'GET',
             dataType: 'json', // added data type
             success: function(res) {
@@ -1114,7 +1114,7 @@ $( document ).ready(function() {
                 id = $(this).attr("data-id");
                  $.ajax({
                           type: "GET",
-                          url: "<?=root();?>do/delete_additional_work/?id="+id,
+                          url: "<?php  echo root();?>do/delete_additional_work/?id="+id,
                           dataType:'JSON', 
                           success:function(res){
                             if(res){
@@ -1178,7 +1178,7 @@ $( document ).ready(function() {
             var record_id     =  ($('input[name="'+record+'"]').val() > 0 ) ? $('input[name="'+record+'"]').val() : 0;
                 
             // Determine if insert or update query should be used
-            var url = '<?=root();?>do/save_additional_work/?id='+record_id;
+            var url = '<?php  echo root();?>do/save_additional_work/?id='+record_id;
             
             $.ajax({
                       url: url,
@@ -1226,7 +1226,7 @@ $( document ).ready(function() {
         var repack_id = $(this).attr('data-repack-id');
         
         $.ajax({
-            url: '<?=root();?>do/additional_work_content/?id='+repack_id+'&load=1',
+            url: '<?php  echo root();?>do/additional_work_content/?id='+repack_id+'&load=1',
             type: 'GET',
             dataType: 'json', // added data type
             success: function(res) {
@@ -1308,7 +1308,7 @@ $( document ).ready(function() {
                 var record_id = ($('input[name="'+record+'"]').val() > 0 ) ? $('input[name="'+record+'"]').val() : 0;
                 
                 // Determine if insert or update query should be used
-                var url = '<?=root();?>do/save_additional_work/?id='+record_id;
+                var url = '<?php  echo root();?>do/save_additional_work/?id='+record_id;
                 
                 console.log("record_id "+record_id);
                 //console.log("remove "+remove);
@@ -1353,7 +1353,7 @@ $( document ).ready(function() {
         $(".row_"+id).remove();
                  $.ajax({
                           type: "GET",
-                          url: "<?=root();?>do/delete_additional_work/?id="+id,
+                          url: "<?php  echo root();?>do/delete_additional_work/?id="+id,
                           dataType:'JSON', 
                           success:function(res){
                             if(res){
@@ -1416,7 +1416,7 @@ $( document ).ready(function() {
     $(document).on('click', '#customer', function() {
         var cust_id = $(this).attr('data-cust-id');
     	$.ajax({
-            url: "<?=root();?>do/get_customer_data/?id="+cust_id,
+            url: "<?php  echo root();?>do/get_customer_data/?id="+cust_id,
             type: 'GET',
             dataType: 'json', // added data type
             success: function(res) {
@@ -1460,7 +1460,7 @@ $( document ).ready(function() {
     $(document).on('click', '#container', function() {
         var id = $(this).attr('data-cont-id');
         $.ajax({
-            url: "<?=root();?>do/get_container_data/?id="+id,
+            url: "<?php  echo root();?>do/get_container_data/?id="+id,
             type: 'GET',
             dataType: 'json', // added data type
             success: function(res) {

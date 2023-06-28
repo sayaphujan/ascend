@@ -1,20 +1,20 @@
-<?
+<?php
  $uid = $_SESSION['uid'];
- $url = $_SERVER['REQUEST_URI'];  
+ $url = $_GET['act'];  
 ?>
 <div class="row">
 	<h4>Reserve Parachute</h4>
 </div>
 
-<div class="alert alert-warning d-none align-items-center" role="alert" id="schedulealert"></div>
+<div class="alert alert-warning d-none align-items-center" role="alert" id="containeralert"></div>
 
-<form id="reserve_parachute_form	" action="" method="post" onsubmit="add_reserve_parachute();  return false;">
+<form id="reserve_parachute_form" action="" method="post" onsubmit="add_reserve_parachute();  return false;">
     <input type="hidden" name="url" value="<?php echo $url;?>">
     <input type="hidden" class="form-control" id="uid" name="uid" value="<?php echo $uid;?>" placeholder="id"/>
     <input type="hidden" class="form-control" id="existing_container" name="existing_container" value="<?php echo $_SESSION['repack_container_id'];?>" placeholder="id"/>
     <div class="row" id="add_new_harness_form">
     	
-    		<div class="col-md-6">	
+    		<div class="col-md-12">	
     			<div class="form-group">
     				<label for="make" class="control-label"><strong>Make:</strong></label>
     				<input type="text" class="form-control" id="make" name="make" placeholder="Manufacturer" />
@@ -39,8 +39,10 @@
                     <label for="fabric" class="control-label"><strong>Fabric:</strong></label>
                     <input type="text" class="form-control" id="fabric" name="fabric" placeholder="Fabric" />
                 </div>
-    		</div>
-    		<button  class="btn btn-primary" id="next_step">Continue to Reserve Parachute</button>	   	
+    		
+    		<button  class="btn btn-primary" id="prev_step" style="float: left;">Back to Harness</button>        
+            <button  class="btn btn-primary" id="next_step" style="float: right;">Continue to AAD</button>	   	
+            </div>
     </div>
 </form>
 
@@ -66,6 +68,13 @@ function get_data(){
          $('#fabric').val(res.rpfabric);
         }
     });
+}
+
+$(document).on('click', '#prev_step', function(){
+    var stepper = new Stepper(document.querySelector('.bs-stepper'))
+    stepper.to(2);
+    
+    $('#harness-part').load('<?php  echo root();?>inc/exec.php?act=container_info&page=harness');
 }
 
 $( document ).ready(function() {

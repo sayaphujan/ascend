@@ -1,4 +1,4 @@
-<?
+<?php 
 
 $order_q = mysqli_query($link, 'SELECT * FROM mask_orders WHERE id=\''.sf($_SESSION['order_id']).'\'');
 
@@ -13,7 +13,7 @@ $order = mysqli_fetch_assoc($order_q);
 <div class="container">
     <div class="row">
         <div class="col-sm-12 pt-5">
-            <h1>Order Confirmation - Order #<?=$order['id']?></h1>
+            <h1>Order Confirmation - Order #<?php  echo $order['id']?></h1>
           
         </div>
     </div>
@@ -29,10 +29,10 @@ $order = mysqli_fetch_assoc($order_q);
 			<br />
 			<br />
 			
-			<?=$order['name']?><br />
-			<?=$order['address_1']?><br />
-			<?=($order['address_2']!=='' ? $order['address_2'].'<br>' : '')?>
-			<?=$order['city']?>, <?=$order['state']?> <?=$order['zip']?>
+			<?php  echo $order['name']?><br />
+			<?php  echo $order['address_1']?><br />
+			<?php  echo ($order['address_2']!=='' ? $order['address_2'].'<br>' : '')?>
+			<?php  echo $order['city']?>, <?php  echo $order['state']?> <?php  echo $order['zip']?>
 			
 		</div>
 	</div>
@@ -52,7 +52,7 @@ $order = mysqli_fetch_assoc($order_q);
 		</thead>
 		<tbody>
 			
-			<?
+			<?php 
 			
 			$cart = json_decode($order['order_data'],true);
 			

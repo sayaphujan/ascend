@@ -1,4 +1,4 @@
-<?
+<?php
     $_SESSION['repack_container_id'] = '';
     
     $uid = $_SESSION['uid'];
@@ -11,11 +11,11 @@
     </div>
     		<div class="alert alert-warning d-none align-items-center" role="alert" id="containeralert"></div>
     <form id="container_form" action="" method="post" onsubmit="add_container();  return false;">
-    <input type="hidden" name="url" value="<?=$url;?>">
-    <input type="hidden" class="form-control" id="uid" name="uid" value="<?=$uid;?>" placeholder="id"/>
+    <input type="hidden" name="url" value="<?php echo $url;?>">
+    <input type="hidden" class="form-control" id="uid" name="uid" value="<?php echo $uid;?>" placeholder="id"/>
     
     
-        <? 
+        <?php 
         $cq = mysqli_query($link, 'SELECT * FROM containers WHERE customer=\''.sf($uid).'\'');
         
         if(mysqli_num_rows($cq)>0) {
@@ -27,7 +27,7 @@
         				<label for="existing_container" class="control-label"><strong>Pick a previously registered container:</strong></label>
         				<select class="form-control" id="existing_container" name="existing_container">
         					<option value="new">Register New Container</option>
-        					<?
+        					<?php
         					while($c = mysqli_fetch_assoc($cq)) {
         						echo '<option value="'.$c['id'].'">'.$c['manufacturer'].' '.$c['model'].''.($c['serial']!=='' ? ' SN: '.$c['serial'] : '').'</option>';
         					}
@@ -45,9 +45,9 @@
         	</div>
         	<br />
         	<br />
-        <? }else{ ?>
+        <?php }else{ ?>
            <input type="hidden" class="form-control" id="existing_container" name="existing_container" value="new"/>
-        <? } ?>
+        <?php } ?>
     <div class="row" id="add_new_container_form">
     	
     		<div class="col-md-6">	
@@ -127,14 +127,14 @@
 </div>
 <script>
 function add_container() {
-	$.post( "<?php echo root();?>inc/exec.php?act=add_container&repack_type=<?=$url;?>&ajax=1&schedule=1", $('#container_form').serialize(), '', 'script');
+	$.post( "<?php echo root();?>inc/exec.php?act=add_container&repack_type=<?php echo $url;?>&ajax=1&schedule=1", $('#container_form').serialize(), '', 'script');
 }
 
 function get_data(){
     $('#add_new_container_form').show();
     var id = $('#existing_container').val();
     $.ajax({
-        url: "<?=root();?>do/get_container_data/?id="+id,
+        url: "<?php echo root();?>do/get_container_data/?id="+id,
         type: 'GET',
         dataType: 'json', // added data type
         success: function(res) {
@@ -169,10 +169,10 @@ $( document ).ready(function() {
         get_data();
     }
     
-    $( "#aad_install" ).datepicker({ dateFormat: "mm-dd-yy", setDate: '<?=date('Y-m-d')?>', altField: "#aad_install"});
+    $( "#aad_install" ).datepicker({ dateFormat: "mm-dd-yy", setDate: '<?php echo date('Y-m-d')?>', altField: "#aad_install"});
     
-    $( "#aad_eol" ).datepicker({ dateFormat: "mm-dd-yy", setDate: '<?=date('Y-m-d')?>', altField: "#aad_eol"});
+    $( "#aad_eol" ).datepicker({ dateFormat: "mm-dd-yy", setDate: '<?php echo date('Y-m-d')?>', altField: "#aad_eol"});
     
-    $( "#aad_next_maintenance" ).datepicker({ dateFormat: "mm-dd-yy", setDate: '<?=date('Y-m-d')?>', altField: "#aad_next_maintenance"});
+    $( "#aad_next_maintenance" ).datepicker({ dateFormat: "mm-dd-yy", setDate: '<?php echo date('Y-m-d')?>', altField: "#aad_next_maintenance"});
 });
 </script>

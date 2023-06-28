@@ -1,4 +1,4 @@
-<?
+<?php 
 $rq = mysqli_query($link, 'SELECT repacks.*, containers.manufacturer, containers.model, containers.serial, users.first_name, users.last_name FROM `repacks` LEFT JOIN containers ON repacks.container = containers.id LEFT JOIN users ON repacks.customer = users.id ORDER BY repacks.speed, repacks.estimated_pickup');
 
 $r = mysqli_fetch_assoc($rq);

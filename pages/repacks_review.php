@@ -1,4 +1,4 @@
-<?
+<?php 
 $url_id = (isset($_GET['id'])) ? sf($_GET['id']) : '';
 
 if($_SESSION['type'] == 'customer'){
@@ -415,7 +415,7 @@ if($_SESSION['type'] == 'customer'){
 <div class="container">
 	<h3 style="margin-top:20px;margin-bottom:20px">Scheduled Repacks</h3>
 
-    <?
+    <?php 
     if($_SESSION['type'] == 'customer'){
          echo $msg;
     }
@@ -494,7 +494,7 @@ $( document ).ready(function() {
         "ajax":
         {
             
-            "url": "<?=root();?>do/delivered_work_order_list_review/?id=<?=$url_id;?>",
+            "url": "<?php  echo root();?>do/delivered_work_order_list_review/?id=<?php  echo $url_id;?>",
             "type": "POST"
         },
         "deferRender": true,
@@ -542,7 +542,7 @@ $( document ).ready(function() {
         "order": [[ 0, 'asc' ]],
         "ajax":
         {
-            "url": "<?=root();?>do/work_order_list_review/?id=<?=$url_id;?>",
+            "url": "<?php  echo root();?>do/work_order_list_review/?id=<?php  echo $url_id;?>",
             "type": "POST"
         },
         "deferRender": true,
@@ -674,7 +674,7 @@ $( document ).ready(function() {
     	$('#repack_modal').modal({backdrop: 'static', keyboard: false});
     	
     	$.ajax({
-            url: '<?=root();?>do/repack_content/?id='+id+'&load=1',
+            url: '<?php  echo root();?>do/repack_content/?id='+id+'&load=1',
             type: 'GET',
             dataType: 'json', // added data type
             success: function(res) {
@@ -714,7 +714,7 @@ $( document ).ready(function() {
     	$('#repack_modal').modal({backdrop: 'static', keyboard: false});
     	
     	$.ajax({
-            url: '<?=root();?>do/repack_info_content/?id='+id+'&load=1',
+            url: '<?php  echo root();?>do/repack_info_content/?id='+id+'&load=1',
             type: 'GET',
             dataType: 'json', // added data type
             success: function(res) {
@@ -750,7 +750,7 @@ $( document ).ready(function() {
     $(document).on('click', '#additional', function() {
         var repack_id = $(this).attr('data-repack-id');
     	$.ajax({
-            url: '<?=root();?>do/additional_work_content/?id='+repack_id+'&page=review',
+            url: '<?php  echo root();?>do/additional_work_content/?id='+repack_id+'&page=review',
             type: 'GET',
             dataType: 'json', // added data type
             success: function(res) {
@@ -771,7 +771,7 @@ $( document ).ready(function() {
     $(document).on('click', '#customer', function() {
         var cust_id = $(this).attr('data-cust-id');
     	$.ajax({
-            url: "<?=root();?>do/get_customer_data/?id="+cust_id,
+            url: "<?php  echo root();?>do/get_customer_data/?id="+cust_id,
             type: 'GET',
             dataType: 'json', // added data type
             success: function(res) {
@@ -804,7 +804,7 @@ $( document ).ready(function() {
     $(document).on('click', '#container', function() {
         var id = $(this).attr('data-cont-id');
         $.ajax({
-            url: "<?=root();?>do/get_container_data/?id="+id,
+            url: "<?php  echo root();?>do/get_container_data/?id="+id,
             type: 'GET',
             dataType: 'json', // added data type
             success: function(res) {

@@ -21,7 +21,7 @@
                 </div>
                 <div class="bs-stepper-content">
                     <div id="logins-part" class="content" role="tabpanel" aria-labelledby="logins-part-trigger">
-                        <? include 'schedule_repack/register.php'; ?>
+                        <?php  include 'schedule_repack/register.php'; ?>
                     </div>
                     <div id="information-part" class="content" role="tabpanel" aria-labelledby="information-part-trigger">2</div>
                     <div id="schedule-part" class="content" role="tabpanel" aria-labelledby="schedule-part-trigger">3</div>
@@ -61,7 +61,7 @@ function goto_step_schedule() {
 
 $(document).ready(function () {
   var stepper = new Stepper($('.bs-stepper')[0]);
-  <? 
+  <?php  
   if($_SESSION['uid']>0) {
 	if($_SESSION['repack_container_id']) {
 		echo 'step_schedule('.$_SESSION['repack_container_id'].');';
@@ -70,7 +70,7 @@ $(document).ready(function () {
 	}
   ?>
 	
-<? } ?>
+<?php  } ?>
 })
 
 
