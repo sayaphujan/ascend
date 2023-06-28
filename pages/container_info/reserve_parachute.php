@@ -8,7 +8,7 @@
 
 <div class="alert alert-warning d-none align-items-center" role="alert" id="containeralert"></div>
 
-<form id="reserve_parachute_form" action="" method="post" onsubmit="add_reserve_parachute();  return false;">
+<form id="reserve_parachute_form">
     <input type="hidden" name="url" value="<?php echo $url;?>">
     <input type="hidden" class="form-control" id="uid" name="uid" value="<?php echo $uid;?>" placeholder="id"/>
     <input type="hidden" class="form-control" id="existing_container" name="existing_container" value="<?php echo $_SESSION['repack_container_id'];?>" placeholder="id"/>
@@ -17,31 +17,31 @@
     		<div class="col-md-12">	
     			<div class="form-group">
     				<label for="make" class="control-label"><strong>Make:</strong></label>
-    				<input type="text" class="form-control" id="make" name="make" placeholder="Manufacturer" />
+    				<input type="text" class="form-control" id="rpmake" name="make" placeholder="Manufacturer" />
     			</div>
     			<div class="form-group">
     				<label for="model" class="control-label"><strong>Model:</strong></label>
-    				<input type="text" class="form-control" id="model" name="model" placeholder="Model" />
+    				<input type="text" class="form-control" id="rpmodel" name="model" placeholder="Model" />
     			</div>
                 <div class="form-group">
                     <label for="size" class="control-label"><strong>Size:</strong></label>
-                    <input type="text" class="form-control" id="size" name="size" placeholder="Size" />
+                    <input type="text" class="form-control" id="rpsize" name="size" placeholder="Size" />
                 </div>
     			<div class="form-group">
     				<label for="serial" class="control-label"><strong>Serial Number:</strong></label>
-    				<input type="text" class="form-control" id="serial" name="serial" placeholder="Serial Number (located on info card)" />
+    				<input type="text" class="form-control" id="rpserial" name="serial" placeholder="Serial Number (located on info card)" />
     			</div>
     			<div class="form-group">
     				<label for="mfr" class="control-label"><strong>Date of Mfr:</strong></label>
-    				<input type="text" class="form-control" id="mfr" name="mfr" placeholder="Date of Mfr" />
+    				<input type="text" class="form-control" id="rpmfr" name="mfr" placeholder="Date of Mfr" />
     			</div>
     			 <div class="form-group">
                     <label for="fabric" class="control-label"><strong>Fabric:</strong></label>
-                    <input type="text" class="form-control" id="fabric" name="fabric" placeholder="Fabric" />
+                    <input type="text" class="form-control" id="rpfabric" name="fabric" placeholder="Fabric" />
                 </div>
     		
-    		<button  class="btn btn-primary" id="prev_step" style="float: left;">Back to Harness</button>        
-            <button  class="btn btn-primary" id="next_step" style="float: right;">Continue to AAD</button>	   	
+    		<button  class="btn btn-primary" id="prev_step" style="float: left;" onclick="step_harness(<?php echo $_SESSION['repack_container_id'];?>);  return false;">Back to Harness</button>        
+            <button  class="btn btn-primary" id="next_step" style="float: right;" onclick="add_reserve_parachute();  return false;">Continue to AAD</button>	   	
             </div>
     </div>
 </form>
@@ -60,21 +60,21 @@ function get_data(){
         dataType: 'json', // added data type
         success: function(res) {
             console.log(res);
-         $('#make').val(res.rpmake);
-         $('#model').val(res.rpmodel);
-         $('#size').val(res.rpsize);
-         $('#serial').val(res.rpserial);
-         $('#mfr').val(res.rpmfr);
-         $('#fabric').val(res.rpfabric);
+         $('#rpmake').val(res.rpmake);
+         $('#rpmodel').val(res.rpmodel);
+         $('#rpsize').val(res.rpsize);
+         $('#rpserial').val(res.rpserial);
+         $('#rpmfr').val(res.rpmfr);
+         $('#rpfabric').val(res.rpfabric);
         }
     });
 }
 
-$(document).on('click', '#prev_step', function(){
+function step_harness(container){
     var stepper = new Stepper(document.querySelector('.bs-stepper'))
     stepper.to(2);
     
-    $('#harness-part').load('<?php  echo root();?>inc/exec.php?act=container_info&page=harness');
+    $('#harness-part').load('<?php  echo root();?>inc/exec.php?act=container_info&page=harness&container='+container);
 }
 
 $( document ).ready(function() {
@@ -83,6 +83,6 @@ $( document ).ready(function() {
         get_data();
     }
     
-    $( "#mfr" ).datepicker({ dateFormat: "mm-dd-yy", setDate: '<?php echo date('Y-m-d')?>', altField: "#mfr"});
+    $( "#rpmfr" ).datepicker({ dateFormat: "mm-dd-yy", setDate: '<?php echo date('Y-m-d')?>', altField: "#mfr"});
 });
 </script>

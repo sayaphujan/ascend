@@ -8,15 +8,15 @@
                     </div>
                     <div class="line"></div>-->
                     <div class="step" data-target="#information-part">
-                        <button type="button" class="step-trigger" role="tab" aria-controls="information-part" id="information-part-trigger"> <span class="bs-stepper-circle">6</span> <span class="bs-stepper-label">Container Information</span> </button>
+                        <button type="button" class="step-trigger" role="tab" aria-controls="information-part" id="information-part-trigger"> <span class="bs-stepper-circle">1</span> <span class="bs-stepper-label">Container Information</span> </button>
                     </div>
                     <div class="line"></div>
                     <div class="step" data-target="#schedule-part">
-                        <button type="button" class="step-trigger" role="tab" aria-controls="schedule-part" id="schedule-part-trigger"> <span class="bs-stepper-circle">7</span> <span class="bs-stepper-label">Schedule</span> </button>
+                        <button type="button" class="step-trigger" role="tab" aria-controls="schedule-part" id="schedule-part-trigger"> <span class="bs-stepper-circle">2</span> <span class="bs-stepper-label">Schedule</span> </button>
                     </div>
 					<div class="line"></div>
                     <div class="step" data-target="#finalize-part">
-                        <button type="button" class="step-trigger" role="tab" aria-controls="finalize-part" id="finalize-part-trigger"> <span class="bs-stepper-circle">8</span> <span class="bs-stepper-label">Finalize</span> </button>
+                        <button type="button" class="step-trigger" role="tab" aria-controls="finalize-part" id="finalize-part-trigger"> <span class="bs-stepper-circle">3</span> <span class="bs-stepper-label">Finalize</span> </button>
                     </div>
                 </div>
                 <div class="bs-stepper-content">
@@ -26,7 +26,7 @@
                     <div id="information-part" class="content" role="tabpanel" aria-labelledby="information-part-trigger">
                         <?php  include 'schedule_repack/container_info.php'; ?>
                     </div>
-                    <div id="schedule-part" class="content" role="tabpanel" aria-labelledby="schedule-part-trigger">3</div>
+                    <div id="schedule-part" class="content" role="tabpanel" aria-labelledby="schedule-part-trigger">2</div>
 					<div id="finalize-part" class="content" role="tabpanel" aria-labelledby="schedule-part-trigger">3</div>
                 </div>
             </div>
@@ -35,12 +35,12 @@
 </div>
 <script>
 
-function step_containerinfo() {
+function step_containerinfo(container) {
 	 
 	var stepper = new Stepper(document.querySelector('.bs-stepper'))
 	stepper.to(2);
 	
-	$('#information-part').load('<?php  echo root();?>inc/exec.php?act=schedule_repack&repack_type=sport&page=container_info');
+	$('#information-part').load('<?php  echo root();?>inc/exec.php?act=schedule_repack&repack_type=sport&page=container_info&container='+container);
 }
 
 function step_schedule(container) {
@@ -50,6 +50,15 @@ function step_schedule(container) {
 	
 	$('#schedule-part').load('<?php  echo root();?>inc/exec.php?act=schedule_repack&repack_type=sport&page=schedule&container='+container);
 	
+}
+
+function step_payment(container) {
+    
+    var stepper = new Stepper(document.querySelector('.bs-stepper'))
+    stepper.to(4);
+    
+    $('#finalize-part').load('<?php  echo root();?>inc/exec.php?act=schedule_repack&repack_type=sport&page=payment&container='+container);
+    
 }
 
 function goto_step_schedule() {
@@ -66,13 +75,9 @@ $(document).ready(function () {
   <?php  
   if($_SESSION['uid']>0) {
 	if($_SESSION['repack_container_id']) {
-		echo 'step_schedule('.$_SESSION['repack_container_id'].');';
-	} else {
-		echo 'step_containerinfo();';
+		echo 'step_containerinfo('.$_SESSION['repack_container_id'].');';
 	}
-  ?>
-	
-<?php  } ?>
+  } ?>
 })
 
 

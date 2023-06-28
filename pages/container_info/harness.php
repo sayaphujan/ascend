@@ -10,7 +10,7 @@
     	<h4>Harness / Container</h4>
     </div>
     		<div class="alert alert-warning d-none align-items-center" role="alert" id="containeralert"></div>
-    <form id="harness_form" action="" method="post" onsubmit="add_harness();  return false;">
+    <form id="harness_form">
     <input type="hidden" name="url" value="<?php echo $url;?>">
     <input type="hidden" class="form-control" id="uid" name="uid" value="<?php echo $uid;?>" placeholder="id"/>
     <input type="hidden" class="form-control" id="existing_container" name="existing_container" value="<?php echo $_SESSION['repack_container_id'];?>" placeholder="id"/>
@@ -38,7 +38,7 @@
     				<input type="text" class="form-control" id="mfr" name="mfr" placeholder="Date of Mfr" />
     			</div>
     		
-            <button  class="btn btn-primary" id="next_step" style="float: right;">Continue to Reserve Parachute</button>	
+            <button  class="btn btn-primary" id="next_step" style="float: right;" onclick="add_harness(); return false;">Continue to Reserve Parachute</button>	
             </div>   
     </div>
     </form>

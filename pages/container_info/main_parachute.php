@@ -1,6 +1,6 @@
 <?php
  $uid = $_SESSION['uid'];
- $url = $_SERVER['REQUEST_URI'];  
+ $url = $_GET['act'];  
 ?>
 <div class="row">
 	<h4>Main Parachute</h4>
@@ -8,43 +8,44 @@
 
 <div class="alert alert-warning d-none align-items-center" role="alert" id="schedulealert"></div>
 
-<form id="main_parachute_form	" action="" method="post" onsubmit="add_main_parachute();  return false;">
+<form id="main_parachute_form" >
     <input type="hidden" name="url" value="<?php  echo $url;?>">
     <input type="hidden" class="form-control" id="uid" name="uid" value="<?php  echo $uid;?>" placeholder="id"/>
     <input type="hidden" class="form-control" id="existing_container" name="existing_container" value="<?php  echo $_SESSION['repack_container_id'];?>" placeholder="id"/>
     <div class="row" id="add_new_harness_form">
     	
-    		<div class="col-md-6">	
+    		<div class="col-md-12">	
     			<div class="form-group">
     				<label for="make" class="control-label"><strong>Make:</strong></label>
-    				<input type="text" class="form-control" id="make" name="make" placeholder="Manufacturer" />
+    				<input type="text" class="form-control" id="mpmake" name="make" placeholder="Manufacturer" />
     			</div>
     			<div class="form-group">
     				<label for="model" class="control-label"><strong>Model:</strong></label>
-    				<input type="text" class="form-control" id="model" name="model" placeholder="Model" />
+    				<input type="text" class="form-control" id="mpmodel" name="model" placeholder="Model" />
     			</div>
                 <div class="form-group">
                     <label for="size" class="control-label"><strong>Size:</strong></label>
-                    <input type="text" class="form-control" id="size" name="size" placeholder="Size" />
+                    <input type="text" class="form-control" id="mpsize" name="size" placeholder="Size" />
                 </div>
     			<div class="form-group">
     				<label for="serial" class="control-label"><strong>Serial Number:</strong></label>
-    				<input type="text" class="form-control" id="serial" name="serial" placeholder="Serial Number (located on info card)" />
+    				<input type="text" class="form-control" id="mpserial" name="serial" placeholder="Serial Number (located on info card)" />
     			</div>
     			<div class="form-group">
     				<label for="mfr" class="control-label"><strong>Date of Mfr:</strong></label>
-    				<input type="text" class="form-control" id="mfr" name="mfr" placeholder="Date of Mfr" />
+    				<input type="text" class="form-control" id="mpmfr" name="mfr" placeholder="Date of Mfr" />
     			</div>
     			 <div class="form-group">
                     <label for="fabric" class="control-label"><strong>Fabric:</strong></label>
-                    <input type="text" class="form-control" id="fabric" name="fabric" placeholder="Fabric Type" />
+                    <input type="text" class="form-control" id="mpfabric" name="fabric" placeholder="Fabric Type" />
                 </div>
                 <div class="form-group">
                     <label for="line" class="control-label"><strong>Line:</strong></label>
-                    <input type="text" class="form-control" id="line" name="line" placeholder="Line Type" />
+                    <input type="text" class="form-control" id="mpline" name="line" placeholder="Line Type" />
                 </div>
-    		</div>
-    		<button  class="btn btn-primary" id="next_step">Verified</button>	   	
+    		<button  class="btn btn-primary" id="prev_step" style="float: left;" onclick="step_aad(<?php echo $_SESSION['repack_container_id'];?>);  return false;">Back to AAD</button>  
+    		<button  class="btn btn-primary" id="next_step" style="float: right;" onclick="add_main_parachute();  return false;">Verified</button>	   	
+            </div>
     </div>
 </form>
 
@@ -62,15 +63,22 @@ function get_data(){
         dataType: 'json', // added data type
         success: function(res) {
             console.log(res);
-         $('#make').val(res.mpmake);
-         $('#model').val(res.mpmodel);
-         $('#size').val(res.mpsize);
-         $('#serial').val(res.mpserial);
-         $('#mfr').val(res.mpmfr);
-         $('#fabric').val(res.mpfabric);
-         $('#line').val(res.mpline);
+         $('#mpmake').val(res.mpmake);
+         $('#mpmodel').val(res.mpmodel);
+         $('#mpsize').val(res.mpsize);
+         $('#mpserial').val(res.mpserial);
+         $('#mpmfr').val(res.mpmfr);
+         $('#mpfabric').val(res.mpfabric);
+         $('#mpline').val(res.mpline);
         }
     });
+}
+
+function step_aad(container){
+    var stepper = new Stepper(document.querySelector('.bs-stepper'))
+    stepper.to(4);
+    
+    $('#aad-info-part').load('<?php  echo root();?>inc/exec.php?act=container_info&page=aad_info&container='+container);
 }
 
 $( document ).ready(function() {
@@ -79,6 +87,6 @@ $( document ).ready(function() {
         get_data();
     }
     
-    $( "#mfr" ).datepicker({ dateFormat: "mm-dd-yy", setDate: '<?php  echo date('Y-m-d')?>', altField: "#mfr"});
+    $( "#mpmfr" ).datepicker({ dateFormat: "mm-dd-yy", setDate: '<?php  echo date('Y-m-d')?>', altField: "#mfr"});
 });
 </script>

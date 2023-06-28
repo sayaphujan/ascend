@@ -1121,11 +1121,11 @@ case 'update_staff':
 						echo 'stepper.to(3);';
 						
 						if(sf($_POST['url']) == 'tandem'){
-						    echo '$(\'#schedule-part\').load(\'/inc/exec.php?act=schedule_repack&page=schedule&repack_type=tandem&container='.sf($_POST['existing_container']).'\');';
+						    echo '$(\'#schedule-part\').load(\''.root().'/inc/exec.php?act=schedule_repack&page=schedule&repack_type=tandem&container='.sf($_POST['existing_container']).'\');';
 						}else if(sf($_POST['url']) == 'sport'){
-						    echo '$(\'#schedule-part\').load(\'/inc/exec.php?act=schedule_repack&page=schedule&repack_type=sport&container='.sf($_POST['existing_container']).'\');';
-						}else if(sf($_POST['url']) == 'container_information'){
-						    echo '$(\'#reserve-parachute-part\').load(\'/inc/exec.php?act=container_info&page=reserve_parachute&container='.sf($_POST['existing_container']).'\');';
+						    echo '$(\'#schedule-part\').load(\''.root().'/inc/exec.php?act=schedule_repack&page=schedule&repack_type=sport&container='.sf($_POST['existing_container']).'\');';
+						}else if(sf($_POST['url']) == 'container_information' || sf($_POST['url']) == 'container_info' ){
+						    echo '$(\'#reserve-parachute-part\').load(\''.root().'/inc/exec.php?act=container_info&page=reserve_parachute&container='.sf($_POST['existing_container']).'\');';
 						}
 						echo '$(\'#harness_form input[type="text"]\').val(\'\');';
 					}
@@ -1160,7 +1160,7 @@ case 'update_staff':
 						    echo '$(\'#schedule-part\').load(\''.root().'/inc/exec.php?act=schedule_repack&page=schedule&repack_type=tandem&container='.$id.'\');';
 						}else if(sf($_POST['url']) == 'sport'){
 						    echo '$(\'#schedule-part\').load(\''.root().'/inc/exec.php?act=schedule_repack&page=schedule&repack_type=sport&container='.$id.'\');';
-						}else if(sf($_POST['url']) == 'container_info'){
+						}else if(sf($_POST['url']) == 'container_info' || sf($_POST['url']) == 'container_information' ){
 						    echo '$(\'#reserve-parachute-part\').load(\''.root().'/inc/exec.php?act=container_info&page=reserve_parachute&container='.sf($_POST['existing_container']).'\');';
 						}
 						echo '$(\'#harness_form input[type="text"]\').val(\'\');';
@@ -1204,7 +1204,7 @@ case 'update_staff':
 						    echo '$(\'#schedule-part\').load(\''.root().'/inc/exec.php?act=schedule_repack&page=schedule&repack_type=tandem&container='.sf($_POST['existing_container']).'\');';
 						}else if(sf($_POST['url']) == 'sport'){
 						    echo '$(\'#schedule-part\').load(\''.root().'/inc/exec.php?act=schedule_repack&page=schedule&repack_type=sport&container='.sf($_POST['existing_container']).'\');';
-						}else if(sf($_POST['url']) == 'container_information'){
+						}else if(sf($_POST['url']) == 'container_information' || sf($_POST['url']) == 'container_info' ){
 						    echo '$(\'#main-parachute-part\').load(\''.root().'/inc/exec.php?act=container_info&page=main_parachute&container='.sf($_POST['existing_container']).'\');';
 						}
 						echo '$(\'#aad_info_form input[type="text"]\').val(\'\');';
@@ -1261,7 +1261,7 @@ case 'update_staff':
 						    echo '$(\'#schedule-part\').load(\''.root().'/inc/exec.php?act=schedule_repack&page=schedule&repack_type=tandem&container='.sf($_POST['existing_container']).'\');';
 						}else if(sf($_POST['url']) == 'sport'){
 						    echo '$(\'#schedule-part\').load(\''.root().'/inc/exec.php?act=schedule_repack&page=schedule&repack_type=sport&container='.sf($_POST['existing_container']).'\');';
-						}else if(sf($_POST['url']) == 'container_info'){
+						}else if(sf($_POST['url']) == 'container_info' || sf($_POST['url']) == 'container_information' ){
 						    echo '$(\'#aad-info-part\').load(\''.root().'/inc/exec.php?act=container_info&page=aad_info&container='.sf($_POST['existing_container']).'\');';
 						}
 						echo '$(\'#reserve_parachute_form input[type="text"]\').val(\'\');';
@@ -1279,7 +1279,7 @@ case 'update_staff':
 				
 				}
 			
-			    //echo json_encode($query);
+			    echo json_encode($query);
 			}
 		
 		
@@ -1316,8 +1316,9 @@ case 'update_staff':
 						    echo '$(\'#schedule-part\').load(\''.root().'/inc/exec.php?act=schedule_repack&page=schedule&repack_type=tandem&container='.sf($_POST['existing_container']).'\');';
 						}else if(sf($_POST['url']) == 'sport'){
 						    echo '$(\'#schedule-part\').load(\''.root().'/inc/exec.php?act=schedule_repack&page=schedule&repack_type=sport&container='.sf($_POST['existing_container']).'\');';
-						}else if(sf($_POST['url']) == 'container_information'){
-						    echo '$(\'#schedule-part\').load(\''.root().'/inc/exec.php?act=schedule_repack&page=schedule&repack_type=sport&container='.sf($_POST['existing_container']).'\');';
+						}else if(sf($_POST['url']) == 'container_information' || sf($_POST['url']) == 'container_info' ){
+						    //echo '$(\'#schedule-part\').load(\''.root().'/inc/exec.php?act=schedule_repack&page=schedule&repack_type=sport&container='.sf($_POST['existing_container']).'\');';
+						    echo 'document.location=\''.root().'schedule_sport_repack/\';';
 						}
 						echo '$(\'#main_parachute_form input[type="text"]\').val(\'\');';
 					}

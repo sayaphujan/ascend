@@ -1,6 +1,6 @@
 <?php
     $uid = $_SESSION['uid'];
-    $url = $_SERVER['REQUEST_URI'];  
+    $url = $_GET['act'];  
 ?>
 <div class="container-fluid">
 
@@ -8,35 +8,36 @@
     	<h4>AAD</h4>
     </div>
     		<div class="alert alert-warning d-none align-items-center" role="alert" id="containeralert"></div>
-    <form id="aad_info_form" action="" method="post" onsubmit="add_aad();  return false;">
+    <form id="aad_info_form">
     <input type="hidden" name="url" value="<?php echo $url;?>">
     <input type="hidden" class="form-control" id="uid" name="uid" value="<?php echo $uid;?>" placeholder="id"/>
     <input type="hidden" class="form-control" id="existing_container" name="existing_container" value="<?php echo $_SESSION['repack_container_id'];?>" placeholder="id"/>
     <div class="row" id="add_new_aad_info_form">
     	
-    		<div class="col-md-6">	
+    		<div class="col-md-12">	
     			<div class="form-group">
     				<label for="make" class="control-label"><strong>Make:</strong></label>
-    				<input type="text" class="form-control" id="make" name="make" placeholder="Manufacturer" />
+    				<input type="text" class="form-control" id="amake" name="make" placeholder="Manufacturer" />
     			</div>
     			<div class="form-group">
     				<label for="model" class="control-label"><strong>Model:</strong></label>
-    				<input type="text" class="form-control" id="model" name="model" placeholder="Model" />
+    				<input type="text" class="form-control" id="amodel" name="model" placeholder="Model" />
     			</div>
                 <div class="form-group">
                     <label for="size" class="control-label"><strong>Size:</strong></label>
-                    <input type="text" class="form-control" id="size" name="size" placeholder="Size" />
+                    <input type="text" class="form-control" id="asize" name="size" placeholder="Size" />
                 </div>
     			<div class="form-group">
     				<label for="serial" class="control-label"><strong>Serial Number:</strong></label>
-    				<input type="text" class="form-control" id="serial" name="serial" placeholder="Serial Number (located on info card)" />
+    				<input type="text" class="form-control" id="aserial" name="serial" placeholder="Serial Number (located on info card)" />
     			</div>
     			<div class="form-group">
     				<label for="mfr" class="control-label"><strong>Date of Mfr:</strong></label>
-    				<input type="text" class="form-control" id="mfr" name="mfr" placeholder="Date of Mfr" />
+    				<input type="text" class="form-control" id="amfr" name="mfr" placeholder="Date of Mfr" />
     			</div>
-    		</div>   
-            <button  class="btn btn-primary" id="next_step">Continue to Main Parachute</button>	
+    		<button  class="btn btn-primary" id="prev_step" style="float: left;" onclick="step_reserve_parachute(<?php echo $_SESSION['repack_container_id'];?>);  return false;">Back to Reserve Parachute</button>        
+            <button  class="btn btn-primary" id="next_step" style="float: right;" onclick="add_aad();  return false;">Continue to Main Parachute</button>	
+            </div>   
     </div>
     </form>
 </div>
@@ -53,13 +54,20 @@ function get_data(){
         dataType: 'json', // added data type
         success: function(res) {
             console.log(res);
-         $('#make').val(res.amake);
-         $('#model').val(res.amodel);
-         $('#size').val(res.asize);
-         $('#serial').val(res.aserial);
-         $('#mfr').val(res.amfr);
+         $('#amake').val(res.amake);
+         $('#amodel').val(res.amodel);
+         $('#asize').val(res.asize);
+         $('#aserial').val(res.aserial);
+         $('#amfr').val(res.amfr);
         }
     });
+}
+
+function step_reserve_parachute(container){
+    var stepper = new Stepper(document.querySelector('.bs-stepper'))
+    stepper.to(3);
+    
+    $('#reserve-parachute-part').load('<?php  echo root();?>inc/exec.php?act=container_info&page=reserve_parachute&container='+container);
 }
 
 $( document ).ready(function() {
@@ -68,6 +76,6 @@ $( document ).ready(function() {
         get_data();
     }
     
-    $( "#mfr" ).datepicker({ dateFormat: "mm-dd-yy", setDate: '<?php echo date('Y-m-d')?>', altField: "#mfr"});
+    $( "#amfr" ).datepicker({ dateFormat: "mm-dd-yy", setDate: '<?php echo date('Y-m-d')?>', altField: "#mfr"});
 });
 </script>
