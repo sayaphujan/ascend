@@ -25,7 +25,7 @@
                 </div>
                 <div class="bs-stepper-content">
                     <div id="logins-part" class="content" role="tabpanel" aria-labelledby="logins-part-trigger">
-                        <? include 'container_info/register.php'; ?>
+                        <?php include 'container_info/register.php'; ?>
                     </div>
                     <div id="harness-part" class="content" role="tabpanel" aria-labelledby="harness-part-trigger">2</div>
                     <div id="reserve-parachute-part" class="content" role="tabpanel" aria-labelledby="reserve-parachute-part-trigger">3</div>
@@ -67,16 +67,15 @@ function step_aad_info() {
 
 $(document).ready(function () {
   var stepper = new Stepper($('.bs-stepper')[0]);
-  <? 
+  <?php 
   if($_SESSION['uid']>0) {
 	if($_SESSION['repack_container_id']) {
 		echo 'step_reserve_parachute('.$_SESSION['repack_container_id'].');';
 	} else {
 		echo 'step_harness();';
 	}
+  } 
   ?>
-	
-<? } ?>
 })
 
 

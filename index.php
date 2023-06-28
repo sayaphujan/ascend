@@ -34,7 +34,12 @@ if (isset($_SESSION['adminid'])) {
     		$title .= '';
     		break;
     	
-    	case 'schedule_sport_repack':
+    	case 'container_information':
+            $page = 'pages/container_information.php';
+            $title .= '';
+            break;
+
+        case 'schedule_sport_repack':
     		$page = 'pages/schedule_sport_repack.php';
     		$title .= '';
     		break;
@@ -138,6 +143,11 @@ if (isset($_SESSION['adminid'])) {
     		$page = 'pages/confirmation.php';
     		$title .= '';
     		break;
+
+        case 'container_information':
+            $page = 'pages/container_information.php';
+            $title .= '';
+            break;
     	
     	case 'schedule_sport_repack':
     		$page = 'pages/schedule_sport_repack.php';
@@ -232,6 +242,12 @@ if (isset($_SESSION['adminid'])) {
     }		
 }else{
     switch ( $_GET[ 'page' ] ) {
+
+        
+        case 'container_information':
+            $page = 'pages/container_information.php';
+            $title .= '';
+            break;
         
         case 'schedule_sport_repack':
     		$page = 'pages/schedule_sport_repack.php';
@@ -378,7 +394,7 @@ if (isset($_SESSION['adminid'])) {
                             <a class="nav-link" href="<?php echo root()?>account/">Account</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="<?php echo root('do/logout/')?>">Logout</a>
+                            <a class="nav-link" href="<?php echo root()?>do/logout/">Logout</a>
                         </li>
                     </ul>
                 </div>

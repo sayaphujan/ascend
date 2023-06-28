@@ -1,149 +1,79 @@
 <?
-$url = $_GET['repack_type'];  
+ $uid = $_SESSION['uid'];
+ $url = $_SERVER['REQUEST_URI'];  
 ?>
 <div class="row">
-	<h4>Schedule your reserve repack</h4>
+	<h4>Reserve Parachute</h4>
 </div>
 
 <div class="alert alert-warning d-none align-items-center" role="alert" id="schedulealert"></div>
 
-<form id="schedule_form" action="" method="post" onsubmit="schedule_dropoff();  return false;">
-    <input type="hidden" name="url" value="<?=$url;?>">
-<div class="row">
-	
-		<div class="col-md-6">	
-		<div class="form-group">
-				<div class="row">
-					<div class="col-md-12">
-						<div ><u><strong>Container</strong></u></div>
-						<br />
-						<?
-
-						$cq = mysqli_query($link, 'SELECT * FROM containers WHERE customer=\''.sf($_SESSION['uid']).'\' AND id=\''.sf($_SESSION['repack_container_id']).'\'');
-
-						if(mysqli_num_rows($cq)>0) {
-							
-							$c = mysqli_fetch_assoc($cq);
-						
-							echo ''.$c['manufacturer'].' '.$c['model'].''.($c['serial']!=='' ? ' SN: '.$c['serial'] : '').' &nbsp;&nbsp; <button type="button" class="btn-sm btn-warning" onclick="step_containerinfo(\''.$c['id'].'\')">Change</button>';
-						}
-						
-						?>
-						
-						
-					</div>
-				</div>
-				
-				<br />
-			</div>
-		
-			<div class="form-group">
-				<div class="row">
-					<div class="col-md-12">
-						<div ><u><strong>Speeds</strong></u></div>
-						<br />
-						
-						<div><strong>Standard</strong> - Typical turn around is 9 days from the date of drop off.</div>
-						<div><strong>Rush 1</strong> - Front of the line, typically same day depending on dropoff time and rigger availability.</div>
-						<div><strong>Rush 2</strong> - Immediate repack</div>
-						
-					</div>
-				</div>
-				<br />
-				<?php
-    				$cq = mysqli_query($link, 'SELECT * FROM repacks WHERE customer=\''.sf($_SESSION['uid']).'\' AND container=\''.sf($_SESSION['repack_container_id']).'\'');
-    
-    						if(mysqli_num_rows($cq)>0) {
-    							
-    							$r = mysqli_fetch_assoc($cq);
-    						}
-				?>
-				<?echo $url;?>
-				<label for="priority" class="control-label"><strong>Select your Repack Speed:</strong></label>
-				<select class="form-control" id="speed" name="speed">
-				    <? if($url == 'tandem'){ ?>
-				        <option value="standard" <? if($r['speed'] == 'standard' ) { echo 'selected'; } ?>>Standard Lead Time - $<?=$repack_pricing['standard']+100;?>.00</option>
-					    <option value="rush1" <? if($r['speed'] == 'rush1' ) { echo 'selected'; } ?>>Rush 1 (Front of line) - $<?=$repack_pricing['rush1']+100;?>.00</option>
-					    <option value="rush2" <? if($r['speed'] == 'rush2' ) { echo 'selected'; } ?>>Rush 2 (Immediate) - $<?=$repack_pricing['rush2']+100;?>.00</option>    
-				    <? }else if($url == 'sport'){ ?>
-    					<option value="standard" <? if($r['speed'] == 'standard' ) { echo 'selected'; } ?>>Standard Lead Time - $<?=$repack_pricing['standard']?></option>
-    					<option value="rush1" <? if($r['speed'] == 'rush1' ) { echo 'selected'; } ?>>Rush 1 (Front of line) - $<?=$repack_pricing['rush1']?></option>
-    					<option value="rush2" <? if($r['speed'] == 'rush2' ) { echo 'selected'; } ?>>Rush 2 (Immediate) - $<?=$repack_pricing['rush2']?></option>
-					<? } ?>
-				</select>
-				
-				<br />
-				
-				<div class="row">
-					<div class="col-md-12">
-						<div ><u><strong>Current Turn Around Times</strong></u></div>
-						<div><strong>Standard</strong>: <?=date('m-d-Y', strtotime(get_next_pickup_date('standard')));?></div>
-						<div><strong>Rush 1 (Front of line)</strong>: <?=date('m-d-Y', strtotime(get_next_pickup_date('rush1')));?></div>
-						<div><strong>Rush 2 (Immediate)</strong>: <?=date('m-d-Y', strtotime(get_next_pickup_date('rush2')));?></div>
-						
-					</div>
-				</div>
-				
-				
-			</div>
-			
-			
-		</div>
-		<div class="col-md-2"></div>
-		<div class="col-md-4">
-			<div class="form-group">
-				<label for="dropoff" class="control-label"><strong>Pick your drop Off Date:</strong></label>
-				<script>
-				$( function() {
-					$( "#datepicker" ).datepicker({ minDate: 0, maxDate: "+12M", dateFormat: "yy-mm-dd", setDate: '<?=date('Y-m-d')?>', altField: "#dropoff_date",
-						onSelect: function(dateText) {
-								update_pickup(this.value);
-						}				
-					});
-				} );
-				</script>
-				<div id="datepicker"></div>
-				<input type="hidden" id="dropoff_date" name="dropoff_date">
-				
-			</div>
-			
-			<div class="form-group">
-				<label for="pickup_date" class="control-label"><strong>Estimated Pickup Date:</strong></label>
-				
-				<input type="text" class="form-control" id="pickup_date" name="pickup_date" value="<?=date('m-d-Y', strtotime(get_next_pickup_date('standard')));?>"/>
-				<input type="hidden" id="container_id" name="container_id" value="<?=$c['id'];?>">
-			</div>
-			
-			<button  class="btn btn-primary" >Continue to Payment</button>
-		
-		</div>
-	
-</div>
+<form id="reserve_parachute_form	" action="" method="post" onsubmit="add_reserve_parachute();  return false;">
+    <input type="hidden" name="url" value="<?php echo $url;?>">
+    <input type="hidden" class="form-control" id="uid" name="uid" value="<?php echo $uid;?>" placeholder="id"/>
+    <input type="hidden" class="form-control" id="existing_container" name="existing_container" value="<?php echo $_SESSION['repack_container_id'];?>" placeholder="id"/>
+    <div class="row" id="add_new_harness_form">
+    	
+    		<div class="col-md-6">	
+    			<div class="form-group">
+    				<label for="make" class="control-label"><strong>Make:</strong></label>
+    				<input type="text" class="form-control" id="make" name="make" placeholder="Manufacturer" />
+    			</div>
+    			<div class="form-group">
+    				<label for="model" class="control-label"><strong>Model:</strong></label>
+    				<input type="text" class="form-control" id="model" name="model" placeholder="Model" />
+    			</div>
+                <div class="form-group">
+                    <label for="size" class="control-label"><strong>Size:</strong></label>
+                    <input type="text" class="form-control" id="size" name="size" placeholder="Size" />
+                </div>
+    			<div class="form-group">
+    				<label for="serial" class="control-label"><strong>Serial Number:</strong></label>
+    				<input type="text" class="form-control" id="serial" name="serial" placeholder="Serial Number (located on info card)" />
+    			</div>
+    			<div class="form-group">
+    				<label for="mfr" class="control-label"><strong>Date of Mfr:</strong></label>
+    				<input type="text" class="form-control" id="mfr" name="mfr" placeholder="Date of Mfr" />
+    			</div>
+    			 <div class="form-group">
+                    <label for="fabric" class="control-label"><strong>Fabric:</strong></label>
+                    <input type="text" class="form-control" id="fabric" name="fabric" placeholder="Fabric" />
+                </div>
+    		</div>
+    		<button  class="btn btn-primary" id="next_step">Continue to Reserve Parachute</button>	   	
+    </div>
 </form>
 
 <script>
-function update_pickup(date) {
-	$.post( "/inc/exec.php?act=get_estimated_pickup&repack_type=<?=$url;?>&ajax=1&schedule=1", $('#schedule_form').serialize(), '', 'script');
+function add_reserve_parachute() {
+
+	$.post( "/inc/exec.php?act=add_reserve_parachute&ajax=1&schedule=1", $('#reserve_parachute_form').serialize(), '', 'script');
 }
 
-function schedule_dropoff() {
-
-	$.post( "/inc/exec.php?act=schedule_dropoff&repack_type=<?=$url;?>&ajax=1&schedule=1", $('#schedule_form').serialize(), '', 'script');
-	
-	//var stepper = new Stepper(document.querySelector('.bs-stepper'))
-	//stepper.to(3);
-	
-	//$('#schedule-part').load('/inc/exec.php?act=schedule_repack&repack_type=<?=$url;?>&page=schedule&container='+container+'&dropoff=);
+function get_data(){
+    var id = $('#existing_container').val();
+    $.ajax({
+        url: "<?php echo root();?>do/get_container_data/?id="+id,
+        type: 'GET',
+        dataType: 'json', // added data type
+        success: function(res) {
+            console.log(res);
+         $('#make').val(res.rpmake);
+         $('#model').val(res.rpmodel);
+         $('#size').val(res.rpsize);
+         $('#serial').val(res.rpserial);
+         $('#mfr').val(res.rpmfr);
+         $('#fabric').val(res.rpfabric);
+        }
+    });
 }
 
-$('#dropoff_date').on('input',function(e){
- update_pickup();
+$( document ).ready(function() {
+    var id = $('#existing_container').val();
+    if(id>0){
+        get_data();
+    }
+    
+    $( "#mfr" ).datepicker({ dateFormat: "mm-dd-yy", setDate: '<?php echo date('Y-m-d')?>', altField: "#mfr"});
 });
-
-$('#speed').on('change',function(e){
- update_pickup();
-});
-
-$( "#pickup_date" ).datepicker({ minDate: 0, maxDate: "+12M", dateFormat: "mm-dd-yy", setDate: '<?=date('Y-m-d')?>', altField: "#pickup_date"});
-
 </script>

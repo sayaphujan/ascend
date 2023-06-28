@@ -181,16 +181,69 @@ case 'update_staff':
 			}
 		
 		break;
+
+		case 'container_info':
+		    
+			if($_GET['page']=='harness') {
+				include '../pages/container_information/harness.php';
+			}
+		
+			if($_GET['page']=='reserve_parachute') {
+				include '../pages/container_information/reserve_parachute.php';
+			}
+
+			if($_GET['page']=='aad') {
+				include '../pages/container_information/aad_info.php';
+			}
+
+			if($_GET['page']=='main_parachute') {
+				include '../pages/container_information/main_parachute.php';
+			}
+		
+		break;
 		
 		case 'get_container_data':
 		    
-		$aq = mysqli_query($link, 'SELECT * FROM containers WHERE id=\''.sf($_GET['id']).'\'');
+		$aq  = mysqli_query($link, 'SELECT * FROM containers WHERE id=\''.sf($_GET['id']).'\'');
 		
-		$cq = mysqli_fetch_assoc($aq);
-		
-		    $cq['aad_install']  = date('m-d-Y', strtotime($cq['aad_install'])); 
-		    $cq['aad_eol']      = date('m-d-Y', strtotime($cq['aad_eol'])); 
-		    $cq['aad_next_maintenance'] = date('m-d-Y', strtotime($cq['aad_next_maintenance'])); 
+		$cq  = mysqli_fetch_assoc($aq);
+		$h   = unserialize($cq['harness']);
+		$rp  = unserialize($cq['reserve_parachute']);
+		$a   = unserialize($cq['aad_info']);
+		$mp  = unserialize($cq['main_parachute']);
+
+		$cq = array(
+					'aad_install' 			=> date('m-d-Y', strtotime($cq['aad_install'])),
+					'aad_eol'				=> date('m-d-Y', strtotime($cq['aad_eol'])),
+					'aad_next_maintenance'  => date('m-d-Y', strtotime($cq['aad_next_maintenance'])),
+					
+					'hmake' 	=> $h['make'],
+					'hmodel' 	=> $h['model'],
+					'hsize' 	=> $h['size'],
+					'hserial' 	=> $h['serial'],
+					'hmfr' 		=> $h['mfr'],
+
+					'amake' 	=> $a['make'],
+					'amodel' 	=> $a['model'],
+					'asize' 	=> $a['size'],
+					'aserial' 	=> $a['serial'],
+					'amfr' 		=> $a['mfr'],
+
+					'rpmake' 	=> $rp['make'],
+					'rpmodel' 	=> $rp['model'],
+					'rpsize' 	=> $rp['size'],
+					'rpserial' 	=> $rp['serial'],
+					'rpmfr' 	=> $rp['mfr'],
+					'rpfabric' 	=> $rp['fabric'],
+
+					'mpmake' 	=> $mp['make'],
+					'mpmodel' 	=> $mp['model'],
+					'mpsize' 	=> $mp['size'],
+					'mpserial' 	=> $mp['serial'],
+					'mpmfr' 	=> $mp['mfr'],
+					'mpfabric' 	=> $mp['fabric'],
+					'mpline' 	=> $mp['line'],
+				);
 		
 		echo json_encode($cq);
 		break;
@@ -1041,6 +1094,251 @@ case 'update_staff':
 		
 		break;
 		
+		case 'add_harness':
+			$harness = serialize($_POST);
+		
+			if($_SESSION['type']=='customer' || $_SESSION['type']=='admin' ) {
+			
+				if($_GET['ajax']) echo '$("#containeralert").removeClass("d-flex").addClass("d-none");'; 
+				
+				$_POST['mfr'] = dbdate($_POST['mfr']);
+					    
+				if($_POST['existing_container']>0) {
+				
+					//check stuff
+					$cq = mysqli_query($link, 'SELECT * FROM containers WHERE customer=\''.sf($_POST['uid']).'\' AND id=\''.sf($_POST['existing_container']).'\'');
+
+					if(mysqli_num_rows($cq)>0) {
+					   				    
+					    $query = 'UPDATE containers SET `harness`=\''.sf($harness).'\' WHERE id=\''.sf($_POST['existing_container']).'\'';
+					    
+					    $update = mysqli_query($link,$query);
+					    //echo $query;
+					
+						$_SESSION['repack_container_id']=sf($_POST['existing_container']);
+						
+						echo 'var stepper = new Stepper(document.querySelector(\'.bs-stepper\'));';
+						echo 'stepper.to(3);';
+						
+						if(sf($_POST['url']) == 'tandem'){
+						    echo '$(\'#schedule-part\').load(\'/inc/exec.php?act=schedule_repack&page=schedule&repack_type=tandem&container='.sf($_POST['existing_container']).'\');';
+						}else if(sf($_POST['url']) == 'sport'){
+						    echo '$(\'#schedule-part\').load(\'/inc/exec.php?act=schedule_repack&page=schedule&repack_type=sport&container='.sf($_POST['existing_container']).'\');';
+						}else if(sf($_POST['url']) == 'container_information'){
+						    echo '$(\'#reserve-parachute-part-part\').load(\'/inc/exec.php?act=container_info&page=reserve_parachute&container='.sf($_POST['existing_container']).'\');';
+						}
+						echo '$(\'#harness_form input[type="text"]\').val(\'\');';
+					}
+				
+				}
+				
+				
+				if(!blankCheck(['make','model','size','serial','mfr'])) {
+				
+					echo '$("#containeralert").html("Please fill out all required fields");';
+					echo '$("#containeralert").removeClass("d-none").addClass("d-flex");';
+					
+					exit();
+				
+				}
+
+				if($_POST['existing_container'] <1){
+				    $query = 'INSERT INTO containers (`customer`, `harness`,`enter_date`) VALUES (\''.sf($_SESSION['uid']).'\',\''.sf($harness).'\',NOW())';
+    				mysqli_query($link, $query);
+    				
+    				$id = mysqli_insert_id($link);
+    				
+    				$_SESSION['repack_container_id']=$id;
+    				
+    				//echo 'step_schedule();';
+    				
+    				echo 'var stepper = new Stepper(document.querySelector(\'.bs-stepper\'));';
+    				echo 'stepper.to(3);';
+    				
+    				
+						if(sf($_POST['url']) == 'tandem'){
+						    echo '$(\'#schedule-part\').load(\'/inc/exec.php?act=schedule_repack&page=schedule&repack_type=tandem&container='.$id.'\');';
+						}else if(sf($_POST['url']) == 'sport'){
+						    echo '$(\'#schedule-part\').load(\'/inc/exec.php?act=schedule_repack&page=schedule&repack_type=sport&container='.$id.'\');';
+						}else if(sf($_POST['url']) == 'container_information'){
+						    echo '$(\'#reserve-parachute-part\').load(\'/inc/exec.php?act=container_info&page=reserve_parachute&container='.sf($_POST['existing_container']).'\');';
+						}
+						echo '$(\'#harness_form input[type="text"]\').val(\'\');';
+    				
+				}
+			
+			    echo json_encode($query);
+			}
+		
+		
+		
+		break;
+		
+		case 'add_aad':
+			$harness = serialize($_POST);
+		
+			if($_SESSION['type']=='customer' || $_SESSION['type']=='admin' ) {
+			
+				if($_GET['ajax']) echo '$("#containeralert").removeClass("d-flex").addClass("d-none");'; 
+				
+				$_POST['mfr'] = dbdate($_POST['mfr']);
+					    
+				if($_POST['existing_container']>0) {
+				
+					//check stuff
+					$cq = mysqli_query($link, 'SELECT * FROM containers WHERE customer=\''.sf($_POST['uid']).'\' AND id=\''.sf($_POST['existing_container']).'\'');
+
+					if(mysqli_num_rows($cq)>0) {
+					   				    
+					    $query = 'UPDATE containers SET `aad_info`=\''.sf($harness).'\' WHERE id=\''.sf($_POST['existing_container']).'\'';
+					    
+					    $update = mysqli_query($link,$query);
+					    //echo $query;
+					
+						$_SESSION['repack_container_id']=sf($_POST['existing_container']);
+						
+						echo 'var stepper = new Stepper(document.querySelector(\'.bs-stepper\'));';
+						echo 'stepper.to(5);';
+						
+						if(sf($_POST['url']) == 'tandem'){
+						    echo '$(\'#schedule-part\').load(\'/inc/exec.php?act=schedule_repack&page=schedule&repack_type=tandem&container='.sf($_POST['existing_container']).'\');';
+						}else if(sf($_POST['url']) == 'sport'){
+						    echo '$(\'#schedule-part\').load(\'/inc/exec.php?act=schedule_repack&page=schedule&repack_type=sport&container='.sf($_POST['existing_container']).'\');';
+						}else if(sf($_POST['url']) == 'container_information'){
+						    echo '$(\'#main-parachute-part\').load(\'/inc/exec.php?act=container_info&page=main_parachute&container='.sf($_POST['existing_container']).'\');';
+						}
+						echo '$(\'#aad_info_form input[type="text"]\').val(\'\');';
+					}
+				
+				}
+				
+				
+				if(!blankCheck(['make','model','size','serial','mfr','fabric'])) {
+				
+					echo '$("#containeralert").html("Please fill out all required fields");';
+					echo '$("#containeralert").removeClass("d-none").addClass("d-flex");';
+					
+					exit();
+				
+				}
+			
+			    echo json_encode($query);
+			}
+		
+		
+		
+		break;
+
+		case 'add_reserve_parachute':
+			$harness = serialize($_POST);
+		
+			if($_SESSION['type']=='customer' || $_SESSION['type']=='admin' ) {
+			
+				if($_GET['ajax']) echo '$("#containeralert").removeClass("d-flex").addClass("d-none");'; 
+				
+				$_POST['mfr'] = dbdate($_POST['mfr']);
+					    
+				if($_POST['existing_container']>0) {
+				
+					//check stuff
+					$cq = mysqli_query($link, 'SELECT * FROM containers WHERE customer=\''.sf($_POST['uid']).'\' AND id=\''.sf($_POST['existing_container']).'\'');
+
+					if(mysqli_num_rows($cq)>0) {
+					   				    
+					    $query = 'UPDATE containers SET `reserve_parachute`=\''.sf($harness).'\' WHERE id=\''.sf($_POST['existing_container']).'\'';
+					    
+					    $update = mysqli_query($link,$query);
+					    //echo $query;
+					
+						$_SESSION['repack_container_id']=sf($_POST['existing_container']);
+						
+						echo 'var stepper = new Stepper(document.querySelector(\'.bs-stepper\'));';
+						echo 'stepper.to(4);';
+						
+						if(sf($_POST['url']) == 'tandem'){
+						    echo '$(\'#schedule-part\').load(\'/inc/exec.php?act=schedule_repack&page=schedule&repack_type=tandem&container='.sf($_POST['existing_container']).'\');';
+						}else if(sf($_POST['url']) == 'sport'){
+						    echo '$(\'#schedule-part\').load(\'/inc/exec.php?act=schedule_repack&page=schedule&repack_type=sport&container='.sf($_POST['existing_container']).'\');';
+						}else if(sf($_POST['url']) == 'container_information'){
+						    echo '$(\'#aad-info-part\').load(\'/inc/exec.php?act=container_info&page=aad_info&container='.sf($_POST['existing_container']).'\');';
+						}
+						echo '$(\'#reserve_parachute_form input[type="text"]\').val(\'\');';
+					}
+				
+				}
+				
+				
+				if(!blankCheck(['make','model','size','serial','mfr','fabric'])) {
+				
+					echo '$("#containeralert").html("Please fill out all required fields");';
+					echo '$("#containeralert").removeClass("d-none").addClass("d-flex");';
+					
+					exit();
+				
+				}
+			
+			    echo json_encode($query);
+			}
+		
+		
+		
+		break;
+
+		case 'add_main_parachute':
+			$harness = serialize($_POST);
+		
+			if($_SESSION['type']=='customer' || $_SESSION['type']=='admin' ) {
+			
+				if($_GET['ajax']) echo '$("#containeralert").removeClass("d-flex").addClass("d-none");'; 
+				
+				$_POST['mfr'] = dbdate($_POST['mfr']);
+					    
+				if($_POST['existing_container']>0) {
+				
+					//check stuff
+					$cq = mysqli_query($link, 'SELECT * FROM containers WHERE customer=\''.sf($_POST['uid']).'\' AND id=\''.sf($_POST['existing_container']).'\'');
+
+					if(mysqli_num_rows($cq)>0) {
+					   				    
+					    $query = 'UPDATE containers SET `main_parachute`=\''.sf($harness).'\' WHERE id=\''.sf($_POST['existing_container']).'\'';
+					    
+					    $update = mysqli_query($link,$query);
+					    //echo $query;
+					
+						$_SESSION['repack_container_id']=sf($_POST['existing_container']);
+						
+						echo 'var stepper = new Stepper(document.querySelector(\'.bs-stepper\'));';
+						echo 'stepper.to(6);';
+						
+						if(sf($_POST['url']) == 'tandem'){
+						    echo '$(\'#schedule-part\').load(\'/inc/exec.php?act=schedule_repack&page=schedule&repack_type=tandem&container='.sf($_POST['existing_container']).'\');';
+						}else if(sf($_POST['url']) == 'sport'){
+						    echo '$(\'#schedule-part\').load(\'/inc/exec.php?act=schedule_repack&page=schedule&repack_type=sport&container='.sf($_POST['existing_container']).'\');';
+						}else if(sf($_POST['url']) == 'container_information'){
+						    echo '$(\'#schedule-part\').load(\'/inc/exec.php?act=schedule_repack&page=schedule&repack_type=sport&container='.sf($_POST['existing_container']).'\');';
+						}
+						echo '$(\'#main_parachute_form input[type="text"]\').val(\'\');';
+					}
+				
+				}
+				
+				
+				if(!blankCheck(['make','model','size','serial','mfr','fabric','line'])) {
+				
+					echo '$("#containeralert").html("Please fill out all required fields");';
+					echo '$("#containeralert").removeClass("d-none").addClass("d-flex");';
+					
+					exit();
+				
+				}
+			
+			    echo json_encode($query);
+			}
+		
+		
+		
+		break;
+		
 		case 'add_additional_work':
             $repack_id      = sf($_POST['repack_id']);
             $wo_id          = sf($_POST['wo_id']);
@@ -1646,6 +1944,8 @@ case 'update_staff':
 						        echo 'document.location=\'/schedule_sport_repack/\';';
     							}else if(sf($_POST['url']) == '/schedule_tandem_repack/'){
     						        echo 'document.location=\'/schedule_tandem_repack/\';';
+    							}else if(sf($_POST['url']) == '/container_information/'){
+    						        echo 'document.location=\'/container_information/\';';
     							}
 
 							}
@@ -1664,6 +1964,8 @@ case 'update_staff':
 					        echo "/schedule_sport_repack/";
 					    }else if($_POST['url'] == '/schedule_tandem_repack/'){
 					        echo "/schedule_tandem_repack/";
+					    }else if($_POST['url'] == '/container_information/'){
+					        echo "/container_information/";
 					    }
 					}
 					
@@ -1719,7 +2021,8 @@ case 'update_staff':
 						echo 'console.log(\'Register OK\');';
 						if($_GET['schedule']) {
 						    
-						        echo 'step_containerinfo();';
+						        //echo 'step_containerinfo();';
+								echo 'step_harness();';
 							
     							echo '$("#register_form").html("");';
     							echo '$("#login_form").html("");';
@@ -1729,6 +2032,8 @@ case 'update_staff':
 						        echo 'document.location=\'/schedule_sport_repack/\';';
     							}else if(sf($_POST['url']) == '/schedule_tandem_repack/'){
     						        echo 'document.location=\'/schedule_tandem_repack/\';';
+    							}else if(sf($_POST['url']) == '/container_information/'){
+    						        echo 'document.location=\'/container_information/\';';
     							}
 						} else {
 							echo 'document.location=\'/repacks-review/\';';
@@ -1739,6 +2044,8 @@ case 'update_staff':
 					        header('location: '.root().'schedule_sport_repack/');
 					    }else if($_POST['url'] == '/schedule_tandem_repack/'){
 					        header('location: '.root().'schedule_tandem_repack/');
+					    }else if($_POST['url'] == '/container_information/'){
+					        header('location: '.root().'container_information/');
 					    }
 					exit();
 				
