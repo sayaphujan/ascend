@@ -47,7 +47,7 @@
 <script>
 function add_reserve_parachute() {
 
-	$.post( "/inc/exec.php?act=add_reserve_parachute&ajax=1&schedule=1", $('#reserve_parachute_form').serialize(), '', 'script');
+	$.post( "<?php echo root();?>inc/exec.php?act=add_reserve_parachute&ajax=1&schedule=1", $('#reserve_parachute_form').serialize(), '', 'script');
 }
 
 function get_data(){

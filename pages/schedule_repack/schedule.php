@@ -1,4 +1,4 @@
-<?
+<?php
 $url = $_GET['repack_type'];  
 ?>
 <div class="row">
@@ -8,7 +8,7 @@ $url = $_GET['repack_type'];
 <div class="alert alert-warning d-none align-items-center" role="alert" id="schedulealert"></div>
 
 <form id="schedule_form" action="" method="post" onsubmit="schedule_dropoff();  return false;">
-    <input type="hidden" name="url" value="<?=$url;?>">
+    <input type="hidden" name="url" value="<?php echo $url;?>">
 <div class="row">
 	
 		<div class="col-md-6">	
@@ -17,7 +17,7 @@ $url = $_GET['repack_type'];
 					<div class="col-md-12">
 						<div ><u><strong>Container</strong></u></div>
 						<br />
-						<?
+						<?php
 
 						$cq = mysqli_query($link, 'SELECT * FROM containers WHERE customer=\''.sf($_SESSION['uid']).'\' AND id=\''.sf($_SESSION['repack_container_id']).'\'');
 
@@ -58,18 +58,18 @@ $url = $_GET['repack_type'];
     							$r = mysqli_fetch_assoc($cq);
     						}
 				?>
-				<?echo $url;?>
+				<?php echo $url;?>
 				<label for="priority" class="control-label"><strong>Select your Repack Speed:</strong></label>
 				<select class="form-control" id="speed" name="speed">
-				    <? if($url == 'tandem'){ ?>
-				        <option value="standard" <? if($r['speed'] == 'standard' ) { echo 'selected'; } ?>>Standard Lead Time - $<?=$repack_pricing['standard']+100;?>.00</option>
-					    <option value="rush1" <? if($r['speed'] == 'rush1' ) { echo 'selected'; } ?>>Rush 1 (Front of line) - $<?=$repack_pricing['rush1']+100;?>.00</option>
-					    <option value="rush2" <? if($r['speed'] == 'rush2' ) { echo 'selected'; } ?>>Rush 2 (Immediate) - $<?=$repack_pricing['rush2']+100;?>.00</option>    
-				    <? }else if($url == 'sport'){ ?>
-    					<option value="standard" <? if($r['speed'] == 'standard' ) { echo 'selected'; } ?>>Standard Lead Time - $<?=$repack_pricing['standard']?></option>
-    					<option value="rush1" <? if($r['speed'] == 'rush1' ) { echo 'selected'; } ?>>Rush 1 (Front of line) - $<?=$repack_pricing['rush1']?></option>
-    					<option value="rush2" <? if($r['speed'] == 'rush2' ) { echo 'selected'; } ?>>Rush 2 (Immediate) - $<?=$repack_pricing['rush2']?></option>
-					<? } ?>
+				    <?php if($url == 'tandem'){ ?>
+				        <option value="standard" <?php if($r['speed'] == 'standard' ) { echo 'selected'; } ?>>Standard Lead Time - $<?php echo $repack_pricing['standard']+100;?>.00</option>
+					    <option value="rush1" <?php if($r['speed'] == 'rush1' ) { echo 'selected'; } ?>>Rush 1 (Front of line) - $<?php echo $repack_pricing['rush1']+100;?>.00</option>
+					    <option value="rush2" <?php if($r['speed'] == 'rush2' ) { echo 'selected'; } ?>>Rush 2 (Immediate) - $<?php echo $repack_pricing['rush2']+100;?>.00</option>    
+				    <?php }else if($url == 'sport'){ ?>
+    					<option value="standard" <?php if($r['speed'] == 'standard' ) { echo 'selected'; } ?>>Standard Lead Time - $<?php echo $repack_pricing['standard']?></option>
+    					<option value="rush1" <?php if($r['speed'] == 'rush1' ) { echo 'selected'; } ?>>Rush 1 (Front of line) - $<?php echo $repack_pricing['rush1']?></option>
+    					<option value="rush2" <?php if($r['speed'] == 'rush2' ) { echo 'selected'; } ?>>Rush 2 (Immediate) - $<?php echo $repack_pricing['rush2']?></option>
+					<?php } ?>
 				</select>
 				
 				<br />
@@ -77,9 +77,9 @@ $url = $_GET['repack_type'];
 				<div class="row">
 					<div class="col-md-12">
 						<div ><u><strong>Current Turn Around Times</strong></u></div>
-						<div><strong>Standard</strong>: <?=date('m-d-Y', strtotime(get_next_pickup_date('standard')));?></div>
-						<div><strong>Rush 1 (Front of line)</strong>: <?=date('m-d-Y', strtotime(get_next_pickup_date('rush1')));?></div>
-						<div><strong>Rush 2 (Immediate)</strong>: <?=date('m-d-Y', strtotime(get_next_pickup_date('rush2')));?></div>
+						<div><strong>Standard</strong>: <?php echo date('m-d-Y', strtotime(get_next_pickup_date('standard')));?></div>
+						<div><strong>Rush 1 (Front of line)</strong>: <?php echo date('m-d-Y', strtotime(get_next_pickup_date('rush1')));?></div>
+						<div><strong>Rush 2 (Immediate)</strong>: <?php echo date('m-d-Y', strtotime(get_next_pickup_date('rush2')));?></div>
 						
 					</div>
 				</div>
@@ -95,7 +95,7 @@ $url = $_GET['repack_type'];
 				<label for="dropoff" class="control-label"><strong>Pick your drop Off Date:</strong></label>
 				<script>
 				$( function() {
-					$( "#datepicker" ).datepicker({ minDate: 0, maxDate: "+12M", dateFormat: "yy-mm-dd", setDate: '<?=date('Y-m-d')?>', altField: "#dropoff_date",
+					$( "#datepicker" ).datepicker({ minDate: 0, maxDate: "+12M", dateFormat: "yy-mm-dd", setDate: '<?php echo date('Y-m-d')?>', altField: "#dropoff_date",
 						onSelect: function(dateText) {
 								update_pickup(this.value);
 						}				
@@ -110,8 +110,8 @@ $url = $_GET['repack_type'];
 			<div class="form-group">
 				<label for="pickup_date" class="control-label"><strong>Estimated Pickup Date:</strong></label>
 				
-				<input type="text" class="form-control" id="pickup_date" name="pickup_date" value="<?=date('m-d-Y', strtotime(get_next_pickup_date('standard')));?>"/>
-				<input type="hidden" id="container_id" name="container_id" value="<?=$c['id'];?>">
+				<input type="text" class="form-control" id="pickup_date" name="pickup_date" value="<?php echo date('m-d-Y', strtotime(get_next_pickup_date('standard')));?>"/>
+				<input type="hidden" id="container_id" name="container_id" value="<?php echo $c['id'];?>">
 			</div>
 			
 			<button  class="btn btn-primary" >Continue to Payment</button>
@@ -123,17 +123,17 @@ $url = $_GET['repack_type'];
 
 <script>
 function update_pickup(date) {
-	$.post( "/inc/exec.php?act=get_estimated_pickup&repack_type=<?=$url;?>&ajax=1&schedule=1", $('#schedule_form').serialize(), '', 'script');
+	$.post( "<?php  echo root();?>inc/exec.php?act=get_estimated_pickup&repack_type=<?php echo $url;?>&ajax=1&schedule=1", $('#schedule_form').serialize(), '', 'script');
 }
 
 function schedule_dropoff() {
 
-	$.post( "/inc/exec.php?act=schedule_dropoff&repack_type=<?=$url;?>&ajax=1&schedule=1", $('#schedule_form').serialize(), '', 'script');
+	$.post( "<?php  echo root();?>inc/exec.php?act=schedule_dropoff&repack_type=<?php echo $url;?>&ajax=1&schedule=1", $('#schedule_form').serialize(), '', 'script');
 	
 	//var stepper = new Stepper(document.querySelector('.bs-stepper'))
 	//stepper.to(3);
 	
-	//$('#schedule-part').load('/inc/exec.php?act=schedule_repack&repack_type=<?=$url;?>&page=schedule&container='+container+'&dropoff=);
+	//$('#schedule-part').load('/inc/exec.php?act=schedule_repack&repack_type=<?php echo $url;?>&page=schedule&container='+container+'&dropoff=);
 }
 
 $('#dropoff_date').on('input',function(e){
@@ -144,6 +144,6 @@ $('#speed').on('change',function(e){
  update_pickup();
 });
 
-$( "#pickup_date" ).datepicker({ minDate: 0, maxDate: "+12M", dateFormat: "mm-dd-yy", setDate: '<?=date('Y-m-d')?>', altField: "#pickup_date"});
+$( "#pickup_date" ).datepicker({ minDate: 0, maxDate: "+12M", dateFormat: "mm-dd-yy", setDate: '<?php echo date('Y-m-d')?>', altField: "#pickup_date"});
 
 </script>

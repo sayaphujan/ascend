@@ -44,7 +44,7 @@
 </div>
 <script>
 function add_harness() {
-	$.post( "/inc/exec.php?act=add_harness&ajax=1&schedule=1", $('#harness_form').serialize(), '', 'script');
+	$.post( "<?php echo root();?>inc/exec.php?act=add_harness&ajax=1&schedule=1", $('#harness_form').serialize(), '', 'script');
 }
 
 function get_data(){

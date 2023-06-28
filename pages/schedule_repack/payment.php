@@ -110,14 +110,14 @@ $url = $_GET['repack_type'];
 
 <script>
 function update_pickup(date) {
-	$.post( "/inc/exec.php?act=get_estimated_pickup&repack_type=<?=$url;?>&ajax=1&schedule=1", $('#schedule_form').serialize(), '', 'script');
+	$.post( "<?php echo root();?>inc/exec.php?act=get_estimated_pickup&repack_type=<?=$url;?>&ajax=1&schedule=1", $('#schedule_form').serialize(), '', 'script');
 }
 
 function finalize_repack() {
 
 	$('#place_order_button').prop('disabled', true);
 
-	$.post( "/inc/exec.php?act=submit_repack_order&ajax=1&schedule=1&repack_type=<?=$url;?>", 'container=<?=$_SESSION['repack_container_id']?>&speed=<?=$_GET['speed']?>&dropoff_date=<?=$_GET['dropoff_date']?>&estimated_pickup=<?=$_GET['estimated_pickup']?>', '', 'script');
+	$.post( "<?php echo root();?>inc/exec.php?act=submit_repack_order&ajax=1&schedule=1&repack_type=<?=$url;?>", 'container=<?=$_SESSION['repack_container_id']?>&speed=<?=$_GET['speed']?>&dropoff_date=<?=$_GET['dropoff_date']?>&estimated_pickup=<?=$_GET['estimated_pickup']?>', '', 'script');
 	
 }
 

@@ -43,7 +43,7 @@ function step_harness() {
 	var stepper = new Stepper(document.querySelector('.bs-stepper'))
 	stepper.to(2);
 	
-	$('#harness-part').load('/inc/exec.php?act=container_info&page=harness');
+	$('#harness-part').load('<?php echo root();?>inc/exec.php?act=container_info&page=harness');
 }
 
 function step_reserve_parachute(container) {
@@ -51,7 +51,7 @@ function step_reserve_parachute(container) {
 	var stepper = new Stepper(document.querySelector('.bs-stepper'))
 	stepper.to(3);
 	
-	$('#reserve-parachute-part').load('/inc/exec.php?act=container_info&page=reserve_parachute&container='+container);
+	$('#reserve-parachute-part').load('<?php echo root();?>inc/exec.php?act=container_info&page=reserve_parachute&container='+container);
 	
 }
 
@@ -60,7 +60,7 @@ function step_aad_info() {
 	var stepper = new Stepper(document.querySelector('.bs-stepper'))
 	stepper.to(3);
 	
-	$('#aad-info-part').load('/inc/exec.php?act=container_info&page=aad&container='+container);
+	$('#aad-info-part').load('<?php echo root();?>inc/exec.php?act=container_info&page=aad&container='+container);
 	
 }
 

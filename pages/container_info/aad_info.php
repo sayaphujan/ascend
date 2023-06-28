@@ -42,7 +42,7 @@
 </div>
 <script>
 function add_aad() {
-	$.post( "/inc/exec.php?act=add_aad&ajax=1&schedule=1", $('#aad_info_form').serialize(), '', 'script');
+	$.post( "<?php echo root();?>inc/exec.php?act=add_aad&ajax=1&schedule=1", $('#aad_info_form').serialize(), '', 'script');
 }
 
 function get_data(){

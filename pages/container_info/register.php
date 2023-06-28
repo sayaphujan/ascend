@@ -64,11 +64,11 @@
 
 <script>
 function login() {
-	$.post( "/inc/exec.php?act=login&ajax=1&schedule=1", $('#login_form').serialize(), '', 'script');
+	$.post( "<?php echo root();?>inc/exec.php?act=login&ajax=1&schedule=1", $('#login_form').serialize(), '', 'script');
 }
 
 function register() {
-	$.post( "/inc/exec.php?act=register&ajax=1&schedule=1", $('#register_form').serialize(), '', 'script');
+	$.post( "<?php echo root();?>inc/exec.php?act=register&ajax=1&schedule=1", $('#register_form').serialize(), '', 'script');
 }
 
 </script>

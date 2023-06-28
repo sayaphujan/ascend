@@ -127,7 +127,7 @@
 </div>
 <script>
 function add_container() {
-	$.post( "/inc/exec.php?act=add_container&repack_type=<?=$url;?>&ajax=1&schedule=1", $('#container_form').serialize(), '', 'script');
+	$.post( "<?php echo root();?>inc/exec.php?act=add_container&repack_type=<?=$url;?>&ajax=1&schedule=1", $('#container_form').serialize(), '', 'script');
 }
 
 function get_data(){

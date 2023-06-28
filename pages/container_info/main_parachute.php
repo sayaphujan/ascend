@@ -51,7 +51,7 @@
 <script>
 function add_main_parachute() {
 
-	$.post( "/inc/exec.php?act=add_main_parachute&ajax=1&schedule=1", $('#main_parachute_form').serialize(), '', 'script');
+	$.post( "<?php echo root();?>inc/exec.php?act=add_main_parachute&ajax=1&schedule=1", $('#main_parachute_form').serialize(), '', 'script');
 }
 
 function get_data(){
