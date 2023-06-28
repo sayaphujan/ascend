@@ -1,4 +1,3 @@
-
 <div class="container">
     <div class="row pt-4">
         <div class="col-md-5">
@@ -25,13 +24,13 @@
                     <label for="email" class="control-label"><strong>Email:</strong></label>
                     <input type="email" class="form-control" id="cemail" name="cemail" placeholder="Please enter your email..."/>
                 </div>
-                <? if (!isset($_SESSION['forgot'])) { ?>
+                <?php if (!isset($_SESSION['forgot'])) { ?>
                     <div class="form-group">
                         <label for="password" class="control-label"><strong>Password:</strong></label>
                         <input type="password" class="form-control" id="cpassword" name="cpassword" autocomplete="off" placeholder="Please enter your password..."/>
                     </div>
                     <button type="submit" class="btn btn-standard" name="submit">Submit</button>
-                    <? } ?>
+                    <?php } ?>
                 <button type="button" class="btn btn-standard" name="forgot">Forgot My Password</button>
             </form>
         </div>
@@ -42,7 +41,7 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/notify/0.4.2/notify.js"></script>
 <script>
 function login() {
-     $.post('<?=root();?>inc/exec.php?act=login', $('#login_form').serialize(), function(result){
+     $.post('<?php echo root();?>inc/exec.php?act=login', $('#login_form').serialize(), function(result){
                 if(result == "error"){
                     $.notify("Sorry this email or password is not valid, please re-check & try again","error")
                 }else{

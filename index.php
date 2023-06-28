@@ -1,10 +1,10 @@
-<?
-if($_SERVER['REMOTE_ADDR']!=='114.10.16.126' && $_SERVER['REMOTE_ADDR']!=='103.97.101.1'){
+<?php
+/*if($_SERVER['REMOTE_ADDR']!=='114.10.16.126' && $_SERVER['REMOTE_ADDR']!=='103.97.101.1'){
     echo 'Updates in progress.';
     exit();
     header('Location: https://peregrinemfginc.com/', true, 301);
     die();  
-}
+}*/
 //if($_SERVER['REMOTE_ADDR']!=='10.0.0.50' && $_SERVER['REMOTE_ADDR']!=='103.97.101.1' && $_SERVER['REMOTE_ADDR'] !== '119.2.52.102' && $_SERVER['REMOTE_ADDR'] !== '103.105.28.149') {
 //echo 'Updates in progress.';
 //exit();
@@ -15,7 +15,7 @@ if($_SERVER['REMOTE_ADDR']!=='114.10.16.126' && $_SERVER['REMOTE_ADDR']!=='103.9
 $title = 'Ascend Rigging';
 require_once 'inc/functions.php'; 
 
-if ( $_SERVER[ 'SERVER_PORT' ] !== '443' ) {
+if ( $_SERVER[ 'SERVER_PORT' ] !== '443' && $_SERVER[ 'SERVER_PORT' ] !== '80' ) {
     header( 'location: ' . root() );
     exit();
 }
@@ -269,7 +269,7 @@ if (isset($_SESSION['adminid'])) {
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.1/css/all.css"/>
 	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bs-stepper/dist/css/bs-stepper.min.css" />
 	 <link rel="stylesheet" href="https://cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css" />
-    <link rel="stylesheet" href="<?=root('master.css'); ?>"/>
+    <link rel="stylesheet" href="<?php echo root();?>master.css"/>
     <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
     <script src="https://www.jqueryscript.net/demo/handle-window-session-storage/jquery.session.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
@@ -279,7 +279,7 @@ if (isset($_SESSION['adminid'])) {
 	<script src="https://cdn.jsdelivr.net/npm/bs-stepper/dist/js/bs-stepper.min.js"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/notify/0.4.2/notify.js"></script>
     <title>
-        <?=$title; ?>
+        <?php echo $title; ?>
     </title>
     <style>
         .table {
@@ -301,15 +301,11 @@ if (isset($_SESSION['adminid'])) {
 <body>
     <nav class="navbar navbar-expand-lg fixed-top">
         <div class="container">
-            <a class="navbar-brand" href="<?=root(); ?>">
-                <!--<img src="<?=root('images/logo.png'); ?>" height="30" alt="">--> Ascend Rigging - Services
+            <a class="navbar-brand" href="<?php echo root(); ?>">
+                <!--<img src="<?php echo root('images/logo.png'); ?>" height="30" alt="">--> Ascend Rigging - Services
             </a>
-             <?
-    //echo"<pre>";
-    //print_r($_SESSION);
-    //echo"</pre>";
-    ?>
-            <?
+             
+            <?php
             
             if (isset($_SESSION['uid']) || isset($_SESSION['adminid'])) { ?>
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
@@ -317,7 +313,7 @@ if (isset($_SESSION['adminid'])) {
                 </button>
                 <div class="collapse navbar-collapse" id="navbarResponsive">
                     <ul class="navbar-nav ml-auto">
-						<? 
+						<?php
 						    if ($_SESSION['type']=='admin' || $_SESSION['type']=='staff' || $_SESSION['type']=='customer') { 
 						?>
 					
@@ -325,28 +321,28 @@ if (isset($_SESSION['adminid'])) {
                                   <li class="dropdown-toggle" type="button" data-toggle="dropdown" style="margin-top:10px;margin-right:10px;">Schedule a Service
                                   <span class="caret"></span></li>
                                   <ul class="dropdown-menu" style="background-color:#a51522;border:transparent;">
-                                    <li><a class="nav-link" href="<?=root()?>schedule_sport_repack/">Schedule Sport Repack</a></li>
-                                    <!--<li><a class="nav-link" href="<?=root()?>schedule_tandem_repack/">Tandem</a></li>-->
-                                    <li><a class="nav-link" href="#">Assemblies, Repacks, Inspections</a></li>
-                                    <li><a class="nav-link" href="#">Canopy Sewing</a></li>
-                                    <li><a class="nav-link" href="#">Harness Work</a></li>
-                                    <li><a class="nav-link" href="#">Tandem Maintenance</a></li>
-                                    <li><a class="nav-link" href="#">Common Maintenance Items</a></li>
+                                    <li><a class="nav-link" href="<?php echo root()?>container_information/">Schedule Sport Repack</a></li>
+                                    <!--<li><a class="nav-link" href="<?php echo root()?>schedule_tandem_repack/">Tandem</a></li>-->
+                                    <li><a class="nav-link" href="container_information/">Assemblies, Repacks, Inspections</a></li>
+                                    <li><a class="nav-link" href="container_information/">Canopy Sewing</a></li>
+                                    <li><a class="nav-link" href="container_information/">Harness Work</a></li>
+                                    <li><a class="nav-link" href="container_information/">Tandem Maintenance</a></li>
+                                    <li><a class="nav-link" href="container_information/">Common Maintenance Items</a></li>
                                   </ul>
                                 </div>
 						
-						<? 
+						<?php
 						    }
 						    if ($_SESSION['type']=='customer') 
 						    {
 						?>
 						    <li class="nav-item">
-                                <a class="nav-link" href="<?=root()?>container-review/">My Containers</a>
+                                <a class="nav-link" href="<?php echo root()?>container-review/">My Containers</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" href="<?=root()?>repacks-review/">My Repacks</a>
+                                <a class="nav-link" href="<?php echo root()?>repacks-review/">My Repacks</a>
                             </li>
-						<?
+						<?php
 						    }
 						    if ($_SESSION['type']=='admin') 
 						    { 
@@ -356,52 +352,52 @@ if (isset($_SESSION['adminid'])) {
                                   <span class="caret"></span></li>
                                   <ul class="dropdown-menu" style="background-color:#a51522;border:transparent;">
                                     <li class="nav-item">
-                                        <a class="nav-link" href="<?=root()?>repacks/">Repacks</a>
+                                        <a class="nav-link" href="<?php echo root()?>repacks/">Repacks</a>
                                     </li>
                                     <!--
                                     <li class="nav-item">
-                                        <a class="nav-link" href="<?=root()?>maintenance/">Maintenance</a>
+                                        <a class="nav-link" href="<?php echo root()?>maintenance/">Maintenance</a>
                                     </li>-->
             						<li class="nav-item">
-                                        <a class="nav-link" href="<?=root()?>customers/">Customers</a>
+                                        <a class="nav-link" href="<?php echo root()?>customers/">Customers</a>
                                     </li>
             					
                                     
             						<li class="nav-item">
-                                        <a class="nav-link" href="<?=root()?>staff/">Staff</a>
+                                        <a class="nav-link" href="<?php echo root()?>staff/">Staff</a>
                                     </li>
                                     <!--
             						<li class="nav-item">
-                                        <a class="nav-link" href="<?=root()?>settings/">Settings</a>
+                                        <a class="nav-link" href="<?php echo root()?>settings/">Settings</a>
                                     </li>-->
                                   </ul>
                                 </div>
-						<? } ?>
+						<?php } ?>
 					    
                         <li class="nav-item">
-                            <a class="nav-link" href="<?=root()?>account/">Account</a>
+                            <a class="nav-link" href="<?php echo root()?>account/">Account</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="<?=root('do/logout/')?>">Logout</a>
+                            <a class="nav-link" href="<?php echo root('do/logout/')?>">Logout</a>
                         </li>
                     </ul>
                 </div>
-            <? } else { ?>
+            <?php } else { ?>
                 <ul class="navbar-nav ml-auto">
                     <li class="nav-item">
                         
                     </li>
                 </ul>
-            <? } ?>
+            <?php } ?>
         </div>
     </nav>
     <header class="py-5">
-   		<img src="<?=root('images/ar-logo.png'); ?>" alt="" class="img-fluid d-block mx-auto" />
+   		<img src="<?php echo root('images/ar-logo.png'); ?>" alt="" class="img-fluid d-block mx-auto" />
     </header>
 	
 
 
-    <? 
+    <?php 
     if ($_SESSION['error']) {
         echo '<div class="container">'.$_SESSION['error'].'</div>';
         unset($_SESSION['error']);

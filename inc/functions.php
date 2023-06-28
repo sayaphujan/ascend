@@ -1,4 +1,4 @@
-<?
+<?php
 date_default_timezone_set( 'America/Chicago' );
 
 error_reporting( E_ALL ^ E_NOTICE );
@@ -19,7 +19,7 @@ $repack_label['tandem']='Tamdem Reserve Repack';
 
 //error_reporting(0);
 
-$link = mysqli_connect('localhost','ascendloft_db','bke5qmwivc1l','ascendloft_db');
+$link = mysqli_connect('localhost','root','','ascendloft_db');
 if ( mysqli_connect_error() ) {
     $emsg = 'MySQL Error: ' . mysqli_connect_error();
     die( $emsg );
@@ -39,7 +39,8 @@ function root( $var = '' ) {
     if ( !empty( $_SERVER[ 'HTTPS' ] ) && $_SERVER[ 'HTTPS' ] != 'off' ) {
         $pro = 'https';
     }
-    return $pro . '://' . $dom . '/' . $fol . $var;
+    //return $pro . '://' . $dom . '/' . $fol . $var;
+    return 'http://127.0.0.1/ascend/';
 
 }
 
