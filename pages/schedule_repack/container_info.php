@@ -1,6 +1,4 @@
 <?php
-    $_SESSION['repack_container_id'] = '';
-    
     $uid = $_SESSION['uid'];
     $url = $_GET['repack_type'];  
 ?>

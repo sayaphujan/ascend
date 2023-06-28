@@ -69,10 +69,10 @@ $(document).ready(function () {
   var stepper = new Stepper($('.bs-stepper')[0]);
   <?php  
   if($_SESSION['uid']>0) {
-	if($_SESSION['repack_container_id']) {
+	//if($_SESSION['repack_container_id']) {
 		echo 'step_harness('.$_SESSION['repack_container_id'].');';
-	}
-  } 
+	//}
+  }
   ?>
 })
 

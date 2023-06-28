@@ -24,7 +24,7 @@
                         <?php  //include 'schedule_repack/register.php'; ?>
                     </div>-->
                     <div id="information-part" class="content" role="tabpanel" aria-labelledby="information-part-trigger">
-                        <?php  include 'schedule_repack/container_info.php'; ?>
+                        <?php  include 'schedule_repack/container_summary.php'; ?>
                     </div>
                     <div id="schedule-part" class="content" role="tabpanel" aria-labelledby="schedule-part-trigger">2</div>
 					<div id="finalize-part" class="content" role="tabpanel" aria-labelledby="schedule-part-trigger">3</div>

@@ -70,5 +70,4 @@ function login() {
 function register() {
 	$.post( "<?php echo root();?>inc/exec.php?act=register&ajax=1&schedule=1", $('#register_form').serialize(), '', 'script');
 }
-
 </script>
