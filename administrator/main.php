@@ -11,7 +11,7 @@
 			<a href="" class="btn btn-large btn-standard d-block text-center">Other Maintenance</a>-->
             <?php 
             if(isset($_SESSION['adminid']) && $_SESSION['adminid'] > 0) { 
-                echo '<a href="'.root().'Schedule_sport_repack/" class="btn btn-large btn-standard d-block text-center mb-2">Schedule Sport Repack</a>';
+                echo '<a href="'.root().'schedule_sport_repack/" class="btn btn-large btn-standard d-block text-center mb-2">Schedule Sport Repack</a>';
             }else{
                 echo '<a href="'.root().'container_information/" class="btn btn-large btn-standard d-block text-center mb-2">Schedule Sport Repack</a>';
             } 
