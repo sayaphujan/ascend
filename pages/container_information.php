@@ -6,7 +6,8 @@
     }else{
         $_SESSION['repack_container_id'] = 0;
     }
-    
+  
+  $s = (isset($_GET['s']) && $_GET['s'] > 0) ? $_GET['s'] : $_SESSION['service'];
 ?>
 <div class="container">
     <div class="row">
@@ -53,7 +54,7 @@ function step_harness(container) {
 	var stepper = new Stepper(document.querySelector('.bs-stepper'))
 	stepper.to(2);
 	
-	$('#harness-part').load('<?php  echo root();?>inc/exec.php?act=container_info&page=harness&container='+container);
+	$('#harness-part').load('<?php  echo root();?>inc/exec.php?act=container_info&page=harness&container='+container+'&s=<?php echo $s;?>');
 }
 
 function step_reserve_parachute(container) {
@@ -61,7 +62,7 @@ function step_reserve_parachute(container) {
 	var stepper = new Stepper(document.querySelector('.bs-stepper'))
 	stepper.to(3);
 	
-	$('#reserve-parachute-part').load('<?php  echo root();?>inc/exec.php?act=container_info&page=reserve_parachute&container='+container);
+	$('#reserve-parachute-part').load('<?php  echo root();?>inc/exec.php?act=container_info&page=reserve_parachute&container='+container+'&s=<?php echo $s;?>');
 	
 }
 
@@ -70,7 +71,7 @@ function step_aad_info(container) {
 	var stepper = new Stepper(document.querySelector('.bs-stepper'))
 	stepper.to(4);
 	
-	$('#aad-info-part').load('<?php  echo root();?>inc/exec.php?act=container_info&page=aad_info&container='+container);
+	$('#aad-info-part').load('<?php  echo root();?>inc/exec.php?act=container_info&page=aad_info&container='+container+'&s=<?php echo $s;?>');
 	
 }
 

@@ -49,7 +49,7 @@
 <script>
 function add_reserve_parachute() {
 
-	$.post( "<?php echo root();?>inc/exec.php?act=add_reserve_parachute&ajax=1&schedule=1", $('#reserve_parachute_form').serialize(), '', 'script');
+	$.post( "<?php echo root();?>inc/exec.php?act=add_reserve_parachute&ajax=1&schedule=1&s=<?php echo $_GET['s'];?>", $('#reserve_parachute_form').serialize(), '', 'script');
 }
 
 function get_data(){
@@ -74,7 +74,7 @@ function step_harness(container){
     var stepper = new Stepper(document.querySelector('.bs-stepper'))
     stepper.to(2);
     
-    $('#harness-part').load('<?php  echo root();?>inc/exec.php?act=container_info&page=harness&container='+container);
+    $('#harness-part').load('<?php  echo root();?>inc/exec.php?act=container_info&page=harness&container='+container+'&s=<?php echo $_GET['s'];?>');
 }
 
 $( document ).ready(function() {

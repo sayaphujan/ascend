@@ -1,5 +1,6 @@
 <?php
     $uid = $_SESSION['uid'];
+    $s = (isset($_GET['s']) && $_GET['s'] > 0) ? $_GET['s'] : $_SESSION['service'];
 ?>
 <div class="container-fluid">
 
@@ -20,8 +21,9 @@
             <div class="col-md-12">
                 <div class="row">
                     <div class="form-group">
-                        <label for="existing_container" class="control-label"><strong>Pick a previously registered container:</strong></label>
+                        <label for="existing_container" class="control-label"><strong>Pick a previously registered service:</strong></label>
                         <select class="form-control" id="container" name="container">
+                            <option value="0">Register New Service</option>
                             <?php
                             while($c = mysqli_fetch_assoc($cq)) {
                                 $h = unserialize($c['harness']);
@@ -162,7 +164,7 @@
 </div>
 <script>
 function add_container() {
-    $.post( "<?php echo root();?>inc/exec.php?act=add_container_summary&repack_type=sport&ajax=1&schedule=1", $('#container_form').serialize(), '', 'script');
+    $.post( "<?php echo root();?>inc/exec.php?act=add_container_summary&repack_type=sport&ajax=1&schedule=1&s=<?php echo $s;?>", $('#container_form').serialize(), '', 'script');
 }
 
 function get_data(){
@@ -203,7 +205,7 @@ function get_data(){
 function step_harness(container){
     var id = (container > 0) ? container : $("#existing_container").val();
 
-    document.location='<?php echo root();?>container_information/?id='+id;
+    document.location='<?php echo root();?>container_information/?id='+id+'&s=<?php echo $s;?>';
 }
 
 $('#container').change(function () {
@@ -211,6 +213,8 @@ $('#container').change(function () {
     $("#existing_container").val(id);
     if(id>0){
         get_data();
+    }else{
+        document.location='<?php echo root();?>container_information/?id='+id;       
     }
 });
 

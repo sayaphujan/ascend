@@ -64,10 +64,10 @@
 
 <script>
 function login() {
-	$.post( "<?php echo root();?>inc/exec.php?act=login&ajax=1&schedule=1", $('#login_form').serialize(), '', 'script');
+	$.post( "<?php echo root();?>inc/exec.php?act=login&ajax=1&schedule=1&s=<?php echo $_GET['s'];?>", $('#login_form').serialize(), '', 'script');
 }
 
 function register() {
-	$.post( "<?php echo root();?>inc/exec.php?act=register&ajax=1&schedule=1", $('#register_form').serialize(), '', 'script');
+	$.post( "<?php echo root();?>inc/exec.php?act=register&ajax=1&schedule=1&s=<?php echo $_GET['s'];?>", $('#register_form').serialize(), '', 'script');
 }
 </script>

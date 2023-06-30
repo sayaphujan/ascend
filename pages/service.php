@@ -1,6 +1,3 @@
-<?php 
-$s = (isset($_GET['s']) && $_GET['s'] > 0) ? $_GET['s'] : $_SESSION['service'];
-?>
 <div class="container">
     <div class="row">
         <div class="col-md-12">
@@ -47,7 +44,7 @@ function step_containerinfo(container) {
 	var stepper = new Stepper(document.querySelector('.bs-stepper'))
 	stepper.to(1);
 	
-	$('#information-part').load('<?php  echo root();?>inc/exec.php?act=schedule_repack&repack_type=sport&page=container_info&container='+container+'&s=<?php echo $s;?>');
+	$('#information-part').load('<?php  echo root();?>inc/exec.php?act=schedule_repack&repack_type=sport&page=container_info&container='+container);
 }
 
 function step_service(container) {
@@ -55,7 +52,7 @@ function step_service(container) {
 	var stepper = new Stepper(document.querySelector('.bs-stepper'))
 	stepper.to(2);
 	
-	$('#service-part').load('<?php  echo root();?>inc/exec.php?act=schedule_repack&repack_type=sport&page=service&container='+container+'&s=<?php echo $s;?>');
+	$('#service-part').load('<?php  echo root();?>inc/exec.php?act=schedule_repack&repack_type=sport&page=service&container='+container);
 	
 }
 
@@ -64,7 +61,7 @@ function step_schedule(container) {
     var stepper = new Stepper(document.querySelector('.bs-stepper'))
     stepper.to(3);
     
-    $('#schedule-part').load('<?php  echo root();?>inc/exec.php?act=schedule_repack&repack_type=sport&page=schedule&container='+container+'&s=<?php echo $s;?>');
+    $('#schedule-part').load('<?php  echo root();?>inc/exec.php?act=schedule_repack&repack_type=sport&page=schedule&container='+container);
     
 }
 
@@ -73,7 +70,7 @@ function step_payment(container) {
     var stepper = new Stepper(document.querySelector('.bs-stepper'))
     stepper.to(4);
     
-    $('#finalize-part').load('<?php  echo root();?>inc/exec.php?act=schedule_repack&repack_type=sport&page=payment&container='+container+'&s=<?php echo $s;?>');
+    $('#finalize-part').load('<?php  echo root();?>inc/exec.php?act=schedule_repack&repack_type=sport&page=payment&container='+container);
     
 }
 

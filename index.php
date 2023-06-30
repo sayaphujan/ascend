@@ -39,6 +39,11 @@ if (isset($_SESSION['adminid'])) {
             $title .= '';
             break;
 
+        case 'service':
+            $page = 'pages/service.php';
+            $title .= '';
+            break;
+
         case 'schedule_sport_repack':
     		$page = 'pages/schedule_sport_repack.php';
     		$title .= '';
@@ -148,6 +153,11 @@ if (isset($_SESSION['adminid'])) {
             $page = 'pages/container_information.php';
             $title .= '';
             break;
+
+        case 'service':
+            $page = 'pages/service.php';
+            $title .= '';
+            break;
     	
     	case 'schedule_sport_repack':
     		$page = 'pages/schedule_sport_repack.php';
@@ -248,6 +258,11 @@ if (isset($_SESSION['adminid'])) {
             $page = 'pages/container_information.php';
             $title .= '';
             break;
+
+        case 'service':
+            $page = 'pages/service.php';
+            $title .= '';
+            break;
         
         case 'schedule_sport_repack':
     		$page = 'pages/schedule_sport_repack.php';
@@ -337,13 +352,11 @@ if (isset($_SESSION['adminid'])) {
                                   <li class="dropdown-toggle" type="button" data-toggle="dropdown" style="margin-top:10px;margin-right:10px;">Schedule a Service
                                   <span class="caret"></span></li>
                                   <ul class="dropdown-menu" style="background-color:#a51522;border:transparent;">
-                                    <li><a class="nav-link" href="<?php echo root()?>Schedule_sport_repack/">Schedule Sport Repack</a></li>
-                                    <!--<li><a class="nav-link" href="<?php echo root()?>schedule_tandem_repack/">Tandem</a></li>-->
-                                    <li><a class="nav-link" href="container_information/">Assemblies, Repacks, Inspections</a></li>
-                                    <li><a class="nav-link" href="container_information/">Canopy Sewing</a></li>
-                                    <li><a class="nav-link" href="container_information/">Harness Work</a></li>
-                                    <li><a class="nav-link" href="container_information/">Tandem Maintenance</a></li>
-                                    <li><a class="nav-link" href="container_information/">Common Maintenance Items</a></li>
+                                    <li><a class="nav-link" href="<?php echo root()?>service/">Assemblies, Repacks, Inspections</a></li>
+                                    <li><a class="nav-link" href="<?php echo root()?>service/">Common Maintenance Items</a></li>
+                                    <li><a class="nav-link" href="<?php echo root()?>service/">Tandem Maintenance</a></li>
+                                    <li><a class="nav-link" href="<?php echo root()?>service/">Canopy Sewing</a></li>
+                                    <li><a class="nav-link" href="<?php echo root()?>service/">Harness Work</a></li>
                                   </ul>
                                 </div>
 						

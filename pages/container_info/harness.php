@@ -2,6 +2,7 @@
        
     $uid = $_SESSION['uid'];
     $url = (isset($_GET['id'])) ? 'container_info' : $_GET['act'];  
+    $s = (isset($_GET['s']) && $_GET['s'] > 0) ? $_GET['s'] : $_SESSION['service'];
 ?>
 <div class="container-fluid">
 
@@ -44,7 +45,7 @@
 </div>
 <script>
 function add_harness() {
-	$.post( "<?php echo root();?>inc/exec.php?act=add_harness&ajax=1&schedule=1", $('#harness_form').serialize(), '', 'script');
+	$.post( "<?php echo root();?>inc/exec.php?act=add_harness&ajax=1&schedule=1&s=<?php echo $s;?>", $('#harness_form').serialize(), '', 'script');
 }
 
 function get_data(){

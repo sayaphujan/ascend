@@ -10,17 +10,17 @@
 			<a href="" class="btn btn-large btn-standard d-block text-center">Other Maintenance</a>-->
             <?php 
             if(isset($_SESSION['uid']) && $_SESSION['uid'] > 0) { 
-                echo '<a href="'.root().'schedule_sport_repack/" class="btn btn-large btn-standard d-block text-center mb-2">Schedule Sport Repack</a>';
+                $menu = root().'service/';  
             }else{
-                echo '<a href="'.root().'container_information/" class="btn btn-large btn-standard d-block text-center mb-2">Schedule Sport Repack</a>';
-            } 
-            ?>
+                $menu = root().'container_information/';
+            }
+                echo '<a href="'.$menu.'?s=1" class="btn btn-large btn-standard d-block text-center mb-2">Assemblies, Repacks, Inspections</a>';
+                echo '<a href="'.$menu.'?s=2" class="btn btn-large btn-standard d-block text-center mb-2">Common Maintenance Items</a>';
+                echo '<a href="'.$menu.'?s=3" class="btn btn-large btn-standard d-block text-center mb-2">Tandem Maintenance</a>';
+                echo '<a href="'.$menu.'?s=4" class="btn btn-large btn-standard d-block text-center mb-2">Canopy Sewing</a>';
+                echo '<a href="'.$menu.'?s=5" class="btn btn-large btn-standard d-block text-center mb-2">Harness Work</a>';
             
-			<a href="<?php  echo root();?>container_information/" class="btn btn-large btn-standard d-block text-center mb-2">Assemblies, Repacks, Inspections</a>
-			<a href="<?php  echo root();?>container_information/" class="btn btn-large btn-standard d-block text-center mb-2">Canopy Sewing</a>
-			<a href="<?php  echo root();?>container_information/" class="btn btn-large btn-standard d-block text-center mb-2">Harness Work</a>
-			<a href="<?php  echo root();?>container_information/" class="btn btn-large btn-standard d-block text-center mb-2">Tandem Maintenance</a>
-			<a href="<?php  echo root();?>container_information/" class="btn btn-large btn-standard d-block text-center mb-2">Common Maintenance Items</a>
+            ?>
 		</div>
 	<?php 
 	if (!isset($_SESSION['uid'])) {

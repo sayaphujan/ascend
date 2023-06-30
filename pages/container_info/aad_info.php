@@ -43,7 +43,7 @@
 </div>
 <script>
 function add_aad() {
-	$.post( "<?php echo root();?>inc/exec.php?act=add_aad&ajax=1&schedule=1", $('#aad_info_form').serialize(), '', 'script');
+	$.post( "<?php echo root();?>inc/exec.php?act=add_aad&ajax=1&schedule=1&s=<?php echo $_GET['s'];?>", $('#aad_info_form').serialize(), '', 'script');
 }
 
 function get_data(){
@@ -67,7 +67,7 @@ function step_reserve_parachute(container){
     var stepper = new Stepper(document.querySelector('.bs-stepper'))
     stepper.to(3);
     
-    $('#reserve-parachute-part').load('<?php  echo root();?>inc/exec.php?act=container_info&page=reserve_parachute&container='+container);
+    $('#reserve-parachute-part').load('<?php  echo root();?>inc/exec.php?act=container_info&page=reserve_parachute&container='+container+'&s=<?php echo $_GET['s'];?>');
 }
 
 $( document ).ready(function() {

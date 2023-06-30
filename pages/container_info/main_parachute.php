@@ -52,7 +52,7 @@
 <script>
 function add_main_parachute() {
 
-	$.post( "<?php  echo root();?>inc/exec.php?act=add_main_parachute&ajax=1&schedule=1", $('#main_parachute_form').serialize(), '', 'script');
+	$.post( "<?php  echo root();?>inc/exec.php?act=add_main_parachute&ajax=1&schedule=1&s=<?php echo $_GET['s'];?>", $('#main_parachute_form').serialize(), '', 'script');
 }
 
 function get_data(){
@@ -78,7 +78,7 @@ function step_aad(container){
     var stepper = new Stepper(document.querySelector('.bs-stepper'))
     stepper.to(4);
     
-    $('#aad-info-part').load('<?php  echo root();?>inc/exec.php?act=container_info&page=aad_info&container='+container);
+    $('#aad-info-part').load('<?php  echo root();?>inc/exec.php?act=container_info&page=aad_info&container='+container+'&s=<?php echo $_GET['s'];?>');
 }
 
 $( document ).ready(function() {
