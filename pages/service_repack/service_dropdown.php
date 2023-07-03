@@ -90,7 +90,7 @@
                                         ],
             ];
     $o = [
-                /*'S-RUSH1' => ['$'],
+                'S-RUSH1' => ['$'],
                 'S-RUSH2' => ['$'],
                 'S-SHOPRATE' => ['$'],
                 'S-STORAGE' => ['$'],
@@ -125,7 +125,7 @@
                 'S-SCOTCH1' => ['$'],
                 'S-SCOTCH2' => ['$'],
                 'S-DISASS1' => ['$'],
-                'S-DISASS2' => ['$'],*/
+                'S-DISASS2' => ['$'],
                 'S-REPLBOC' => ['$'],
                 'S-AADMAINT' => ['$'],
                 'S-KLREPLACE' => ['$'],

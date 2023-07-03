@@ -58,7 +58,7 @@ $url = $_GET['repack_type'];
     							$r = mysqli_fetch_assoc($cq);
     						}
 				?>
-				<?php echo $url;?>
+
 				<label for="priority" class="control-label"><strong>Select your Repack Speed:</strong></label>
 				<select class="form-control" id="speed" name="speed">
 				    <?php if($url == 'tandem'){ ?>
@@ -66,6 +66,10 @@ $url = $_GET['repack_type'];
 					    <option value="rush1" <?php if($r['speed'] == 'rush1' ) { echo 'selected'; } ?>>Rush 1 (Front of line) - $<?php echo $repack_pricing['rush1']+100;?>.00</option>
 					    <option value="rush2" <?php if($r['speed'] == 'rush2' ) { echo 'selected'; } ?>>Rush 2 (Immediate) - $<?php echo $repack_pricing['rush2']+100;?>.00</option>    
 				    <?php }else if($url == 'sport'){ ?>
+    					<option value="standard" <?php if($r['speed'] == 'standard' ) { echo 'selected'; } ?>>Standard Lead Time - $<?php echo $repack_pricing['standard']?></option>
+    					<option value="rush1" <?php if($r['speed'] == 'rush1' ) { echo 'selected'; } ?>>Rush 1 (Front of line) - $<?php echo $repack_pricing['rush1']?></option>
+    					<option value="rush2" <?php if($r['speed'] == 'rush2' ) { echo 'selected'; } ?>>Rush 2 (Immediate) - $<?php echo $repack_pricing['rush2']?></option>
+    				<?php }else if($url == 'pilot'){ ?>
     					<option value="standard" <?php if($r['speed'] == 'standard' ) { echo 'selected'; } ?>>Standard Lead Time - $<?php echo $repack_pricing['standard']?></option>
     					<option value="rush1" <?php if($r['speed'] == 'rush1' ) { echo 'selected'; } ?>>Rush 1 (Front of line) - $<?php echo $repack_pricing['rush1']?></option>
     					<option value="rush2" <?php if($r['speed'] == 'rush2' ) { echo 'selected'; } ?>>Rush 2 (Immediate) - $<?php echo $repack_pricing['rush2']?></option>
