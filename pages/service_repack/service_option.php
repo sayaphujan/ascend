@@ -4,9 +4,9 @@
     </div>
     <div class="row pt-4">
         <div class="col-md-5">
-            <button onclick="sport();" class="btn btn-standard">Schedule Sport Repack</button>
-            <button onclick="tandem();" class="btn btn-standard">Schedule Tandem Repack</button>
-            <button onclick="pilot();" class="btn btn-standard">Schedule Pilot Repack</button>
+            <a href="javascript:void(0)" onclick="sport();" class="btn btn-large btn-standard d-block text-center mb-2">Schedule Sport Repack</a>
+            <a href="javascript:void(0)" onclick="tandem();" class="btn btn-large btn-standard d-block text-center mb-2">Schedule Tandem Repack</a>
+            <a href="javascript:void(0)" onclick="pilot();" class="btn btn-large btn-standard d-block text-center mb-2">Schedule Pilot Repack</a>
 		</div>
     </div>
 </div>
