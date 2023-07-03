@@ -4,10 +4,11 @@
 
     $cq = mysqli_query($link, 'SELECT * FROM containers WHERE customer=\''.sf($uid).'\' AND service_id=\''.sf($_GET['s']).'\'');
     $res = mysqli_fetch_assoc($cq);
+
     $_SESSION['repack_container_id'] = $res['id'];
-    $s = $res['service_id'];
+    $serv = $res['service_id'];
     
-switch ($s) {
+switch ($serv) {
 	case '1':
 		$o = 'Assemblies, Repacks, Inspections';
 		break;
@@ -43,8 +44,104 @@ include("service_dropdown.php");
     	  <form id="service_form">
             <input type="hidden" class="form-control" id="uid" name="uid" value="<?php echo $_SESSION['uid'];?>" placeholder="id"/>
             <input type="hidden" class="form-control" id="existing_container" name="existing_container" value="<?php echo $_SESSION['repack_container_id'];?>"/>
-    	  	<?php if($s == 1){ ?>
-    	  	            <div class="form-group">
+            <input type="hidden" class="form-control" id="s" name="s" value="<?php echo $serv;?>" placeholder="id"/>
+    	  	<?php if($serv == 1){ ?>
+                <?php if($_GET['repack_type'] == 'sport') { ?>
+                    <div class="form-group">
+                        <label for="make" class="control-label"><strong>Reserve Repack</strong></label>
+                        <select class="form-control" id="reserve_repack" name="reserve_repack" >
+                            <?php sport('reserve_repack'); ?>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="make" class="control-label"><strong>Assembly</strong></label>
+                        <select class="form-control"  id="assembly" name="assembly" >
+                            <?php sport('assembly'); ?>
+                        </select>
+                    </div>
+                     <div class="form-group">
+                        <label for="make" class="control-label"><strong>Inspect and Repack</strong></label>
+                        <select class="form-control"  id="inspect_repack" name="inspect_repack" >
+                            <?php sport('inspect_repack'); ?>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="make" class="control-label"><strong>AAD</strong></label>
+                        <select class="form-control"  id="aad" name="aad" >
+                            <?php sport('aad'); ?>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="make" class="control-label"><strong>Inspection</strong></label>
+                        <select class="form-control"  id="inspection" name="inspection" >
+                            <?php sport('inspection'); ?>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="make" class="control-label"><strong>Trim chk only- not a full inspect</strong></label>
+                        <select class="form-control"  id="S-TRIMCHECK" name="S-TRIMCHECK" >
+                            
+                        <?php options('S-TRIMCHECK'); ?></select>
+                    </div>
+                    <div class="form-group">
+                        <label for="make" class="control-label"><strong>CSC 25 jump check</strong></label>
+                        <select class="form-control"  id="S-CSC25" name="S-CSC25" >
+                            
+                        <?php options('S-CSC25'); ?></select>
+                    </div>
+                    <div class="form-group">
+                        <label for="make" class="control-label"><strong>30 lb strength test only</strong></label>
+                        <select class="form-control"  id="S-30LBTEST" name="S-30LBTEST" >
+                            
+                        <?php options('S-30LBTEST'); ?></select>
+                    </div>
+                    <div class="form-group">
+                        <label for="make" class="control-label"><strong>Wash</strong></label>
+                        <select class="form-control"  id="wash" name="wash" >
+                            <?php sport('wash'); ?>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="make" class="control-label"><strong>Main</strong></label>
+                        <select class="form-control"  id="main" name="main" >
+                            <?php sport('main'); ?>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="make" class="control-label"><strong>Scotchguard</strong></label>
+                        <select class="form-control"  id="scotchguard" name="scotchguard" >
+                            <?php sport('scotchguard'); ?>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="make" class="control-label"><strong>Disassembly</strong></label>
+                        <select class="form-control"  id="disassembly" name="disassembly" >
+                            <?php sport('disassembly'); ?>
+                        </select>
+                    </div>
+                <?php } else if($_GET['repack_type'] == 'tandem') { ?>
+                    <div class="form-group">
+                        <label for="make" class="control-label"><strong>Reserve Repack</strong></label>
+                        <select class="form-control" id="reserve_repack" name="reserve_repack" >
+                            <?php tandem('reserve_repack'); ?>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="make" class="control-label"><strong>Assembly</strong></label>
+                        <select class="form-control"  id="assembly" name="assembly" >
+                            <?php tandem('assembly'); ?>
+                        </select>
+                    </div>
+                <?php } else if($_GET['repack_type'] == 'pilot') { ?>
+                     <div class="form-group">
+                        <label for="make" class="control-label"><strong>Emergency Inspect</strong></label>
+                        <select class="form-control"  id="emergency_inspect" name="emergency_inspect" >
+                            <?php pilot('emergency_inspect'); ?>
+                        </select>
+                    </div>
+                <?php } ?>
+            <!--
+    	  	<div class="form-group">
                 <label for="make" class="control-label"><strong>Reserve Repack (SPORT) STANDARD LEAD TIME</strong></label>
                 <select class="form-control"  id="S-IRS1" name="S-IRS1" >
                 	<?php options('S-IRS1'); ?>
@@ -257,9 +354,9 @@ include("service_dropdown.php");
                 <select class="form-control"  id="S-DISASS2" name="S-DISASS2" >
                     
                 <?php options('S-DISASS2'); ?></select>
-            </div>
+            </div>-->
     	  	<?php }
-    	  		if($s == 2){ 
+    	  		if($serv == 2){ 
     	  	 ?>
 			            <div class="form-group">
                 <label for="make" class="control-label"><strong>Replace BOC pocket</strong></label>
@@ -508,7 +605,7 @@ include("service_dropdown.php");
                 <?php options('S-HEATSHRINK'); ?></select>
             </div>
             <?php }
-    	  		if($s == 3){ 
+    	  		if($serv == 3){ 
     	  	 ?>
             <div class="form-group">
                 <label for="make" class="control-label"><strong>Replace Recoil Ripcord System</strong></label>
@@ -591,7 +688,7 @@ include("service_dropdown.php");
                 <?php options(''); ?></select>
             </div>
             <?php }
-    	  		if($s == 4){ 
+    	  		if($serv == 4){ 
     	  	 ?>
                         <div class="form-group">
                 <label for="make" class="control-label"><strong>Tandem/Military Re-line</strong></label>
@@ -764,7 +861,7 @@ include("service_dropdown.php");
                 <?php options('S-SLDRCHAN'); ?></select>
             </div>
     	  	<?php } 
-            if($s == 5){ 
+            if($serv == 5){ 
                 ?>
             <div class="form-group">
                 <label for="make" class="control-label"><strong>Shorten Leg Staps (Webbing Only)</strong></label>
@@ -863,25 +960,25 @@ include("service_dropdown.php");
                 <label for="make" class="control-label"><strong>Rush Fee(front of line)</strong></label>
                 <select class="form-control"  id="S-RUSH1" name="S-RUSH1" >
                     
-                <?php options('S-RUSH1'); ?></select>
+                <?php sport('S-RUSH1'); ?></select>
 
             </div>
             <div class="form-group">
                 <label for="make" class="control-label"><strong>Rush Fee(right now)</strong></label>
                 <select class="form-control"  id="S-RUSH2" name="S-RUSH2" >
                     
-                <?php options('S-RUSH2'); ?></select>
+                <?php sport('S-RUSH2'); ?></select>
 
             </div>
             <div class="form-group">
                 <label for="make" class="control-label"><strong>Hourly shop rate</strong></label>
                 <select class="form-control"  id="S-SHOPRATE" name="S-SHOPRATE" >
-                	<?php options('S-SHOPRATE'); ?></select>
+                	<?php sport('S-SHOPRATE'); ?></select>
             </div>
             <div class="form-group">
                 <label for="make" class="control-label"><strong>Monthly storage fee</strong></label>
                 <select class="form-control"  id="S-STORAGE" name="S-STORAGE" >
-                    <?php options('S-STORAGE'); ?></select>
+                    <?php sport('S-STORAGE'); ?></select>
             </div>
             <button  class="btn btn-primary" id="next_step" style="float: right;" onclick="add_service_option();  return false;">Continue Scheduling</button>        
           </form>
@@ -891,7 +988,7 @@ include("service_dropdown.php");
 </div>
 <script>
 $( document ).ready(function() {
-    $('#service_form select').attr('readonly', 'readonly');
+    //$('#service_form select').attr('readonly', 'readonly');
 });
 
 function add_service_option() {
