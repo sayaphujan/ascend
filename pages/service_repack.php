@@ -13,6 +13,7 @@ $s = (isset($_GET['s']) && $_GET['s'] > 0) ? $_GET['s'] : $_SESSION['service'];
                     <div class="step" data-target="#service-part">
                         <button type="button" class="step-trigger" role="tab" aria-controls="service-part" id="service-part-trigger"> <span class="bs-stepper-circle">2</span> <span class="bs-stepper-label">Service Options</span> </button>
                     </div>
+                    <div class="line"></div>
                     <div class="step" data-target="#schedule-part">
                         <button type="button" class="step-trigger" role="tab" aria-controls="schedule-part" id="schedule-part-trigger"> <span class="bs-stepper-circle">3</span> <span class="bs-stepper-label">Schedule</span> </button>
                     </div>
@@ -84,7 +85,9 @@ $(document).ready(function () {
   <?php  
   if($_SESSION['uid']>0) {
 	//if($_SESSION['repack_container_id']) {
-		echo 'step_containerinfo('.$_SESSION['repack_container_id'].');';
+    if($_GET['page'] == 'service_list'){
+        echo 'step_service('.$_SESSION['repack_container_id'].');';   
+    }
 	//}
   } ?>
 })
