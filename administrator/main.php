@@ -11,7 +11,7 @@
 			<a href="" class="btn btn-large btn-standard d-block text-center">Other Maintenance</a>-->
             <?php 
             if(isset($_SESSION['uid']) && $_SESSION['uid'] > 0) { 
-                $menu = root().'service/';  
+                $menu = root().'service_repack/';  
             }else{
                 $menu = root().'container_information/';
             }

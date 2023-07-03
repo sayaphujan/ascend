@@ -23,6 +23,7 @@
                     <div class="form-group">
                         <label for="existing_container" class="control-label"><strong>Pick a previously registered service:</strong></label>
                         <select class="form-control" id="container" name="container">
+                            <option value="-">-- Select Service --</option>
                             <option value="0">Register New Service</option>
                             <?php
                             while($c = mysqli_fetch_assoc($cq)) {
@@ -156,8 +157,10 @@
                         </div>
                     </div>
                 </div>
+                <hr/>
+                <p>Please confirm the information you have written. It is important that this information is accurate.</p>
             <button  class="btn btn-primary" id="prev_step" style="float: left;" onclick="step_harness(<?php echo $_SESSION['repack_container_id'];?>);  return false;">Back to Harness</button>        
-            <button  class="btn btn-primary" id="next_step" style="float: right;" onclick="add_container();  return false;">Verified</button>        
+            <button  class="btn btn-primary" id="next_step" style="float: right;" onclick="add_container();  return false;">Verify My Rig</button>        
     		</div>
     </div>
     </form>
@@ -219,12 +222,13 @@ $('#container').change(function () {
 });
 
 $( document ).ready(function() {
-    $('#container').trigger('change');
+    
     $('#container_form input').attr('readonly', 'readonly');
     var id = ($('#existing_container').val() > 0) ? $('#existing_container').val() : $('#container').val();
     $.session.set('repack_container_id',id);
+    $('#container').val($.session.get('repack_container_id'));
+    //$('#container').trigger('change');
     
-    //alert($.session.get('repack_container_id'));
     if(id>0){
         get_data();
     }
