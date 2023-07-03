@@ -1,6 +1,7 @@
 <?php
  $uid = $_SESSION['uid'];
  $url = $_GET['act'];  
+ $s = (isset($_GET['s']) && $_GET['s'] > 0) ? $_GET['s'] : $_SESSION['service'];
 ?>
 <div class="row">
 	<h4>Reserve Parachute</h4>
@@ -12,6 +13,7 @@
     <input type="hidden" name="url" value="<?php echo $url;?>">
     <input type="hidden" class="form-control" id="uid" name="uid" value="<?php echo $uid;?>" placeholder="id"/>
     <input type="hidden" class="form-control" id="existing_container" name="existing_container" value="<?php echo $_SESSION['repack_container_id'];?>" placeholder="id"/>
+    <input type="hidden" class="form-control" id="s" name="s" value="<?php echo $s;?>" placeholder="service option"/>
     <div class="row" id="add_new_harness_form">
     	
     		<div class="col-md-12">	

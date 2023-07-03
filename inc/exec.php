@@ -1171,12 +1171,13 @@ case 'update_staff':
 				}
 
 				if($_POST['existing_container'] <1){
-				    $query = 'INSERT INTO containers (`customer`, `harness`,`enter_date`) VALUES (\''.sf($_SESSION['uid']).'\',\''.sf($harness).'\',NOW())';
+				    $query = 'INSERT INTO containers (`customer`, `harness`, `service_id`, `enter_date`) VALUES (\''.sf($_SESSION['uid']).'\',\''.sf($harness).'\', \''.sf($_POST['s']).'\', NOW())';
     				mysqli_query($link, $query);
     				
     				$id = mysqli_insert_id($link);
     				
     				$_SESSION['repack_container_id']=$id;
+    				$_SESSION['service']=$_POST['s'];
     				
     				//echo 'step_schedule();';
     				
@@ -1435,21 +1436,24 @@ case 'update_staff':
 
 		case 'add_service_option':
 			$harness = serialize($_POST);
-			echo json_encode($harness);
+			//echo json_encode($harness);
+		//echo '<br/>'.$_SESSION['type'].'<br/>'.$_POST['existing_container'];
 		
 			if($_SESSION['type']=='customer' || $_SESSION['type']=='admin' ) {
 			
-				if($_GET['ajax']) echo '$("#containeralert").removeClass("d-flex").addClass("d-none");'; 
+				//if($_GET['ajax']) echo '$("#containeralert").removeClass("d-flex").addClass("d-none");'; 
 				
 				if($_POST['existing_container']>0) {
 				
 					//check stuff
-					$cq = mysqli_query($link, 'SELECT * FROM containers WHERE customer=\''.sf($_POST['uid']).'\' AND id=\''.sf($_POST['existing_container']).'\'');
+					$check = 'SELECT * FROM containers WHERE customer=\''.sf($_POST['uid']).'\' AND id=\''.sf($_POST['existing_container']).'\'';
+					//echo $check;
+					$cq = mysqli_query($link, $check);
 
 					if(mysqli_num_rows($cq)>0) {
 					   				    
 					    $query = 'UPDATE containers SET `service_option`=\''.sf($harness).'\' WHERE id=\''.sf($_POST['existing_container']).'\'';
-					    echo json_encode($query);
+					    //echo json_encode($query);
 					    
 					    $update = mysqli_query($link,$query);
 					    //echo $query;
@@ -1457,9 +1461,11 @@ case 'update_staff':
 						$_SESSION['repack_container_id']=sf($_POST['existing_container']);
 						
 						echo 'var stepper = new Stepper(document.querySelector(\'.bs-stepper\'));';
-						echo 'stepper.to(6);';
+						echo 'stepper.to(3);';
+						echo 'step_schedule();';
 						
-						echo '$(\'#schedule-part\').load(\''.root().'/inc/exec.php?act=service_repack&page=schedule&repack_type='.sf($_GET['repack_type']).'&container='.sf($_POST['existing_container']).'\');';
+						echo '$(\'#schedule-part\').load(\''.root().'inc/exec.php?act=service_repack&page=schedule&repack_type='.sf($_GET['repack_type']).'&container='.sf($_POST['existing_container']).'\');';
+
 						echo '$(\'#service_form input[type="text"]\').val(\'\');';
 					}
 				
@@ -2057,7 +2063,9 @@ case 'update_staff':
 		break;
 		
 		case 'login':
-		$s = (isset($_GET['s'])) ? sf($_GET['s']) : 1;
+		//$s = (isset($_GET['s'])) ? sf($_GET['s']) : 1;
+		$s = sf($_POST['s']);
+		$_SESSION['service']=$_POST['s'];
 			$q = mysqli_query($link, 'SELECT * FROM customers WHERE email=\''.sf($_POST['cemail']).'\' AND active=\'1\'');
 			
 			if(mysqli_num_rows($q)>0) {
@@ -2133,7 +2141,9 @@ case 'update_staff':
 		
 		
 		case 'register':
-		$s = (isset($_GET['s'])) ? sf($_GET['s']) : 1;
+		//$s = (isset($_GET['s'])) ? sf($_GET['s']) : 1;
+		$s = sf($_POST['s']);
+		$_SESSION['service']=$_POST['s'];
 		
 			if($_GET['ajax']) echo '$("#registeralert").removeClass("d-flex").addClass("d-none");';
 			

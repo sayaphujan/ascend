@@ -11,10 +11,11 @@
     <form id="container_form">
     <input type="hidden" class="form-control" id="uid" name="uid" value="<?php echo $uid;?>" placeholder="id"/>
     <input type="hidden" class="form-control" id="existing_container" name="existing_container" value="<?php echo $_SESSION['repack_container_id'];?>"/>
+    <input type="hidden" class="form-control" id="s" name="s" value="<?php echo $s;?>" placeholder="service option"/>
              
     <?php 
     if($_SESSION['repack_container_id'] == ''){
-        $cq = mysqli_query($link, 'SELECT * FROM containers WHERE customer=\''.sf($uid).'\'');
+        $cq = mysqli_query($link, 'SELECT * FROM containers WHERE customer=\''.sf($uid).'\' AND service_id=\''.sf($_GET['s']).'\'');
         
         if(mysqli_num_rows($cq)>0) {
         ?>

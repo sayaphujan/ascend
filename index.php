@@ -367,11 +367,11 @@ if (isset($_SESSION['adminid'])) {
                                   <li class="dropdown-toggle" type="button" data-toggle="dropdown" style="margin-top:10px;margin-right:10px;">Schedule a Service
                                   <span class="caret"></span></li>
                                   <ul class="dropdown-menu" style="background-color:#a51522;border:transparent;">
-                                    <li><a class="nav-link" href="<?php echo root()?>service_repack/">Assemblies, Repacks, Inspections</a></li>
-                                    <li><a class="nav-link" href="<?php echo root()?>service_repack/">Common Maintenance Items</a></li>
-                                    <li><a class="nav-link" href="<?php echo root()?>service_repack/">Tandem Maintenance</a></li>
-                                    <li><a class="nav-link" href="<?php echo root()?>service_repack/">Canopy Sewing</a></li>
-                                    <li><a class="nav-link" href="<?php echo root()?>service_repack/">Harness Work</a></li>
+                                    <li><a class="nav-link" href="<?php echo root()?>service_repack/?s=1">Assemblies, Repacks, Inspections</a></li>
+                                    <li><a class="nav-link" href="<?php echo root()?>service_repack/?s=2">Common Maintenance Items</a></li>
+                                    <li><a class="nav-link" href="<?php echo root()?>service_repack/?s=3">Tandem Maintenance</a></li>
+                                    <li><a class="nav-link" href="<?php echo root()?>service_repack/?s=4">Canopy Sewing</a></li>
+                                    <li><a class="nav-link" href="<?php echo root()?>service_repack/?s=5">Harness Work</a></li>
                                   </ul>
                                 </div>
 						

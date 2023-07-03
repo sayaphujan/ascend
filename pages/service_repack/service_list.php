@@ -32,8 +32,9 @@ switch ($s) {
 
     <div class="row">
     	<div class="col-md-12">
-            <div class="alert alert-warning d-none align-items-center" role="alert" id="containeralert"></div>
+            <!--<div class="alert alert-warning d-none align-items-center" role="alert" id="containeralert"></div>-->
     	  <form id="service_form">
+            <input type="hidden" class="form-control" id="uid" name="uid" value="<?php echo $_SESSION['uid'];?>" placeholder="id"/>
             <input type="hidden" class="form-control" id="existing_container" name="existing_container" value="<?php echo $_SESSION['repack_container_id'];?>"/>
     	  	<?php if($s == 1){ ?>
     	  	            <div class="form-group">

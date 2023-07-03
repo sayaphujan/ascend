@@ -61,6 +61,15 @@ function step_schedule(container) {
     
 }
 
+function goto_step_schedule() {
+    
+    var stepper = new Stepper(document.querySelector('.bs-stepper'))
+    stepper.to(3);
+    
+    //$('#schedule-part').load('/inc/exec.php?act=schedule_repack&repack_type=sport&page=schedule&container='+container);
+    
+}
+
 function step_payment(container) {
     
     var stepper = new Stepper(document.querySelector('.bs-stepper'))

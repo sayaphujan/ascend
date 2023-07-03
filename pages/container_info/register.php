@@ -1,7 +1,7 @@
 <?php
   // Append the requested resource location to the URL   
     $url = explode('/', $_SERVER['REQUEST_URI']);    
-      
+    $s = (isset($_GET['s']) && $_GET['s'] > 0) ? $_GET['s'] : $_SESSION['service'];
     //echo $url[3];  
 ?>
 <div class="row">
@@ -12,6 +12,7 @@
 		
 		<form id="register_form" onsubmit="register();  return false;">
 		    <input type="hidden" name="url" value="<?php echo $url[2];?>">
+		    <input type="hidden" class="form-control" id="s" name="s" value="<?php echo $s;?>" placeholder="service option"/>
 		    <div class="form-group">
                     <label for="first_name" class="control-label"><strong>First Name:</strong></label>
                     <input type="text" class="form-control" id="rfname" name="rfname" autocomplete="off" placeholder="Please enter your first name..."/>
@@ -43,6 +44,7 @@
 		
 		<form id="login_form" action="" method="post"  onsubmit="login();  return false;">
 		    <input type="hidden" name="url" value="<?php echo $url[2];?>">
+		    <input type="hidden" class="form-control" id="s" name="s" value="<?php echo $s;?>" placeholder="service option"/>
 			<div class="form-group">
 				<label for="email" class="control-label"><strong>Email:</strong></label>
 				<input type="email" class="form-control" id="cemail" name="cemail" placeholder="Please enter your email..."/>
