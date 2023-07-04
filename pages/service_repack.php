@@ -49,7 +49,7 @@ function step_service(container) {
 	var stepper = new Stepper(document.querySelector('.bs-stepper'))
 	stepper.to(2);
 	
-	$('#service-part').load('<?php  echo root();?>inc/exec.php?act=service_repack&repack_type=sport&page=service&container='+container+'&s=<?php echo $s;?>');
+	$('#service-part').load('<?php  echo root();?>inc/exec.php?act=service_repack&repack_type=sport&page=service_list&container='+container+'&s=<?php echo $s;?>');
 	
 }
 
@@ -81,15 +81,7 @@ function step_payment(container) {
 }
 
 $(document).ready(function () {
-  var stepper = new Stepper($('.bs-stepper')[0]);
-  <?php  
-  if($_SESSION['uid']>0) {
-	//if($_SESSION['repack_container_id']) {
-    if($_GET['page'] == 'service_list'){
-        echo 'step_service('.$_SESSION['repack_container_id'].');';   
-    }
-	//}
-  } ?>
+    var stepper = new Stepper($('.bs-stepper')[0]);
 })
 
 

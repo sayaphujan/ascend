@@ -198,6 +198,10 @@ case 'update_staff':
 				include '../pages/service_repack/service_list.php';
 			}
 
+			if($_GET['page']=='service_summary') {
+				include '../pages/service_repack/service_summary.php';
+			}
+
 			if($_GET['page']=='schedule') {
 				include '../pages/service_repack/schedule.php';
 			}
@@ -1074,6 +1078,7 @@ case 'update_staff':
 						}else if(sf($_POST['url']) == 'sport'){
 						    echo '$(\'#schedule-part\').load(\'/inc/exec.php?act=schedule_repack&page=schedule&repack_type=sport&container='.sf($_POST['existing_container']).'\');';
 						}
+
 						echo '$(\'#container_form input[type="text"]\').val(\'\');';
 					}
 				
@@ -1420,11 +1425,14 @@ case 'update_staff':
 						$_POST['url'] = (isset($_POST['url'])) ? $_POST['url'] : $_GET['repack_type'];
 
 						if(sf($_POST['url']) == 'tandem'){
-						    echo '$(\'#service-part\').load(\''.root().'/inc/exec.php?act=service_repack&page=service_option&repack_type=tandem&container='.sf($_POST['existing_container']).'\');';
+						    echo '$(\'#service-part\').load(\''.root().'/inc/exec.php?act=service_repack&page=service_list&repack_type=tandem&container='.sf($_POST['existing_container']).'\');';
 						}else if(sf($_POST['url']) == 'sport'){
-						    echo '$(\'#service-part\').load(\''.root().'/inc/exec.php?act=service_repack&page=service_option&repack_type=sport&container='.sf($_POST['existing_container']).'&s='.sf($_GET['s']).'\');';
+						    echo '$(\'#service-part\').load(\''.root().'/inc/exec.php?act=service_repack&page=service_list&repack_type=sport&container='.sf($_POST['existing_container']).'&s='.sf($_GET['s']).'\');';
 						}
+
 						echo '$(\'#container_form input[type="text"]\').val(\'\');';
+
+						//echo 'document.location=\''.root().'service_repack/?page=service_list&container='.sf($_POST['e']).'&s='.sf($_GET['s']).'\';';
 					}
 				
 				}
@@ -1434,12 +1442,59 @@ case 'update_staff':
 		
 		break;
 
+		case 'add_cart':
+					    $query = 'INSERT INTO `shopping_cart` SET 
+					                    `cart_order_id`=\''.sf($_POST['cart_order_id']).'\'
+					                    ,`cart_service_id`=\''.sf($_POST['cart_service_id']).'\'
+					                    ,`cart_customer_id`=\''.sf($_POST['cart_customer_id']).'\'
+					                    ,`cart_service_name`=\''.sf($_POST['cart_service_name']).'\'
+					                    , `cart_service_price`=\''.sf($_POST['cart_service_price']).'\'
+					                    , `cart_container_id`=\''.sf($_POST['cart_container_id']).'\'
+					                    , `cart_repack_type`=\''.sf($_POST['repack_type']).'\'
+					                    , `cart_status`=\'1\'
+					                    ,`cart_created`=NOW()
+					                    ';
+					    
+					    $insert = mysqli_query($link,$query);
+					    $_SESSION['order_id'] = $_POST['cart_order_id'];
+					    if($insert){
+					    	echo $_POST['cart_order_id'];
+					    }else{
+					    	echo 'error';
+					    }
+			break;
+
+		case 'del_item_cart':
+					    $query = 'DELETE FROM `shopping_cart` WHERE `cart_order_id`=\''.sf($_POST['cart_order_id']).'\'
+					                    AND `cart_service_id`=\''.sf($_POST['cart_service_id']).'\'';
+					    
+					    $delete = mysqli_query($link,$query);
+					    if($delete){
+					    	echo 'delete OK';
+					    }else{
+					    	echo 'error';
+					    }
+			break;
+
+		case 'show_cart':
+		$cart = array();
+					    $query = 'SELECT * FROM `shopping_cart` WHERE `cart_order_id`=\''.sf($_POST['cart_order_id']).'\' AND cart_status=\'1\'';
+					    
+					    $res = mysqli_query($link,$query);
+					    $data = mysqli_fetch_all($res, MYSQLI_ASSOC);
+            
+			            $callback = array(
+			                'data'=>$data
+			            );
+			            header('Content-Type: application/json');
+			            echo json_encode($callback['data']);
+				    	
+			break;
+
 		case 'add_service_option':
-			$harness = serialize($_POST);
-			//echo json_encode($harness);
-		//echo '<br/>'.$_SESSION['type'].'<br/>'.$_POST['existing_container'];
+echo json_encode($_POST);
 		
-			if($_SESSION['type']=='customer' || $_SESSION['type']=='admin' ) {
+			/*if($_SESSION['type']=='customer' || $_SESSION['type']=='admin' ) {
 			
 				//if($_GET['ajax']) echo '$("#containeralert").removeClass("d-flex").addClass("d-none");'; 
 				
@@ -1479,7 +1534,7 @@ case 'update_staff':
 				//}
 			
 			    
-			}
+			}*/
 		
 		
 		

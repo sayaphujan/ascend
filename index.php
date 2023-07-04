@@ -44,6 +44,11 @@ if (isset($_SESSION['adminid'])) {
             $title .= '';
             break;
 
+        case 'service_list':
+            $page = 'pages/service_repack/service_list.php';
+            $title .= '';
+            break;
+
         case 'service':
             $page = 'pages/service.php';
             $title .= '';
@@ -164,6 +169,11 @@ if (isset($_SESSION['adminid'])) {
             $title .= '';
             break;
 
+        case 'service_list':
+            $page = 'pages/service_repack/service_list.php';
+            $title .= '';
+            break;
+
         case 'service':
             $page = 'pages/service.php';
             $title .= '';
@@ -271,6 +281,11 @@ if (isset($_SESSION['adminid'])) {
 
         case 'service_repack':
             $page = 'pages/service_repack.php';
+            $title .= '';
+            break;
+
+        case 'service_list':
+            $page = 'pages/service_repack/service_list.php';
             $title .= '';
             break;
 
