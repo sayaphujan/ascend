@@ -17,16 +17,16 @@
             </thead>
             <tbody>         
                     <?php 
-                        $que = 'SELECT * FROM shopping_cart WHERE cart_order_id =\''.sf($_SESSION['order_id']).'\' AND cart_status=\'1\'';
+                        $que = 'SELECT * FROM shopping_cart WHERE cart_order_id =\''.sf($_SESSION['order_id']).'\'';
                         //echo $que;
                         $q = mysqli_query($link, $que);
                         $total_price = 0;
                         while($res = mysqli_fetch_assoc($q)) {
                     echo '
                     <tr id="tr_'.$res['cart_service_id'].'">
-                        <td><button id="item_'.$res['cart_id'].'" onclick="javascript:remove_cart('.$res['cart_service_id'].','.$res['cart_service_price'].')" type="button" class="btn btn-danger btn-remove" data-id="'.$res['cart_id'].'" data-price="'.$res['cart_service_price'].'" data-service="'.$res['cart_service_name'].'">Remove</button></td>
-                        <td>'.$res['cart_service_name'].'</td>
-                        <td>$'.number_format($res['cart_service_price'],2,".",",").'</td>
+                        <td class="p-4"><button id="item_'.$res['cart_id'].'" onclick="javascript:remove_cart('.$res['cart_service_id'].','.$res['cart_service_price'].')" type="button" class="btn btn-danger btn-remove" data-id="'.$res['cart_id'].'" data-price="'.$res['cart_service_price'].'" data-service="'.$res['cart_service_name'].'">Remove</button></td>
+                        <td class="p-4">'.$res['cart_service_name'].'</td>
+                        <td class="p-4">$'.number_format($res['cart_service_price'],2,".",",").'</td>
                     </tr>';
                     $total_price +=$res['cart_service_price'];
                         }
@@ -40,7 +40,7 @@
             </tbody>
         </table>
         <br/>
-        <button  class="btn btn-primary" id="next_step" style="float: right;" onclick="schedule('<?php echo $_SESSION['repack_container_id'];?>');  return false;">Continue Scheduling</button>        
+        <button  class="btn btn-primary" id="next_step" style="float: right;" onclick="step_schedule('<?php echo $_SESSION['repack_container_id'];?>');  return false;">Continue Scheduling</button>        
 
     	</div>
     </div>
@@ -63,23 +63,21 @@ $( document ).ready(function()
     });
 });
 
-function schedule(container) {
-    
-    $.post( "<?php echo root();?>inc/exec.php?act=service_checkout&ajax=1&schedule=1&s=<?php echo $_GET['s'];?>", { 'cart_order_id' : '<?php echo $_SESSION['order_id'];?>', 'cart_customer_id' : '<?php echo $_SESSION['uid'];?>' ,'existing_container' : container, 'repack_type' : '<?php echo $_GET['repack_type'];?>' }, '', 'script');
+function step_schedule(container) {
 
-    /*$.ajax({
+    $.ajax({
       url: '<?php echo root();?>do/service_checkout/',
       type: 'POST',
-      
+      data: { 'cart_order_id' : '<?php echo $_SESSION['order_id'];?>', 'cart_customer_id' : '<?php echo $_SESSION['uid'];?>' ,'existing_container' : '<?php echo $_SESSION['repack_container_id'];?>', 's':'<?php echo $s;?>', 'repack_type' : '<?php echo $r;?>' },
       success: function(response) {
         // Handle the success response here
-        
+        console.log(response);
         
       },
       error: function(xhr, status, error) {
         // Handle any errors that occur during the request
       }
-    });*/
+    });
     
    /* var stepper = new Stepper(document.querySelector('.bs-stepper'))
     stepper.to(3);

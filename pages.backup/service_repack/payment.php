@@ -22,16 +22,9 @@ $url = $_GET['repack_type'];
 
 						if(mysqli_num_rows($cq)>0) {
 							
-							//$c = mysqli_fetch_assoc($cq);
+							$c = mysqli_fetch_assoc($cq);
 						
-							//echo ''.$c['manufacturer'].' '.$c['model'].''.($c['serial']!=='' ? ' SN: '.$c['serial'] : '').' &nbsp;&nbsp; <button type="button" class="btn-sm btn-warning" onclick="step_containerinfo()">Change</button>';
-							while($c = mysqli_fetch_assoc($cq)) {
-                                $_SESSION['repack_container_id'] = $c['id'];
-                                $s = $c['service_id'];
-                                $h = unserialize($c['harness']);
-                                echo ''.$h['make'].' '.$h['model'].''.($h['serial']!=='' ? ' SN: '.$h['serial'] : '').' &nbsp;&nbsp; <button type="button" class="btn-sm btn-warning" onclick="step_containerinfo(\''.$c['id'].'\')">Change</button>';
-                                
-                            }
+							echo ''.$c['manufacturer'].' '.$c['model'].''.($c['serial']!=='' ? ' SN: '.$c['serial'] : '').' &nbsp;&nbsp; <button type="button" class="btn-sm btn-warning" onclick="step_containerinfo()">Change</button>';
 						}
 						
 						?>
@@ -41,25 +34,6 @@ $url = $_GET['repack_type'];
 				</div>
 				
 				
-			</div>
-			
-			<div class="form-group">
-				<div class="row">
-					<div class="col-md-12">
-						<div ><u><strong>Service </strong></u></div>
-						 <?php 
-                            $que = 'SELECT * FROM shopping_cart WHERE cart_order_id =\''.sf($_SESSION['order_id']).'\' AND cart_status=\'0\'';
-                            //echo $que;
-                            $q = mysqli_query($link, $que);
-                            $total_price = 0;
-                            while($res = mysqli_fetch_assoc($q)) {
-                                $total_price +=$res['cart_service_price'];
-                            }
-                            
-                            echo '$'.number_format($total_price,2,".",",");
-                        ?>
-					</div>
-				</div>
 			</div>
 			
 			<div class="form-group">
@@ -143,7 +117,7 @@ function finalize_repack() {
 
 	$('#place_order_button').prop('disabled', true);
 
-	$.post( "<?php echo root();?>inc/exec.php?act=submit_service_order&ajax=1&schedule=1&repack_type=<?php echo $url;?>", 'container=<?php echo $_SESSION['repack_container_id']?>&speed=<?php echo $_GET['speed']?>&dropoff_date=<?php echo $_GET['dropoff_date']?>&estimated_pickup=<?php echo $_GET['estimated_pickup']?>', '', 'script');
+	$.post( "<?php echo root();?>inc/exec.php?act=submit_repack_order&ajax=1&schedule=1&repack_type=<?php echo $url;?>", 'container=<?php echo $_SESSION['repack_container_id']?>&speed=<?php echo $_GET['speed']?>&dropoff_date=<?php echo $_GET['dropoff_date']?>&estimated_pickup=<?php echo $_GET['estimated_pickup']?>', '', 'script');
 	
 }
 

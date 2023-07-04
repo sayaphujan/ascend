@@ -66,7 +66,7 @@ switch ($serv) {
 if(isset($_GET['cart']) && $_GET['cart'] == 'true' ){ 
     $r = $_GET['repack_type'];
 }
-$_SESSION['repack_type'] = $r;
+
 ?>
 <div class="container-fluid">
 
@@ -109,9 +109,9 @@ $_SESSION['repack_type'] = $r;
                         while($res = mysqli_fetch_assoc($q)) {
                     echo '
                     <tr id="tr_'.$res['id'].'">
-                        <td><button id="item_'.$res['id'].'" onclick="javascript:add_cart('.$res['id'].')" type="button" class="btn btn-success btn-add" data-id="'.$res['id'].'" data-price="'.$res['sales_price'].'" data-service="'.$res['service_item'].'">Add</button></td>
-                        <td>'.$res['service_item'].'</td>
-                        <td>$'.number_format($res['sales_price'],2,".",",").'</td>
+                        <td class="p-4"><button id="item_'.$res['id'].'" onclick="javascript:add_cart('.$res['id'].')" type="button" class="btn btn-success btn-add" data-id="'.$res['id'].'" data-price="'.$res['sales_price'].'" data-service="'.$res['service_item'].'">Add</button></td>
+                        <td class="p-4">'.$res['service_item'].'</td>
+                        <td class="p-4">$'.number_format($res['sales_price'],2,".",",").'</td>
                     </tr>';
                         }
                     ?>
@@ -158,10 +158,9 @@ $( document ).ready(function()
 
     if(order == ''){
         generate_order_id(10);
+    }else{
+        show_cart();
     }
-    //else{
-    //    show_cart();
-    //}
 
     $(document).on('change', '#repack_type', function(){
         var r_type = $(this).val();
@@ -228,7 +227,6 @@ function show_cart()
         shopping_cart.push(response);
         
         $.each(shopping_cart[0], function (i, item) {
-            $("#tr_"+item.cart_service_id).hide();
             console.log(shopping_cart[0]);
             console.log("order_id: " + item.cart_order_id);
              list_item +=  '<tr id="detail_'+detail_id+'" data-id="'+item.cart_service_id+'" data-price="'+item.cart_service_price+'">'+
@@ -261,12 +259,12 @@ function show_cart()
 
 function add_cart(id)
 {
-    item = [];
-    total_price = 0;
-    list_item = '';
-    detail_id = 0;
-//console.log('item'+item);
-//console.log('cart'+shopping_cart);
+    //item = [];
+    //total_price = 0;
+    //list_item = '';
+    //detail_id = 0;
+console.log('item'+item);
+console.log('cart'+shopping_cart);
 
     var order = $("#order_id").val();
 

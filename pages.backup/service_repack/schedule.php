@@ -1,6 +1,6 @@
 <?php
 $url = $_GET['repack_type'];  
-//echo $_GET['container'];
+$_SESSION['repack_container_id'] = (isset($_SESSION['repack_container_id']) && $_SESSION['repack_container_id'] > 0) ? $_SESSION['repack_container_id'] : $_GET['container'];
 ?>
 <div class="row">
 	<h4>Schedule your reserve repack</h4>
@@ -20,20 +20,13 @@ $url = $_GET['repack_type'];
 						<br />
 						<?php
 
-						$cq = mysqli_query($link, 'SELECT * FROM containers WHERE customer=\''.sf($_SESSION['uid']).'\' AND id=\''.sf($_GET['container']).'\'');
+						$cq = mysqli_query($link, 'SELECT * FROM containers WHERE customer=\''.sf($_SESSION['uid']).'\' AND id=\''.sf($_SESSION['repack_container_id']).'\'');
 
 						if(mysqli_num_rows($cq)>0) {
 							
-							//$c = mysqli_fetch_assoc($cq);
+							$c = mysqli_fetch_assoc($cq);
 						
-							//echo ''.$c['manufacturer'].' '.$c['model'].''.($c['serial']!=='' ? ' SN: '.$c['serial'] : '').' &nbsp;&nbsp; <button type="button" class="btn-sm btn-warning" onclick="step_containerinfo(\''.$c['id'].'\')">Change</button>';
-							while($c = mysqli_fetch_assoc($cq)) {
-                                $_SESSION['repack_container_id'] = $c['id'];
-                                $s = $c['service_id'];
-                                $h = unserialize($c['harness']);
-                                echo ''.$h['make'].' '.$h['model'].''.($h['serial']!=='' ? ' SN: '.$h['serial'] : '').' &nbsp;&nbsp; <button type="button" class="btn-sm btn-warning" onclick="step_containerinfo(\''.$c['id'].'\')">Change</button>';
-                                
-                            }
+							echo ''.$c['manufacturer'].' '.$c['model'].''.($c['serial']!=='' ? ' SN: '.$c['serial'] : '').' &nbsp;&nbsp; <button type="button" class="btn-sm btn-warning" onclick="step_containerinfo(\''.$c['id'].'\')">Change</button>';
 						}
 						
 						?>
@@ -123,7 +116,7 @@ $url = $_GET['repack_type'];
 				<label for="pickup_date" class="control-label"><strong>Estimated Pickup Date:</strong></label>
 				
 				<input type="text" class="form-control" id="pickup_date" name="pickup_date" value="<?php echo date('m-d-Y', strtotime(get_next_pickup_date('standard')));?>"/>
-				<input type="hidden" id="container_id" name="container_id" value="<?php echo $_SESSION['repack_container_id'];?>">
+				<input type="hidden" id="container_id" name="container_id" value="<?php echo $c['id'];?>">
 			</div>
 			
 			<button  class="btn btn-primary" >Continue to Payment</button>

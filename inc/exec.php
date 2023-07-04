@@ -1476,6 +1476,21 @@ case 'update_staff':
 					    }
 			break;
 
+		case 'service_checkout':
+		    if($_POST['cart_order_id'] != ''){
+					    $query = 'UPDATE `shopping_cart` SET `cart_status`=\'0\' WHERE `cart_order_id`=\''.sf($_POST['cart_order_id']).'\'
+					                    AND `cart_customer_id`=\''.sf($_POST['cart_customer_id']).'\'';
+					    
+					    $set = mysqli_query($link,$query);
+		    }
+					    
+					        echo 'var stepper = new Stepper(document.querySelector(\'.bs-stepper\'));';
+						    echo 'stepper.to(3);';
+						
+					    	echo '$(\'#schedule-part\').load(\''.root().'inc/exec.php?act=service_repack&page=schedule&repack_type='.sf($_POST['repack_type']).'&container='.sf($_POST['existing_container']).'&s='.sf($_POST['s']).'\');';
+					    
+			break;
+
 		case 'show_cart':
 		$cart = array();
 					    $query = 'SELECT * FROM `shopping_cart` WHERE `cart_order_id`=\''.sf($_POST['cart_order_id']).'\' AND cart_status=\'1\'';
@@ -1860,12 +1875,54 @@ echo json_encode($_POST);
 			}
 
 			echo 'var stepper = new Stepper(document.querySelector(\'.bs-stepper\'));';
-			echo 'stepper.to(3);';
-			echo '$(\'#finalize-part\').load(\''.root().'/inc/exec.php?act=schedule_repack&page=payment&repack_type='.$type.'&container='.$_SESSION['repack_container_id'].'&speed='.$speed.'&dropoff_date='.$dropoff_date.'&estimated_pickup='.$pickup.'\');';
+			echo 'stepper.to(4);';
+			echo '$(\'#finalize-part\').load(\''.root().'/inc/exec.php?act=service_repack&page=payment&repack_type='.$type.'&container='.$_SESSION['repack_container_id'].'&speed='.$speed.'&dropoff_date='.$dropoff_date.'&estimated_pickup='.$pickup.'\');';
 			
 			
 			//echo '$(\'#pickup_date\').val(\''.get_next_pickup_date($speed).'\');';
 			
+		
+		break;
+		
+		case 'submit_service_order':
+			
+			$repack_type = ($_GET['repack_type'] == 'tandem') ? 'tandem' : 'sport';
+			
+			
+			$dropoff_date = $_POST['dropoff_date'];
+			
+			$speed = sf($_POST['speed']);
+			
+			$pickup = get_next_pickup_date($speed,$_POST['dropoff_date']);
+			
+			$container = $_SESSION['repack_container_id'];
+			
+			$paid = 0.00;
+			
+			$price = ($repack_type == 'tandem') ? ($repack_pricing[$speed]+100) : $repack_pricing[$speed];
+			
+			$total = $price;
+			
+			$rq = mysqli_query($link,'SELECT * FROM repacks WHERE `customer`=\''.sf($_SESSION['uid']).'\' AND `container`=\''.sf($container).'\'');
+            $r = mysqli_fetch_assoc($rq);
+            
+                /*$wo  = mysqli_query($link, 'UPDATE work_orders SET `dropoff_date` = \''.sf($dropoff_date).'\', `estimated_pickup`=\''.sf($pickup).'\', `initial_price`=\''.$price.'\',`paid`=\''.$paid.'\',`total_cost`= \''.$total.'\' WHERE `id`=\''.sf($r['work_order']).'\'');
+		*/
+		$que = 'INSERT INTO work_orders (`customer`,`container`,`type`,`date`,`schedule_date`,`dropoff_date`,`estimated_pickup`,`status`,`notes`,`initial_price`,`paid`,`total_cost`) VALUES (\''.sf($_SESSION['uid']).'\',\''.sf($container).'\',\''.sf($repack_type).'\',NOW(),\''.sf($r['schedule_date']).'\',\''.sf($dropoff_date).'\',\''.sf($pickup).'\',\'pending\',\'\',\''.sf($price).'\',\''.sf($paid).'\',\''.sf($total).'\')';
+		//echo $que;
+			$wo  = mysqli_query($link, $que);
+			
+			$wo_id = mysqli_insert_id($link);
+			
+			mysqli_query($link, 'UPDATE repacks SET `work_order` = \''.sf($wo_id).'\' WHERE `id`=\''.sf($r['id']).'\'');
+			
+			unset($_SESSION['repack_container_id']);
+			
+			$id = $r['id'];
+			
+			echo 'document.location=\''.root().'service_order_success/?id='.$id.'\';';
+			
+			//echo $repack_type.'-'.$price;
 		
 		break;
 		
@@ -1905,7 +1962,7 @@ echo json_encode($_POST);
 			
 			$id = $r['id'];
 			
-			echo 'document.location=\''.root().'/repack_order_success/?id='.$id.'\';';
+			echo 'document.location=\''.root().'repack_order_success/?id='.$id.'\';';
 			
 			//echo $repack_type.'-'.$price;
 		

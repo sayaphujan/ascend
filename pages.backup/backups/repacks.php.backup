@@ -1,0 +1,438 @@
+<?
+if ($_SESSION['type']!=='admin') {
+	header('location: /');
+	exit();
+}
+?>
+
+<style>
+#repack_content { color: #fff}
+
+.table {
+	background-color: bebebe;
+}
+
+fieldset {
+    display: none;
+}
+
+fieldset.show {
+    display: block;
+}
+
+select:focus, input:focus {
+    -moz-box-shadow: none !important;
+    -webkit-box-shadow: none !important;
+    box-shadow: none !important;
+    border: 1px solid #2196F3 !important;
+    outline-width: 0 !important;
+    font-weight: 400;
+}
+
+button:focus {
+    -moz-box-shadow: none !important;
+    -webkit-box-shadow: none !important;
+    box-shadow: none !important;
+    outline-width: 0;
+}
+
+.tabs {
+    margin: 2px 5px 0px 5px;
+    padding-bottom: 10px;
+    cursor: pointer;
+}
+
+.tabs:hover, .tabs.active {
+    border-bottom: 1px solid #2196F3;
+}
+
+a:hover {
+    text-decoration: none;
+    color: #1565C0;
+}
+
+.box {
+    margin-bottom: 10px;
+    border-radius: 5px;
+    padding: 10px;
+}
+
+.modal-backdrop { 
+    background-color: #64B5F6;
+}
+
+.line {
+    background-color: #CFD8DC;
+    height: 1px;
+    width: 100%;
+}
+
+@media screen and (max-width: 768px) {
+    .tabs h6 {
+        font-size: 12px;
+    }
+}
+
+.font-weight-bold {
+    color: #fff!important;
+    font-weight: 700!important;
+}
+
+.text-muted  {
+    color: #fff!important;
+}
+</style>
+        <!-- Modal-->
+        <div id="repack_modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" class="modal fade text-left">
+            <div role="document" class="modal-dialog modal-lg">
+                <div class="modal-content" style="background-color:#1d1e22">
+                    <div class="modal-header row d-flex justify-content-between mx-1 mx-sm-3 mb-0 pb-0 border-0">
+                        <div class="tabs active" id="work_order">
+                            <h6 class="font-weight-bold">Work Order</h6>
+                        </div>
+                        <div class="tabs" id="additional">
+                            <h6 class="text-muted">Additional Work</h6>
+                        </div>
+                        <div class="tabs" id="customer">
+                            <h6 class="text-muted">Customer</h6>
+                        </div>
+                        <div class="tabs" id="container">
+                            <h6 class="text-muted">Container</h6>
+                        </div>
+                    </div>
+                    <div class="line"></div>
+                    <div class="modal-body p-0">
+                        <fieldset  class="show" id="tab_work_order">
+                            <form class="form-horizontal" id="step_parts_form" action="" method="post">
+                        		  <div class="modal-body" id="repack_content">
+                        		    
+                        		    <input type="hidden" class="form-control" id="work_order_id" name="work_order_id" placeholder="Work Order ID"/>
+                        		    <input type="hidden" class="form-control" id="repack_id" name="repack_id" placeholder="Repack ID"/>
+                        		    <input type="hidden" class="form-control" id="repack_type" name="repack_type" placeholder="Repack Type"/>
+                        		    <input type="hidden" class="form-control" id="repack_customer" name="repack_customer" placeholder="Repack Customer"/>
+                        		    <input type="hidden" class="form-control" id="schedule_date" name="schedule_date" placeholder="Schedule Date"/>
+                        		    
+                        			<div class="form-group">
+                        				<label for="dropoff_date" class="control-label"><strong>Dropoff  Date:</strong></label>
+                        				<input type="text" class="form-control" id="dropoff_date" name="dropoff_date" placeholder="Dropoff Date"/>
+                        			</div>
+                        			<div class="form-group">
+                        				<label for="estimated_pickup" class="control-label"><strong>Estimated Pickup:</strong></label>
+                        				<input type="text" class="form-control" id="estimated_pickup" name="estimated_pickup" placeholder="Estimated Pickup"/>
+                        			</div>
+                        			<div class="form-group">
+                        				<label for="initial_price" class="control-label"><strong>Initial Price:</strong></label>
+                        				<input type="text" class="form-control" id="initial_price" name="initial_price" placeholder="Initial Price"/>
+                        			</div>
+                        			<div class="form-group">
+                        				<label for="paid" class="control-label"><strong>Paid Amount:</strong></label>
+                        				<input type="text" class="form-control" id="paid" name="paid" placeholder="Paid Amount"/>
+                        			</div>
+                        			<div class="form-group">
+                        				<label for="amount" class="control-label"><strong>Amount Due:</strong></label>
+                        				<input type="text" class="form-control" id="additional_cost" name="additional_cost" placeholder="Additional Cost"/>
+                        			</div>
+                        			<div class="form-group">
+                        				<label for="notes" class="control-label"><strong>Notes:</strong></label>
+                        				<textarea class="form-control" id="notes" name="notes" placeholder="Notes"/></textarea>
+                        			</div>
+                        		  </div>
+                        	  </form>
+                        </fieldset>
+                        <fieldset id="tab_additional" style="padding:10px">
+                            <br/>
+                            <? include("additional_work.php"); ?>		
+                        </fieldset>
+                        <fieldset id="tab_customer">
+                           <? include("account.php"); ?>
+                        </fieldset>
+                        <fieldset id="tab_container" style="padding:10px">
+                            <br/>
+                           <? include("schedule_repack/container_info.php"); ?>
+                        </fieldset>
+                    </div>
+                    <div class="line"></div>
+                    <div class="modal-footer">
+                		<button type="button" class="btn btn-danger" data-dismiss="modal">Close</button> 
+                		<button type="button" class="btn btn-info" onclick="save_work_order()">Save</button>
+                		<button type="button" class="btn btn-success btn-check">Checked-In</button>
+                	</div>
+                </div>
+            </div>
+        </div>
+<script>
+function repack(id) {
+	$('#repack_modal').modal({backdrop: 'static', keyboard: false});
+	//$.post( "/inc/exec.php?act=repack_content&id="+id+"&load=1", '', '', 'script');
+	
+	 $.ajax({
+        url: '<?=root();?>do/set_repack_session/',
+        type: 'POST',
+        dataType: 'json', 
+        data: {'id':id},
+        encode: true,
+        success: function(res){
+            
+        }
+    });
+	
+	$.ajax({
+        url: '<?=root();?>do/repack_content/?id='+id+'&load=1',
+        type: 'GET',
+        dataType: 'json', // added data type
+        success: function(res) {
+            $('.wo-id').html(res.repack_id);
+            $('.btn-check').attr('data-check',res.repack_id);
+            $('.btn-check').attr('data-text','Checked-In');
+            $('input[name="work_order_id"]').val(res.work_order_id);
+            $('input[name="repack_id"]').val(res.repack_id);
+            $('input[name="repack_type"]').val(res.repack_type);
+            $('input[name="repack_customer"]').val(res.repack_customer);
+            $('input[name="dropoff_date"]').val(res.repack_dropoff);
+            $('input[name="estimated_pickup"]').val(res.repack_pickup);
+            $('input[name="schedule_date"]').val(res.repack_schedule);
+            $('input[name="initial_price"]').val(res.initial_price);
+            $('input[name="paid"]').val(res.paid);
+            $('input[name="additional_cost"]').val(res.additional_cost);
+            $('textarea[name="notes"]').val(res.work_notes);
+            //$('input[name="qb_code').val(res.qb_code);
+            //$('textarea[name="description"]').val(res.description);
+        },
+         error: function(jqXHR, textStatus, errorThrown) {
+            setTimeout(function() {$('#repack_modal').modal('hide');}, 200);
+            alert("error");
+        }
+    });
+}
+
+var timer;
+$("#dropoff_date, #estimated_pickup, #intial_price, #paid, #additional_cost, #notes").keyup(function() {
+    clearTimeout(timer);
+    timer = setTimeout(function() {
+      save_work_order();
+    }, 300);
+});
+	
+function save_work_order(){
+    var formData = {
+      repack_id         : $("#repack_id").val(),
+      repack_type       : $("#repack_type").val(),
+      repack_customer   : $("#repack_customer").val(),
+      dropoff_date      : $("#dropoff_date").val(),
+      estimated_pickup  : $("#estimated_pickup").val(),
+      initial_price     : $("#initial_price").val(),
+      paid              : $("#paid").val(),
+      additional_cost   : $("#additional_cost").val(),
+      notes             : $("#notes").val(),
+      schedule_date   : $("#schedule_date").val(),
+      work_order_id   : $("#work_order_id").val(),
+    };
+    
+    $.ajax({
+        url: '<?=root();?>do/update_repack/',
+        type: 'POST',
+        dataType: 'json', 
+        data: formData,
+        encode: true,
+        success: function(res){
+            
+        }
+    });
+
+    event.preventDefault();
+}
+</script>
+
+<div class="container">
+	<h3 style="margin-top:20px">Scheduled Repacks</h3>
+	
+	<button id="show_delivered" type="button" class="btn btn-primary" style="float:right;margin-bottom:25px">Show Delivered Repacks</button>
+	
+<table class="table table-dark scheduled-repacks">
+  <thead>
+    <tr>
+      <th scope="col">Workorder#</th>
+      <th scope="col">Customer</th>
+      <th scope="col">Speed</th>
+      <th scope="col">Container</th>
+	  <th scope="col">Dropoff</th>
+	  <th scope="col">Pickup</th>
+	  <th scope="col">Status</th>
+	  <th scope="col"></th>
+    </tr>
+  </thead>
+  <tbody>
+	<?
+
+	$rq = mysqli_query($link, 'SELECT repacks.*, containers.manufacturer, containers.model, containers.serial, users.first_name, users.last_name FROM `repacks` LEFT JOIN containers ON repacks.container = containers.id LEFT JOIN users ON repacks.customer = users.id WHERE repacks.status != \'delivered\' ORDER BY repacks.speed, repacks.estimated_pickup');
+	while($r = mysqli_fetch_assoc($rq)) {
+		
+		
+	?>
+
+		<tr>
+			<th scope="row"><?=$r['id']?></th>
+			<td><a href="#"><?=$r['first_name']?> <?=$r['last_name']?></a></td>
+			<td><?=$r['speed']?></td>
+			<td><a href="#"><?=$r['manufacturer']?> <?=$r['model']?></a></td>
+			<td><?=date('m-d-y', strtotime($r['dropoff_date']))?></td>
+			<td><?=date('m-d-y', strtotime($r['estimated_pickup']))?></td>
+			<td><?=$r['status']?></td>
+			<td>
+			<?
+			
+			if($r['status']=='pending') {
+			
+				$btn_class = 'btn-success btn-check';
+				$btn_txt = 'Begin Repack';
+			
+			}
+			
+			if($r['status']=='In-Progress') {
+			
+				$btn_class = 'btn-danger';
+				$btn_txt = 'In-Progress';
+			
+			}
+			
+			if($r['status']=='Checked-In') {
+			
+				$btn_class = 'btn-primary';
+				$btn_txt = 'Checked-In';
+			
+			}
+			
+			if($r['status']=='Completed') {
+			
+				$btn_class = 'btn-info';
+				$btn_txt = 'View';
+			
+			}
+			
+			
+			?>
+				<button type="button" data-toggle="modal" data-target="#repack_modal"  data-backdrop="static" data-keyboard="false" onclick="repack(<?=$r['id']?>)" class="btn <?=$btn_class?> btn-<?=$r['id']?>" data-check="<?=$r['id']?>" data-text="<?=$btn_txt?>"><?=$btn_txt?></button>
+			
+			</td>
+		</tr>
+
+	<? } ?>
+   
+  </tbody>
+</table>
+<table class="table table-dark scheduled-repacks-delivered" style="display:none">
+  <thead>
+    <tr>
+      <th scope="col">Workorder#</th>
+      <th scope="col">Customer</th>
+      <th scope="col">Speed</th>
+      <th scope="col">Container</th>
+	  <th scope="col">Dropoff</th>
+	  <th scope="col">Pickup</th>
+	  <th scope="col">Status</th>
+	  <th scope="col"></th>
+    </tr>
+  </thead>
+  <tbody>
+	<?
+
+	$rq = mysqli_query($link, 'SELECT repacks.*, containers.manufacturer, containers.model, containers.serial, users.first_name, users.last_name FROM `repacks` LEFT JOIN containers ON repacks.container = containers.id LEFT JOIN users ON repacks.customer = users.id WHERE repacks.status = \'delivered\' ORDER BY repacks.speed, repacks.estimated_pickup');
+	while($r = mysqli_fetch_assoc($rq)) {
+		
+		
+	?>
+
+		<tr>
+			<th scope="row"><?=$r['id']?></th>
+			<td><a href="#"><?=$r['first_name']?> <?=$r['last_name']?></a></td>
+			<td><?=$r['speed']?></td>
+			<td><a href="#"><?=$r['manufacturer']?> <?=$r['model']?></a></td>
+			<td><?=date('m-d-y', strtotime($r['dropoff_date']))?></td>
+			<td><?=date('m-d-y', strtotime($r['estimated_pickup']))?></td>
+			<td><?=$r['status']?></td>
+			<td>
+			<?
+			
+			if($r['status']=='Delivered') {
+			
+				$btn_class = 'btn-info';
+				$btn_txt = 'Show';
+			
+			}
+			
+			?>
+				<button type="button" data-toggle="modal" data-target="#repack_modal"  data-backdrop="static" data-keyboard="false" onclick="repack(<?=$r['id']?>)" class="btn <?=$btn_class?>"><?=$btn_txt?></button>
+			
+			</td>
+		</tr>
+
+	<? } ?>
+   
+  </tbody>
+</table>
+</div>
+<script>
+$( document ).ready(function() {
+    $('#show_delivered').on('click', function (e) {
+        e.preventDefault();
+        $('.scheduled-repacks').toggle();
+        $('.scheduled-repacks-delivered').toggle();
+        $(this).text(function(i, text){
+          return text === "Show Delivered Repacks" ? "Show Scheduled Repacks" : "Show Delivered Repacks";
+      })
+    });
+    
+    $(".tabs").click(function(){
+    
+        $(".tabs").removeClass("active");
+        $(".tabs h6").removeClass("font-weight-bold");    
+        $(".tabs h6").addClass("text-muted");    
+        $(this).children("h6").removeClass("text-muted");
+        $(this).children("h6").addClass("font-weight-bold");
+        $(this).addClass("active");
+    
+        current_fs = $(".active");
+    
+        next_fs = $(this).attr('id');
+        next_fs = "#tab_" + next_fs;
+    
+        $("fieldset").removeClass("show");
+        $(next_fs).addClass("show");
+    
+        current_fs.animate({}, {
+            step: function() {
+                current_fs.css({
+                    'display': 'none',
+                    'position': 'relative'
+                });
+                next_fs.css({
+                    'display': 'block'
+                });
+            }
+        });
+    });
+
+});
+
+$('.btn-check').on('click', function (e) {
+        e.preventDefault();
+        
+        var id = $(this).attr('data-check');
+        var status = $(this).attr('data-text');
+        
+        $.ajax({
+            url: '<?=root();?>do/update_status_repack/',
+            type: 'POST',
+            dataType: 'json', 
+            data: {'status':status, 'repack_id': id},
+            encode: true,
+            success: function(res){
+                if(res == 1){
+                    $('.btn-'+id).html(status);
+                }
+            }
+        });
+        
+});
+
+</script>

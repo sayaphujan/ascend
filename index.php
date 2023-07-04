@@ -44,11 +44,6 @@ if (isset($_SESSION['adminid'])) {
             $title .= '';
             break;
 
-        case 'service_list':
-            $page = 'pages/service_repack/service_list.php';
-            $title .= '';
-            break;
-
         case 'service':
             $page = 'pages/service.php';
             $title .= '';
@@ -72,6 +67,11 @@ if (isset($_SESSION['adminid'])) {
     	
     	case 'repack_order_success':
     		$page = 'pages/rigging_order_success.php';
+    		$title .= '';
+    	break;
+    	
+    	case 'service_order_success':
+    		$page = 'pages/service_order_success.php';
     		$title .= '';
     	break;
     	
@@ -169,11 +169,6 @@ if (isset($_SESSION['adminid'])) {
             $title .= '';
             break;
 
-        case 'service_list':
-            $page = 'pages/service_repack/service_list.php';
-            $title .= '';
-            break;
-
         case 'service':
             $page = 'pages/service.php';
             $title .= '';
@@ -197,6 +192,11 @@ if (isset($_SESSION['adminid'])) {
     	
     	case 'repack_order_success':
     		$page = 'pages/rigging_order_success.php';
+    		$title .= '';
+    	break;
+    	
+    	case 'service_order_success':
+    		$page = 'pages/service_order_success.php';
     		$title .= '';
     	break;
     	
@@ -281,11 +281,6 @@ if (isset($_SESSION['adminid'])) {
 
         case 'service_repack':
             $page = 'pages/service_repack.php';
-            $title .= '';
-            break;
-
-        case 'service_list':
-            $page = 'pages/service_repack/service_list.php';
             $title .= '';
             break;
 

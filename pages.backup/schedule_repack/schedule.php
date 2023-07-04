@@ -1,6 +1,5 @@
 <?php
 $url = $_GET['repack_type'];  
-//echo $_GET['container'];
 ?>
 <div class="row">
 	<h4>Schedule your reserve repack</h4>
@@ -20,20 +19,13 @@ $url = $_GET['repack_type'];
 						<br />
 						<?php
 
-						$cq = mysqli_query($link, 'SELECT * FROM containers WHERE customer=\''.sf($_SESSION['uid']).'\' AND id=\''.sf($_GET['container']).'\'');
+						$cq = mysqli_query($link, 'SELECT * FROM containers WHERE customer=\''.sf($_SESSION['uid']).'\' AND id=\''.sf($_SESSION['repack_container_id']).'\'');
 
 						if(mysqli_num_rows($cq)>0) {
 							
-							//$c = mysqli_fetch_assoc($cq);
+							$c = mysqli_fetch_assoc($cq);
 						
-							//echo ''.$c['manufacturer'].' '.$c['model'].''.($c['serial']!=='' ? ' SN: '.$c['serial'] : '').' &nbsp;&nbsp; <button type="button" class="btn-sm btn-warning" onclick="step_containerinfo(\''.$c['id'].'\')">Change</button>';
-							while($c = mysqli_fetch_assoc($cq)) {
-                                $_SESSION['repack_container_id'] = $c['id'];
-                                $s = $c['service_id'];
-                                $h = unserialize($c['harness']);
-                                echo ''.$h['make'].' '.$h['model'].''.($h['serial']!=='' ? ' SN: '.$h['serial'] : '').' &nbsp;&nbsp; <button type="button" class="btn-sm btn-warning" onclick="step_containerinfo(\''.$c['id'].'\')">Change</button>';
-                                
-                            }
+							echo ''.$c['manufacturer'].' '.$c['model'].''.($c['serial']!=='' ? ' SN: '.$c['serial'] : '').' &nbsp;&nbsp; <button type="button" class="btn-sm btn-warning" onclick="step_containerinfo(\''.$c['id'].'\')">Change</button>';
 						}
 						
 						?>
@@ -66,7 +58,7 @@ $url = $_GET['repack_type'];
     							$r = mysqli_fetch_assoc($cq);
     						}
 				?>
-
+				<?php echo $url;?>
 				<label for="priority" class="control-label"><strong>Select your Repack Speed:</strong></label>
 				<select class="form-control" id="speed" name="speed">
 				    <?php if($url == 'tandem'){ ?>
@@ -74,10 +66,6 @@ $url = $_GET['repack_type'];
 					    <option value="rush1" <?php if($r['speed'] == 'rush1' ) { echo 'selected'; } ?>>Rush 1 (Front of line) - $<?php echo $repack_pricing['rush1']+100;?>.00</option>
 					    <option value="rush2" <?php if($r['speed'] == 'rush2' ) { echo 'selected'; } ?>>Rush 2 (Immediate) - $<?php echo $repack_pricing['rush2']+100;?>.00</option>    
 				    <?php }else if($url == 'sport'){ ?>
-    					<option value="standard" <?php if($r['speed'] == 'standard' ) { echo 'selected'; } ?>>Standard Lead Time - $<?php echo $repack_pricing['standard']?></option>
-    					<option value="rush1" <?php if($r['speed'] == 'rush1' ) { echo 'selected'; } ?>>Rush 1 (Front of line) - $<?php echo $repack_pricing['rush1']?></option>
-    					<option value="rush2" <?php if($r['speed'] == 'rush2' ) { echo 'selected'; } ?>>Rush 2 (Immediate) - $<?php echo $repack_pricing['rush2']?></option>
-    				<?php }else if($url == 'pilot'){ ?>
     					<option value="standard" <?php if($r['speed'] == 'standard' ) { echo 'selected'; } ?>>Standard Lead Time - $<?php echo $repack_pricing['standard']?></option>
     					<option value="rush1" <?php if($r['speed'] == 'rush1' ) { echo 'selected'; } ?>>Rush 1 (Front of line) - $<?php echo $repack_pricing['rush1']?></option>
     					<option value="rush2" <?php if($r['speed'] == 'rush2' ) { echo 'selected'; } ?>>Rush 2 (Immediate) - $<?php echo $repack_pricing['rush2']?></option>
@@ -123,7 +111,7 @@ $url = $_GET['repack_type'];
 				<label for="pickup_date" class="control-label"><strong>Estimated Pickup Date:</strong></label>
 				
 				<input type="text" class="form-control" id="pickup_date" name="pickup_date" value="<?php echo date('m-d-Y', strtotime(get_next_pickup_date('standard')));?>"/>
-				<input type="hidden" id="container_id" name="container_id" value="<?php echo $_SESSION['repack_container_id'];?>">
+				<input type="hidden" id="container_id" name="container_id" value="<?php echo $c['id'];?>">
 			</div>
 			
 			<button  class="btn btn-primary" >Continue to Payment</button>
@@ -141,6 +129,11 @@ function update_pickup(date) {
 function schedule_dropoff() {
 
 	$.post( "<?php  echo root();?>inc/exec.php?act=schedule_dropoff&repack_type=<?php echo $url;?>&ajax=1&schedule=1", $('#schedule_form').serialize(), '', 'script');
+	
+	//var stepper = new Stepper(document.querySelector('.bs-stepper'))
+	//stepper.to(3);
+	
+	//$('#schedule-part').load('/inc/exec.php?act=schedule_repack&repack_type=<?php echo $url;?>&page=schedule&container='+container+'&dropoff=);
 }
 
 $('#dropoff_date').on('input',function(e){
