@@ -40,7 +40,7 @@ if ( empty( $_SESSION[ 'uid' ] ) )header( 'location: /' );
                 <div class="col-md-6">
                     <div><u><strong>Service</strong></u></div>
                     <?php 
-                    $que = 'SELECT * FROM shopping_cart WHERE cart_order_id =\''.sf($_SESSION['order_id']).'\' AND cart_status=\'0\'';
+                    $que = 'SELECT * FROM shopping_cart WHERE cart_order_id =\''.sf($_GET['order']).'\' AND cart_status=\'0\'';
                             //echo $que;
                             $q = mysqli_query($link, $que);
                             $total_price = 0;
@@ -48,7 +48,8 @@ if ( empty( $_SESSION[ 'uid' ] ) )header( 'location: /' );
                                 $total_price +=$res['cart_service_price'];
                             }
 
-                            $que = 'SELECT * FROM service_cart WHERE sc_cart_order_id =\''.sf($_SESSION['order_id']).'\'';
+                            $que = 'SELECT * FROM service_cart WHERE sc_cart_order_id =\''.sf($_GET['order']).'\'';
+                            //echo $que;
                             $q = mysqli_query($link, $que);
                             while($res = mysqli_fetch_assoc($q)) {
                                 $total_price +=$res['sc_cart_mainchute'];

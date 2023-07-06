@@ -32,7 +32,9 @@
                         }
                         
                         $check = mysqli_query($link,'SELECT * FROM service_cart WHERE sc_cart_order_id=\''.sf($_SESSION['order_id']).'\'');
+
                         $mainchute = mysqli_fetch_assoc($check);
+                        $total_price +=$mainchute['sc_cart_mainchute'];
                     ?>
                     <tr>
                         <td colspan=2>
@@ -42,8 +44,8 @@
                         </td>
                         <td>
                             <select id="cart_mainchute" name="cart_mainchute">
-                                <option value="0" <?php if($mainchute == 0){ echo 'selected'; }?>>No</option>
-                                <option value="12" <?php if($mainchute == 12){ echo 'selected'; }?>>Yes (+$12)</option>
+                                <option value="0" <?php if($mainchute['sc_cart_mainchute'] == 0){ echo 'selected'; }?>>No</option>
+                                <option value="12" <?php if($mainchute['sc_cart_mainchute'] == 12){ echo 'selected'; }?>>Yes (+$12)</option>
                             </select>
                         </td>
                     </tr>
@@ -66,32 +68,22 @@
 </div>
 
 <script>
-$( document ).ready(function() 
-{
     var total_price_sub = 0;
     var total_price = 0;
-    var base_price = 0;
-    var price = base_price;
-    
+
+$( document ).ready(function() 
+{
     $(".btn-remove").unbind().click(function() {
         var price = $(this).data('price');
-            console.log("price "+price);
-            calculate_total_price(price);   
+        calculate_total_price(price);   
     });
-
 
     $(document).on('change', '#cart_mainchute', function(){
-        var main = $(this).val();
-        $.post( "<?php echo root();?>inc/exec.php?act=cart_mainchute", { 'cart_order_id' : '<?php echo $_SESSION['order_id'];?>', 'cart_customer_id' : '<?php echo $_SESSION['uid'];?>' ,'cart_mainchute' : main}, '', 'script');
-        calculate_mainchute(main);
+        calculate_mainchute($(this).val());
     });
-    
-    /*$(document).on('click', '.btn-remove', function()
-    {
-        var id = $(this).data('id');
-        
-    });*/
 });
+
+
 
 function step_service_list(container){
     var stepper = new Stepper(document.querySelector('.bs-stepper'))
@@ -131,8 +123,12 @@ function number_format (number, decimals, dec_point, thousands_sep) {
 
 
 function calculate_mainchute(price){
+
+    $.post( "<?php echo root();?>inc/exec.php?act=cart_mainchute", { 'cart_order_id' : '<?php echo $_SESSION['order_id'];?>', 'cart_customer_id' : '<?php echo $_SESSION['uid'];?>' ,'cart_mainchute' : price}, '', 'script');
+
     var total_price_sub = parseFloat($('#total_price').text().replace('$', ''));
-    if($("#cart_mainchute").val() == 12){
+    
+    if(price == 12){
         total_price_sub += parseFloat(price);
     }else{
         total_price_sub -= parseFloat(12);

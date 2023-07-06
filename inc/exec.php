@@ -1484,7 +1484,7 @@ case 'update_staff':
 		case 'del_item_cart':
 					    $query = 'DELETE FROM `shopping_cart` WHERE `cart_order_id`=\''.sf($_POST['cart_order_id']).'\'
 					                    AND `cart_service_id`=\''.sf($_POST['cart_service_id']).'\'';
-					    
+					    //echo $query;
 					    $delete = mysqli_query($link,$query);
 					    if($delete){
 					    	echo 'delete OK';
@@ -1933,15 +1933,15 @@ echo json_encode($_POST);
 			
 			mysqli_query($link, 'UPDATE repacks SET `work_order` = \''.sf($wo_id).'\' WHERE `id`=\''.sf($r['id']).'\'');
 			
+			$id = $r['id'];
+			
+			echo 'document.location=\''.root().'service_order_success/?id='.$id.'&order='.$_SESSION['order_id'].'\';';
+			
+			
 			unset($_SESSION['repack_container_id']);
 			unset($_SESSION['order_id']);
 			unset($_SESSION['repack_type']);
 			
-			$id = $r['id'];
-			
-			echo 'document.location=\''.root().'service_order_success/?id='.$id.'\';';
-			
-			//echo $repack_type.'-'.$price;
 		
 		break;
 		
