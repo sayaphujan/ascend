@@ -157,8 +157,6 @@ $_SESSION['repack_type'] = $r;
 //default variable definition
 //default variable definition
 var shopping_cart = [];
-var item = [];
-var list_item = '';
 var total_price = 0;
 var detail_id = 0;
 
@@ -220,19 +218,18 @@ function checkout(r_type){
     $('#service-part').load('<?php  echo root();?>inc/exec.php?act=service_repack&repack_type='+r_type+'&page=service_summary&container=<?php echo $_SESSION['repack_container_id'];?>&s=<?php echo $s;?>&order_id='+$("#order_id").val());
 }
 
-function calculate_total_price(price){
-    var total_price_sub = parseFloat($('#total_price').text().replace('$', ''));
-    total_price_sub += parseFloat(price);
-    var total_price = total_price_sub.toFixed(2);
-    $('#total_price').html(number_format(total_price, 2, '.', ','));
-}
+//function calculate_total_price(price){
+//    var total_price_sub = parseFloat($('#total_price').text().replace('$', ''));
+//    total_price_sub += parseFloat(price);
+//    var total_price = total_price_sub.toFixed(2);
+//    $('#total_price').html(number_format(total_price, 2, '.', ','));
+//}
 
 function show_cart()
 {
     var item = [];
     var list_item = '';
     var detail_id = 0;
-    var total_price = 0;
     
     $("#repack_type").addClass("disabled");
     $.ajax({
@@ -240,32 +237,32 @@ function show_cart()
       type: 'POST',
       data: { 'cart_order_id' : $("#order_id").val() },
       success: function(response) {
+        var list_item = '';
+        var total_price = 0; // Reset total_price before recalculating
     
         $.each(response, function (i, val) {
             $("#tr_"+val.cart_service_id).hide();
             
              list_item +=  '<tr id="detail_'+detail_id+'" data-id="'+val.cart_service_id+'" data-price="'+val.cart_service_price+'">'+
-                            '<td style="cursor: pointer" onclick="javascript:remove_cart('+detail_id+','+val.cart_service_id+')" width="10%">x</td>'+
+                            '<td style="cursor: pointer" onclick="javascript:remove_cart('+detail_id+')" width="10%">x</td>'+
                             '<td width="70%">'+val.cart_service_name+'</td>'+
                             '<td width="20%" align="right">$'+val.cart_service_price+'</td>'+
                           '</tr>';
 
-            item.id = val.cart_service_id;
-            item.service = val.cart_service_name;
-            item.price = val.cart_service_price;
-            
+            var item = {
+                    id: val.cart_service_id,
+                    service: val.cart_service_name,
+                    price: val.cart_service_price
+            };
+    
             shopping_cart.push(item);    
             
             total_price += parseFloat(val.cart_service_price);
+            //total_price += parseFloat(item.price);
             detail_id++;
         });
         
-        
-        $('#shopping-cart-detail table tbody').html(list_item);
-        $('#total_price').html(total_price);
-        $('#shopping-cart-value').fadeOut(500, function() {
-            $(this).text(total_price).fadeIn(500);
-        })
+        updateCartDetails(list_item, total_price);
       },
       error: function(xhr, status, error) {
         response = 'error';
@@ -278,8 +275,6 @@ function show_cart()
 function add_cart(id)
 {
     var item = [];
-    var list_item = '';
-    var detail_id = 0;
     var total_price = 0;
     
     if($("#order_id").val() == ''){
@@ -291,13 +286,15 @@ function add_cart(id)
     item.service = $('#item_'+id).data('service');
     item.price = $('#item_'+id).data('price');
     
-    shopping_cart.push(item)  
+    shopping_cart.push(item);
+    //total_price += parseFloat(item.price); // Update total_price
     
-    //console.log(shopping_cart[0]);
+    var list_item = '';
+
     shopping_cart.forEach(function(value, index)
     {
         list_item +=  '<tr id="detail_'+detail_id+'" data-id="'+value.id+'" data-price="'+value.price+'">'+
-                        '<td style="cursor: pointer" onclick="javascript:remove_cart('+detail_id+','+value.id+')" width="10%">x</td>'+
+                        '<td style="cursor: pointer" onclick="javascript:remove_cart('+detail_id+')" width="10%">x</td>'+
                         '<td width="70%">'+value.service+'</td>'+
                         '<td width="20%" align="right">$'+value.price+'</td>'+
                       '</tr>';
@@ -305,12 +302,7 @@ function add_cart(id)
         total_price += parseFloat(value.price);
         detail_id++;
     })
-    
-    $('#shopping-cart-detail table tbody').html(list_item);
-    $('#total_price').html(total_price);
-    $('#shopping-cart-value').fadeOut(500, function() {
-        $(this).text(total_price).fadeIn(500);
-    })
+    updateCartDetails(list_item, total_price);
     $("#tr_"+id).hide();
     
     $.ajax({
@@ -328,15 +320,24 @@ function add_cart(id)
     });
 }
 
-function remove_cart(id, tr)
+function updateCartDetails(list_item, total_price){
+    $('#shopping-cart-detail table tbody').html(list_item);
+    $('#total_price').text(total_price);
+    $('#shopping-cart-value').fadeOut(500, function() {
+        $(this).text(total_price).fadeIn(500); // Update the shopping cart value with 2 decimal places
+    });
+}
+
+function remove_cart(id)
 {
     item_id = $('#detail_'+id).data('id');
-    total_price -= parseFloat($('#detail_'+id).data('price'));
+    var total_price = parseFloat($('#total_price').text().replace('$', ''));
+    var removedItemPrice = parseFloat($('#detail_' + id).data('price'));
+    total_price -= removedItemPrice;
+
 
         shopping_cart.forEach(function(value, index)
         {
-            //alert("index"+index);
-
             if(index == id){
                 shopping_cart.splice(index, 1);
             }
@@ -349,9 +350,11 @@ function remove_cart(id, tr)
     })
     
     $('#detail_'+id).fadeOut(500, function(){  
-        $(this).remove(); 
+        $(this).remove();
+        updateDetailIds(); // Update the detail_id values after removing the item 
     })
 
+    //updateListTotalPrice(removedPrice);
 
     if(shopping_cart.length === 0){
         $("#repack_type").removeClass("disabled");
@@ -360,18 +363,40 @@ function remove_cart(id, tr)
     $.ajax({
       url: '<?php echo root();?>do/del_item_cart/',
       type: 'POST',
-      data: { 'cart_order_id' : $("#order_id").val(), 'cart_service_id' : tr, 'cart_customer_id' : '<?php echo $_SESSION['uid'];?>' },
+      data: { 'cart_order_id' : $("#order_id").val(), 'cart_service_id' : item_id, 'cart_customer_id' : '<?php echo $_SESSION['uid'];?>' },
       success: function(response) {
         // Handle the success response here
         console.log(response);
-        $("#tr_"+tr).show();
-        $("#tr_"+tr).attr('display','block');
-
+        $("#tr_"+item_id).show();
       },
       error: function(xhr, status, error) {
         // Handle any errors that occur during the request
       }
     });
+}
+
+function updateListTotalPrice(removedPrice) {
+    var list_total_price = 0;
+
+    $('#shopping-cart-detail table tbody tr').each(function() {
+        var price = parseFloat($(this).data('price'));
+        list_total_price += price;
+    });
+
+    if (list_total_price === 0) {
+        $('#total_price').text(0);
+    } else {
+        $('#total_price').text(list_total_price.toFixed(2));
+    }
+}
+
+function updateDetailIds() {
+    $('#shopping-cart-detail table tbody tr').each(function(index) {
+        $(this).attr('id', 'detail_' + index);
+        $(this).find('td[onclick]').attr('onclick', 'remove_cart(' + index + ')');
+    });
+
+    detail_id = $('#shopping-cart-detail table tbody tr').length;
 }
 
 function generate_order_id(length){

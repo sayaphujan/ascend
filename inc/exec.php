@@ -1484,7 +1484,7 @@ case 'update_staff':
 		case 'del_item_cart':
 					    $query = 'DELETE FROM `shopping_cart` WHERE `cart_order_id`=\''.sf($_POST['cart_order_id']).'\'
 					                    AND `cart_service_id`=\''.sf($_POST['cart_service_id']).'\'';
-					    //echo $query;
+					    echo $query;
 					    $delete = mysqli_query($link,$query);
 					    if($delete){
 					    	echo 'delete OK';

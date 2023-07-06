@@ -140,6 +140,7 @@ function calculate_mainchute(){
 function remove_cart(id, price)
 {
     var total = parseFloat($("#total").val() - price);
+    var mainchute = parseFloat($("#cart_mainchute").val());
 
         $.ajax({
           url: '<?php echo root();?>do/del_item_cart/',
@@ -150,7 +151,7 @@ function remove_cart(id, price)
             console.log(response);
             $("#tr_"+id).hide();
             $("#total").val(total);
-            var total_price = total.toFixed(2);
+            var total_price = (total+mainchute).toFixed(2);
             $('#total_price').html('$'+number_format(total_price, 2, '.', ','));
           },
           error: function(xhr, status, error) {
