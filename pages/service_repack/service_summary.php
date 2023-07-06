@@ -30,11 +30,12 @@
                     </tr>';
                     $total_price +=$res['cart_service_price'];
                         }
-                        
+
+                        $total_service = $total_price;
                         $check = mysqli_query($link,'SELECT * FROM service_cart WHERE sc_cart_order_id=\''.sf($_SESSION['order_id']).'\'');
 
                         $mainchute = mysqli_fetch_assoc($check);
-                        $total_price +=$mainchute['sc_cart_mainchute'];
+                        $total_service +=$mainchute['sc_cart_mainchute'];
                     ?>
                     <tr>
                         <td colspan=2>
@@ -53,8 +54,10 @@
                      echo '
                     <tr>
                         <td colspan=2><h5>Total </h5></td>
-                        <td><h5><span id="total_price">$'.number_format($total_price,2,".",",").'</span></h5></td>
+                        <td><h5><span id="total_price">$'.number_format($total_service,2,".",",").'</span></h5></td>
                     </tr>';
+
+                    echo '<input type="hidden" id="total" name="total" value="'.$total_price.'">';
                     ?>
             	  	
             </tbody>
@@ -70,16 +73,12 @@
 <script>
     var total_price_sub = 0;
     var total_price = 0;
+    var total = 0;
 
 $( document ).ready(function() 
 {
-    $(".btn-remove").unbind().click(function() {
-        var price = $(this).data('price');
-        calculate_total_price(price);   
-    });
-
     $(document).on('change', '#cart_mainchute', function(){
-        calculate_mainchute($(this).val());
+        calculate_mainchute();
     });
 });
 
@@ -122,31 +121,25 @@ function number_format (number, decimals, dec_point, thousands_sep) {
 }
 
 
-function calculate_mainchute(price){
+function calculate_mainchute(){
 
-    $.post( "<?php echo root();?>inc/exec.php?act=cart_mainchute", { 'cart_order_id' : '<?php echo $_SESSION['order_id'];?>', 'cart_customer_id' : '<?php echo $_SESSION['uid'];?>' ,'cart_mainchute' : price}, '', 'script');
+    $.post( "<?php echo root();?>inc/exec.php?act=cart_mainchute", { 'cart_order_id' : '<?php echo $_SESSION['order_id'];?>', 'cart_customer_id' : '<?php echo $_SESSION['uid'];?>' ,'cart_mainchute' : $("#cart_mainchute").val()}, '', 'script');
 
-    var total_price_sub = parseFloat($('#total_price').text().replace('$', ''));
-    
-    if(price == 12){
-        total_price_sub += parseFloat(price);
-    }else{
-        total_price_sub -= parseFloat(12);
+    if($("#cart_mainchute").val() == 12){
+         var total = parseFloat($("#total").val()) + 12;
     }
-    
-    var total_price = total_price_sub.toFixed(2);
-    $('#total_price').html(number_format(total_price, 2, '.', ','));
-}
 
-function calculate_total_price(price){
-    var total_price_sub = parseFloat($('#total_price').text().replace('$', ''));
-    total_price_sub -= parseFloat(price);
-    var total_price = total_price_sub.toFixed(2);
-    $('#total_price').html(number_format(total_price, 2, '.', ','));
+    if($("#cart_mainchute").val() == 0){
+        var total = (parseFloat($("#total").val()) + 12)-12;
+    }
+
+    var total_price = total.toFixed(2);
+    $('#total_price').html('$'+number_format(total_price, 2, '.', ','));
 }
 
 function remove_cart(id, price)
 {
+    var total = parseFloat($("#total").val() - price);
 
         $.ajax({
           url: '<?php echo root();?>do/del_item_cart/',
@@ -156,7 +149,9 @@ function remove_cart(id, price)
             // Handle the success response here
             console.log(response);
             $("#tr_"+id).hide();
-
+            $("#total").val(total);
+            var total_price = total.toFixed(2);
+            $('#total_price').html('$'+number_format(total_price, 2, '.', ','));
           },
           error: function(xhr, status, error) {
             // Handle any errors that occur during the request
