@@ -1,4 +1,9 @@
 <style>
+.disabled {
+    opacity: 0.6;
+    pointer-events: none;
+}
+
 #shopping-cart{
     position: fixed;
     top: 11px;
@@ -59,9 +64,11 @@ switch ($serv) {
 }
 
     $cq = mysqli_query($link, 'SELECT * FROM shopping_cart WHERE cart_container_id=\''.sf($_SESSION['repack_container_id']).'\' AND cart_status=\'1\' AND cart_customer_id=\''.sf($uid).'\' ORDER BY cart_id DESC LIMIT 1');
-    $d = mysqli_fetch_assoc($cq);
-    $r = $d['cart_repack_type'];
-    $_SESSION['order_id'] = $d['cart_order_id'];
+    if(mysqli_num_rows($cq) > 0){
+        $d = mysqli_fetch_assoc($cq);
+        $r = $d['cart_repack_type'];
+        $_SESSION['order_id'] = $d['cart_order_id'];
+    }
 
 if(isset($_GET['cart']) && $_GET['cart'] == 'true' ){ 
     $r = $_GET['repack_type'];
@@ -74,7 +81,7 @@ $_SESSION['repack_type'] = $r;
     	<div class="col-md-12">
             <!--<div class="alert alert-warning d-none align-items-center" role="alert" id="containeralert"></div>-->
         <label for="make" class="control-label"><strong>Please select Repack Type :</strong></label>
-        <select class="form-control dd" id="repack_type" name="repack_type">
+        <select class="form-control dd  <?php if($_SESSION['order_id'] !=''){ echo 'disabled'; }?>" id="repack_type" name="repack_type">
             <option value=""> -- Select Repack Type  -- </option>
             <option value="sport" <?php if($r=='sport'){echo 'selected'; }?>>Schedule Sport/Tandem Repack</option>
             <option value="pilot" <?php if($r=='pilot'){echo 'selected'; }?>>Schedule Pilot Repack</option>
@@ -105,11 +112,15 @@ $_SESSION['repack_type'] = $r;
                             $que = "SELECT * FROM service_list WHERE group_qb_code = 8";
                         }
 
+                        if($_SESSION['order_id'] != ''){
+                            $que = $que.' AND id NOT IN (SELECT cart_service_id FROM shopping_cart WHERE cart_customer_id=\''.sf($_SESSION['uid']).'\' AND cart_status=\'1\')';
+                        }
+
                         $q = mysqli_query($link, $que);
                         while($res = mysqli_fetch_assoc($q)) {
                     echo '
                     <tr id="tr_'.$res['id'].'">
-                        <td><button id="item_'.$res['id'].'" onclick="javascript:add_cart('.$res['id'].')" type="button" class="btn btn-success btn-add" data-id="'.$res['id'].'" data-price="'.$res['sales_price'].'" data-service="'.$res['service_item'].'">Add</button></td>
+                        <td><button id="item_'.$res['id'].'" type="button" class="btn btn-success btn-add" data-id="'.$res['id'].'" data-price="'.$res['sales_price'].'" data-service="'.$res['service_item'].'">Add</button></td>
                         <td>'.$res['service_item'].'</td>
                         <td>$'.number_format($res['sales_price'],2,".",",").'</td>
                     </tr>';
@@ -150,20 +161,30 @@ var item = [];
 var list_item = '';
 var total_price = 0;
 var detail_id = 0;
+var order = $("#order_id").val();
 
 $( document ).ready(function() 
 {
     
-    var order = $("#order_id").val();
+    
 
     if(order == ''){
         generate_order_id(10);
     }
-    //else{
-    //    show_cart();
-    //}
+    else{
+        show_cart();
+    }
+
+     $(".btn-add").unbind().click(function() {
+        var id = $(this).data('id');
+            add_cart(id);
+    });
 
     $(document).on('change', '#repack_type', function(){
+        if($("#order_id").val() != ''){
+            $(this).addClass('disabled');
+        }
+        
         var r_type = $(this).val();
         step_service(r_type);
     });
@@ -218,68 +239,72 @@ function calculate_total_price(price){
 
 function show_cart()
 {
-    var order = $("#order_id").val();
     $.ajax({
       url: '<?php echo root();?>do/show_cart/',
       type: 'POST',
       data: { 'cart_order_id' : order },
       success: function(response) {
-        //console.log(response);      
-        shopping_cart.push(response);
-        
-        $.each(shopping_cart[0], function (i, item) {
-            $("#tr_"+item.cart_service_id).hide();
-            console.log(shopping_cart[0]);
-            console.log("order_id: " + item.cart_order_id);
-             list_item +=  '<tr id="detail_'+detail_id+'" data-id="'+item.cart_service_id+'" data-price="'+item.cart_service_price+'">'+
-                            '<td style="cursor: pointer" onclick="javascript:remove_cart('+detail_id+')" width="10%">x</td>'+
-                            '<td width="70%">'+item.cart_service_name+'</td>'+
-                            '<td width="20%" align="right">$'+item.cart_service_price+'</td>'+
-                          '</tr>';
-            
-            total_price += parseFloat(item.cart_service_price);
-            detail_id++;
+    
 
-            item.id = item.cart_service_id;
-            item.service = item.cart_service_name;
-            item.price = item.cart_service_price;
-            
-        });
+        //shopping_cart.push(response);
         
+        $.each(response, function (i, val) {
+            
+            $("#tr_"+val.cart_service_id).hide();
+            
+             list_item +=  '<tr id="detail_'+detail_id+'" data-id="'+val.cart_service_id+'" data-price="'+val.cart_service_price+'">'+
+                            '<td style="cursor: pointer" onclick="javascript:remove_cart('+detail_id+','+val.cart_service_id+')" width="10%">x</td>'+
+                            '<td width="70%">'+val.cart_service_name+'</td>'+
+                            '<td width="20%" align="right">$'+val.cart_service_price+'</td>'+
+                          '</tr>';
+
+            item.id = val.cart_service_id;
+            item.service = val.cart_service_name;
+            item.price = val.cart_service_price;
+            
+            total_price += parseFloat(val.cart_service_price);
+            detail_id++;
+        });
+        list_item = list_item;
+        detail_id = detail_id;
+        shopping_cart.push(item);
+
         $('#shopping-cart-detail table tbody').html(list_item);
         $('#total_price').html(total_price);
         $('#shopping-cart-value').fadeOut(500, function() {
             $(this).text(total_price).fadeIn(500);
         })
-        
       },
       error: function(xhr, status, error) {
-        // Handle any errors that occur during the request
+        response = 'error';
       }
     });
+       
+     
 }
 
 function add_cart(id)
 {
-    item = [];
-    total_price = 0;
-    list_item = '';
-    detail_id = 0;
-//console.log('item'+item);
-//console.log('cart'+shopping_cart);
 
-    var order = $("#order_id").val();
+    //item = [];
+    //total_price = 0;
+    //list_item = '';
+    //detail_id = 0;
+    
 
     item.id = $('#item_'+id).data('id');
     item.service = $('#item_'+id).data('service');
     item.price = $('#item_'+id).data('price');
     
-    shopping_cart.push(item)
+    if ($.inArray(item, shopping_cart) === -1) {
+        shopping_cart.push(item)  
+    }
+    
     
     shopping_cart.forEach(function(value, index)
     {
         list_item +=  '<tr id="detail_'+detail_id+'" data-id="'+value.id+'" data-price="'+value.price+'">'+
-                        '<td style="cursor: pointer" onclick="javascript:remove_cart('+detail_id+')" width="10%">x</td>'+
+                        '<td style="cursor: pointer" onclick="javascript:remove_cart('+detail_id+','+value.id+')" width="10%">x</td>'+
                         '<td width="70%">'+value.service+'</td>'+
                         '<td width="20%" align="right">$'+value.price+'</td>'+
                       '</tr>';
@@ -295,7 +320,7 @@ function add_cart(id)
     })
     $("#tr_"+id).hide();
     
-
+    
     $.ajax({
       url: '<?php echo root();?>do/add_cart/',
       type: 'POST',
@@ -303,6 +328,7 @@ function add_cart(id)
       success: function(response) {
         // Handle the success response here
         console.log(response);
+        $("select:not([class*='disabled'])").addClass("disabled");
       },
       error: function(xhr, status, error) {
         // Handle any errors that occur during the request
@@ -310,12 +336,13 @@ function add_cart(id)
     });
 }
 
-function remove_cart(id)
+function remove_cart(id, tr)
 {
+
     item_id = $('#detail_'+id).data('id');
     total_price -= parseFloat($('#detail_'+id).data('price'));
     
-    var order = $("#order_id").val();
+    
 
     shopping_cart.forEach(function(value, index)
     {
@@ -332,6 +359,10 @@ function remove_cart(id)
         $(this).remove(); 
     })
 
+    if(total_price == 0){
+        $("#repack_type").removeClass("disabled");
+    }
+
     $.ajax({
       url: '<?php echo root();?>do/del_item_cart/',
       type: 'POST',
@@ -339,6 +370,7 @@ function remove_cart(id)
       success: function(response) {
         // Handle the success response here
         console.log(response);
+        $("#tr_"+tr).show();
       },
       error: function(xhr, status, error) {
         // Handle any errors that occur during the request

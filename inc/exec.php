@@ -1456,12 +1456,29 @@ case 'update_staff':
 					                    ';
 					    
 					    $insert = mysqli_query($link,$query);
+					    //$id = mysqli_insert_id($link);
+					    
+					    $check = mysqli_query($link,'SELECT * FROM service_cart WHERE `sc_cart_order_id`=\''.sf($_POST['cart_order_id']).'\'');
+					    if(mysqli_num_rows($check) == 0){
+    					    $sc = 'INSERT INTO `service_cart` SET 
+    					                    `sc_cart_order_id`=\''.sf($_POST['cart_order_id']).'\'
+    					                    , `sc_cart_mainchute`= 0
+    					                    ,`sc_cart_created`=NOW()
+    					                    ';
+    					    $insert = mysqli_query($link,$sc);
+					    }
 					    $_SESSION['order_id'] = $_POST['cart_order_id'];
 					    if($insert){
 					    	echo $_POST['cart_order_id'];
 					    }else{
 					    	echo 'error';
 					    }
+			break;
+
+
+		case 'cart_mainchute':
+					    $query = 'UPDATE `service_cart` SET `sc_cart_mainchute`=\''.sf($_POST['cart_mainchute']).'\' WHERE `sc_cart_order_id`=\''.sf($_POST['cart_order_id']).'\'';
+					    $set = mysqli_query($link,$query);
 			break;
 
 		case 'del_item_cart':
@@ -1917,6 +1934,8 @@ echo json_encode($_POST);
 			mysqli_query($link, 'UPDATE repacks SET `work_order` = \''.sf($wo_id).'\' WHERE `id`=\''.sf($r['id']).'\'');
 			
 			unset($_SESSION['repack_container_id']);
+			unset($_SESSION['order_id']);
+			unset($_SESSION['repack_type']);
 			
 			$id = $r['id'];
 			

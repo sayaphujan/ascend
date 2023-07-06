@@ -47,6 +47,12 @@ if ( empty( $_SESSION[ 'uid' ] ) )header( 'location: /' );
                             while($res = mysqli_fetch_assoc($q)) {
                                 $total_price +=$res['cart_service_price'];
                             }
+
+                            $que = 'SELECT * FROM service_cart WHERE sc_cart_order_id =\''.sf($_SESSION['order_id']).'\'';
+                            $q = mysqli_query($link, $que);
+                            while($res = mysqli_fetch_assoc($q)) {
+                                $total_price +=$res['sc_cart_mainchute'];
+                            }
                             
                             echo '$'.number_format($total_price,2,".",",");
                     ?>

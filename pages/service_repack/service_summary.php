@@ -30,6 +30,24 @@
                     </tr>';
                     $total_price +=$res['cart_service_price'];
                         }
+                        
+                        $check = mysqli_query($link,'SELECT * FROM service_cart WHERE sc_cart_order_id=\''.sf($_SESSION['order_id']).'\'');
+                        $mainchute = mysqli_fetch_assoc($check);
+                    ?>
+                    <tr>
+                        <td colspan=2>
+                            Will you be dropping off your rig with main chute attached? 
+                           <br/>
+                            <span style="font-size:13px">*There will be a $12 re-pack fee automatically added as we will need to un-pack & re-pack your main chute.</span>
+                        </td>
+                        <td>
+                            <select id="cart_mainchute" name="cart_mainchute">
+                                <option value="0" <?php if($mainchute == 0){ echo 'selected'; }?>>No</option>
+                                <option value="12" <?php if($mainchute == 12){ echo 'selected'; }?>>Yes (+$12)</option>
+                            </select>
+                        </td>
+                    </tr>
+                    <?php
                      echo '
                     <tr>
                         <td colspan=2><h5>Total </h5></td>
@@ -40,6 +58,7 @@
             </tbody>
         </table>
         <br/>
+        <button  class="btn btn-primary" id="prev_step" style="float: left;" onclick="step_service_list('<?php echo $_SESSION['repack_container_id'];?>');  return false;">Back to Service Options List</button>        
         <button  class="btn btn-primary" id="next_step" style="float: right;" onclick="schedule('<?php echo $_SESSION['repack_container_id'];?>');  return false;">Continue Scheduling</button>        
 
     	</div>
@@ -47,7 +66,6 @@
 </div>
 
 <script>
-
 $( document ).ready(function() 
 {
     var total_price_sub = 0;
@@ -55,37 +73,37 @@ $( document ).ready(function()
     var base_price = 0;
     var price = base_price;
     
-    $(document).on('click', '.btn-add', function()
-    {
+    $(".btn-remove").unbind().click(function() {
         var price = $(this).data('price');
-        console.log("price "+price);
-        calculate_total_price(price);
+            console.log("price "+price);
+            calculate_total_price(price);   
     });
+
+
+    $(document).on('change', '#cart_mainchute', function(){
+        var main = $(this).val();
+        $.post( "<?php echo root();?>inc/exec.php?act=cart_mainchute", { 'cart_order_id' : '<?php echo $_SESSION['order_id'];?>', 'cart_customer_id' : '<?php echo $_SESSION['uid'];?>' ,'cart_mainchute' : main}, '', 'script');
+        calculate_mainchute(main);
+    });
+    
+    /*$(document).on('click', '.btn-remove', function()
+    {
+        var id = $(this).data('id');
+        
+    });*/
 });
+
+function step_service_list(container){
+    var stepper = new Stepper(document.querySelector('.bs-stepper'))
+    stepper.to(2);
+    
+    $('#service-part').load('<?php  echo root();?>inc/exec.php?act=service_repack&repack_type=<?php echo $_SESSION['repack_type'];?>&page=service_list&container=<?php echo $_SESSION['repack_container_id'];?>&s=<?php echo $_GET['s'];?>&order_id=<?php echo $_SESSION['order_id'];?>');
+
+}
 
 function schedule(container) {
     
     $.post( "<?php echo root();?>inc/exec.php?act=service_checkout&ajax=1&schedule=1&s=<?php echo $_GET['s'];?>", { 'cart_order_id' : '<?php echo $_SESSION['order_id'];?>', 'cart_customer_id' : '<?php echo $_SESSION['uid'];?>' ,'existing_container' : container, 'repack_type' : '<?php echo $_GET['repack_type'];?>' }, '', 'script');
-
-    /*$.ajax({
-      url: '<?php echo root();?>do/service_checkout/',
-      type: 'POST',
-      
-      success: function(response) {
-        // Handle the success response here
-        
-        
-      },
-      error: function(xhr, status, error) {
-        // Handle any errors that occur during the request
-      }
-    });*/
-    
-   /* var stepper = new Stepper(document.querySelector('.bs-stepper'))
-    stepper.to(3);
-    
-    $('#schedule-part').load('<?php  echo root();?>inc/exec.php?act=service_repack&repack_type=sport&page=schedule&container='+container+'&s=<?php echo $s;?>');
-    */
 }
 
 function number_format (number, decimals, dec_point, thousands_sep) {
@@ -111,6 +129,19 @@ function number_format (number, decimals, dec_point, thousands_sep) {
     return s.join(dec);
 }
 
+
+function calculate_mainchute(price){
+    var total_price_sub = parseFloat($('#total_price').text().replace('$', ''));
+    if($("#cart_mainchute").val() == 12){
+        total_price_sub += parseFloat(price);
+    }else{
+        total_price_sub -= parseFloat(12);
+    }
+    
+    var total_price = total_price_sub.toFixed(2);
+    $('#total_price').html(number_format(total_price, 2, '.', ','));
+}
+
 function calculate_total_price(price){
     var total_price_sub = parseFloat($('#total_price').text().replace('$', ''));
     total_price_sub -= parseFloat(price);
@@ -120,19 +151,20 @@ function calculate_total_price(price){
 
 function remove_cart(id, price)
 {
-    $.ajax({
-      url: '<?php echo root();?>do/del_item_cart/',
-      type: 'POST',
-      data: { 'cart_order_id' : '<?php echo $_SESSION['order_id'];?>', 'cart_service_id' : id, 'cart_customer_id' : '<?php echo $_SESSION['uid'];?>' },
-      success: function(response) {
-        // Handle the success response here
-        console.log(response);
-        calculate_total_price(price);
-        $("#tr_"+id).hide();
-      },
-      error: function(xhr, status, error) {
-        // Handle any errors that occur during the request
-      }
-    });
+
+        $.ajax({
+          url: '<?php echo root();?>do/del_item_cart/',
+          type: 'POST',
+          data: { 'cart_order_id' : '<?php echo $_SESSION['order_id'];?>', 'cart_service_id' : id, 'cart_customer_id' : '<?php echo $_SESSION['uid'];?>' },
+          success: function(response) {
+            // Handle the success response here
+            console.log(response);
+            $("#tr_"+id).hide();
+
+          },
+          error: function(xhr, status, error) {
+            // Handle any errors that occur during the request
+          }
+        });
 }
 </script>
