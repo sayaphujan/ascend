@@ -55,19 +55,19 @@
             { "data": "group_qb_code" },
             { "data": "service_item" },
             { "data": "sales_price", "render": function ( data, type, row, meta ){
-                return '<div style="text-align:right">$'+data+'</div>';
+                return '<div style="text-align:right">'+data+'</div>';
               }
             },
             { "data": "master_rigger", "render": function ( data, type, row, meta ){
-                return '<div style="text-align:right">$'+data+'</div>';
+                return '<div style="text-align:right">'+data+'</div>';
               }
             },
             { "data": "senior_rigger", "render": function ( data, type, row, meta ){
-                return '<div style="text-align:right">$'+data+'</div>';
+                return '<div style="text-align:right">'+data+'</div>';
               }
             },
             { "data": "trainee", "render": function ( data, type, row, meta ){
-                return '<div style="text-align:right">$'+data+'</div>';
+                return '<div style="text-align:right">'+data+'</div>';
               }
             },
             { "data": "action", "render": function ( data, type, row, meta ){

@@ -118,7 +118,7 @@ function calculate (el, id){
         $('#shoprate_mfg_'+id).val(1);
     }
 
-    if(price_hr > 1){
+    if(price_hr > 0){
         total = price_hr * service_price;
     }
     total_price = mainchute + total;

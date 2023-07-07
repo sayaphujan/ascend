@@ -93,7 +93,7 @@ case 'update_staff':
     		    
     		    if(mysqli_num_rows($q)==0)
     			{
-    			    	$insert = 'INSERT INTO `service_list` (`qb_code`, `group_qb_code`,`service_item`,`sales_price`,`master_rigger`, `senior_rigger`, `trainee`,`status`,`created`) VALUES (\''.sf($_POST['qb_code']).'\',\''.sf($_POST['group_qb_code']).'\',\''.sf($_POST['service_item']).'\',\''.sf($_POST['sales_price']).'\',\''.sf($_POST['master_rigger']).'\',\''.sf($_POST['senior_rigger']).'\',\''.sf($_POST['trainee']).'\', \'1\',NOW())';
+    			    	$insert = 'INSERT INTO `service_list` (`qb_code`, `group_qb_code`,`service_item`,`shoprate_mfg`,`sales_price`,`master_rigger`, `senior_rigger`, `trainee`,`status`,`created`) VALUES (\''.sf($_POST['qb_code']).'\',\''.sf($_POST['group_qb_code']).'\',\''.sf($_POST['service_item']).'\',\''.sf($_POST['shoprate_mfg']).'\',\''.sf($_POST['sales_price']).'\',\''.sf($_POST['master_rigger']).'\',\''.sf($_POST['senior_rigger']).'\',\''.sf($_POST['trainee']).'\', \'1\',NOW())';
     				mysqli_query($link, $insert);
     			    //echo json_encode($insert);
     			    echo "success";
@@ -110,6 +110,7 @@ case 'update_staff':
             		                               ,`master_rigger`=\''.sf($_POST['master_rigger']).'\'
             		                               ,`senior_rigger`=\''.sf($_POST['senior_rigger']).'\'
             		                               ,`trainee`=\''.sf($_POST['trainee']).'\'
+            		                               ,`shoprate_mfg`=\''.sf($_POST['shoprate_mfg']).'\'
             		                               WHERE `id`=\''.sf($_POST['id']).'\'';                 
             		    mysqli_query($link, $update);
         			        echo "update";
@@ -1816,6 +1817,17 @@ echo json_encode($_POST);
 
             foreach($data as $index => $row)
             {
+            	if($data[$index]['shoprate_mfg'] == '1'){
+            		$data[$index]['sales_price'] = 'SHOPRATE/MFG';
+            		$data[$index]['master_rigger'] = 'SHOPRATE/MFG';
+            		$data[$index]['senior_rigger'] = 'SHOPRATE/MFG';
+            		$data[$index]['trainee'] = 'SHOPRATE/MFG';
+            	}else{
+            		$data[$index]['sales_price'] 	= '$'.$data[$index]['sales_price'];
+            		$data[$index]['master_rigger'] 	= '$'.$data[$index]['master_rigger'];
+            		$data[$index]['senior_rigger'] 	= '$'.$data[$index]['senior_rigger'];
+            		$data[$index]['trainee'] 		= '$'.$data[$index]['trainee'];
+            	}
                  switch($data[$index]['group_qb_code']){
                  	case '1':
                  		$data[$index]['group_qb_code'] = 'ASSEMBLIES, REPACKS, INSPECTIONS';
