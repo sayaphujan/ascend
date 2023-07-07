@@ -79,7 +79,60 @@ case 'update_staff':
             $u = mysqli_fetch_assoc($cq);
 		    echo json_encode($u);
 		break;
-		
+
+		case 'get_service_option':
+	        
+		    $cq = mysqli_query($link, 'SELECT * FROM `service_list` WHERE `id`=\''.sf($_GET['id']).'\'');
+            $u = mysqli_fetch_assoc($cq);
+		    echo json_encode($u);
+		break;
+
+		case 'update_service_option':
+    	//print_r($_POST);
+		     $q = mysqli_query($link, 'SELECT * FROM `service_list` WHERE `qb_code`=\''.sf($_POST['qb_code']).'\'');
+    		    
+    		    if(mysqli_num_rows($q)==0)
+    			{
+    			    	$insert = 'INSERT INTO `service_list` (`qb_code`, `group_qb_code`,`service_item`,`sales_price`,`master_rigger`, `senior_rigger`, `trainee`,`status`,`created`) VALUES (\''.sf($_POST['qb_code']).'\',\''.sf($_POST['group_qb_code']).'\',\''.sf($_POST['service_item']).'\',\''.sf($_POST['sales_price']).'\',\''.sf($_POST['master_rigger']).'\',\''.sf($_POST['senior_rigger']).'\',\''.sf($_POST['trainee']).'\', \'1\',NOW())';
+    				mysqli_query($link, $insert);
+    			    //echo json_encode($insert);
+    			    echo "success";
+    			}
+    			else
+    			{
+    			    $u = mysqli_fetch_assoc($q);
+    			    if($u['status'] == '1'){
+        			   $update = 'UPDATE `service_list` SET
+            		                               `qb_code`=\''.sf($_POST['qb_code']).'\'
+            		                               ,`group_qb_code`=\''.sf($_POST['group_qb_code']).'\'
+            		                               ,`service_item`=\''.sf($_POST['service_item']).'\'
+            		                               ,`sales_price`=\''.sf($_POST['sales_price']).'\'
+            		                               ,`master_rigger`=\''.sf($_POST['master_rigger']).'\'
+            		                               ,`senior_rigger`=\''.sf($_POST['senior_rigger']).'\'
+            		                               ,`trainee`=\''.sf($_POST['trainee']).'\'
+            		                               WHERE `id`=\''.sf($_POST['id']).'\'';                 
+            		    mysqli_query($link, $update);
+        			        echo "update";
+            		    //echo json_encode($update);
+    			    }else{
+    			        echo "inactive";
+    			    }
+    			}
+    			//echo $user;
+		break;
+
+
+		case 'remove_service_option':
+        			   $update = 'UPDATE `service_list` SET
+            		                               `status`=\'0\'
+            		                               WHERE `id`=\''.sf($_POST['id']).'\'';                 
+            		    $res = mysqli_query($link, $update);
+        			        if($res){ echo 1;}
+            		    
+
+    			
+		break;
+
 		case 'get_customer_data':
 	        
 		    $cq = mysqli_query($link, 'SELECT * FROM customers WHERE id=\''.sf($_GET['id']).'\'');
@@ -1493,6 +1546,12 @@ case 'update_staff':
 					    }
 			break;
 
+		case 'shoprate_mfg':
+					    $query = 'UPDATE `shopping_cart` SET `cart_shoprate_mfg`=\''.sf($_POST['cart_shoprate_mfg']).'\' WHERE `cart_order_id`=\''.sf($_POST['cart_order_id']).'\' AND cart_service_id=\''.sf($_POST['cart_service_id']).'\'';
+					    echo $query;
+					    $set = mysqli_query($link,$query);
+			break;
+
 		case 'service_checkout':
 		    if($_POST['cart_order_id'] != ''){
 					    $query = 'UPDATE `shopping_cart` SET `cart_status`=\'0\' WHERE `cart_order_id`=\''.sf($_POST['cart_order_id']).'\'
@@ -1704,13 +1763,10 @@ echo json_encode($_POST);
             
             $where = '';
             if(!empty($search)){
-                $where = "AND (users.first_name LIKE '%".$search."%' OR users.last_name LIKE '%".$search."%' OR users.email LIKE '%".$search."%')";
+                $where = "AND (vusers`.`first_name` LIKE '%".$search."%' OR `users`.`last_name` LIKE '%".$search."%' OR `users`.`email` LIKE '%".$search."%')";
             }
             
-            $query = 'SELECT users.*
-                            , ANY_VALUE(CONCAT(users.first_name,\' \',users.last_name)) as name
-                            FROM `users`
-                            WHERE users.type = \'admin\' AND users.active=\'1\' '.$where.' ';
+            $query = 'SELECT users.*, CONCAT(`users`.`first_name`,\' \',`users`.`last_name`) as name FROM `users` WHERE `users`.`type` = \'admin\' AND `users`.`active`=\'1\' '.$where.' ';
             //echo json_encode($query);
             $order_field    = $_POST['order'][0]['column'];
             $order_ascdesc  = $_POST['order'][0]['dir'];
@@ -1721,6 +1777,132 @@ echo json_encode($_POST);
             $sql_filter_count = mysqli_num_rows($sql_filter);
 
             $data = mysqli_fetch_all($sql_data, MYSQLI_ASSOC);
+            
+            $callback = array(
+                'draw'=>$_POST['draw'],
+                'recordsTotal'=>$sql_count,
+                'recordsFiltered'=>$sql_filter_count,
+                'data'=>$data
+            );
+            header('Content-Type: application/json');
+            echo json_encode($callback);
+			            
+		break;
+		
+		case 'service_list_options':
+		    $search = $_POST['search']['value'];
+            $limit  = $_POST['length'];
+            $start  = $_POST['start'];
+
+            $sql          = mysqli_query($link, "SELECT * FROM `users`");
+            $sql_count    = mysqli_num_rows($sql);
+            
+            $where = '';
+            if(!empty($search)){
+                $where = "AND (`service_list`.`qb_code` LIKE '%".$search."%' OR `service_list`.`service_item` LIKE '%".$search."%')";
+            }
+            
+            $query = 'SELECT * FROM `service_list` WHERE `service_list`.`status`=\'1\' '.$where.' ';
+            //echo json_encode($query);
+            $order_field    = $_POST['order'][0]['column'];
+            $order_ascdesc  = $_POST['order'][0]['dir'];
+            $order          = " ORDER BY ".$_POST['columns'][$order_field]['data']." ".$order_ascdesc;
+
+            $sql_data = mysqli_query($link, $query.$order." LIMIT ".$limit." OFFSET ".$start);
+            $sql_filter = mysqli_query($link, $query);
+            $sql_filter_count = mysqli_num_rows($sql_filter);
+
+            $data = mysqli_fetch_all($sql_data, MYSQLI_ASSOC);
+
+            foreach($data as $index => $row)
+            {
+                 switch($data[$index]['group_qb_code']){
+                 	case '1':
+                 		$data[$index]['group_qb_code'] = 'ASSEMBLIES, REPACKS, INSPECTIONS';
+                 		break;
+
+                 	case '2':
+                 		$data[$index]['group_qb_code'] = 'COMMON MAINTENANCE ITEMS';
+                 		break;
+
+                 	case '3':
+                 		$data[$index]['group_qb_code'] = 'TANDEM MAINTENANCE';
+                 		break;
+
+                 	case '4':
+                 		$data[$index]['group_qb_code'] = 'CANOPY SEWING WORK';
+                 		break;
+
+                 	case '5':
+                 		$data[$index]['group_qb_code'] = 'HARNESS WORK (MASTER RIGGER ONLY)';
+                 		break;
+
+                 	case '6':
+                 		$data[$index]['group_qb_code'] = 'COMMON REPLACEMENT PARTS (DO NOT POST PUBLIC)';
+                 		break;
+
+                 	case '7':
+                 		$data[$index]['group_qb_code'] = 'SEPARATE NOTATION';
+                 		break;
+
+                 	case '8':
+                 		$data[$index]['group_qb_code'] = '(PILOT) ASSEMBLIES, REPACKS, INSPECTIONS';
+                 		break;
+
+
+                 	default:
+                 		$data[$index]['group_qb_code'] = 'ASSEMBLIES, REPACKS, INSPECTIONS';
+                 		break;
+                 }
+                 
+            }
+            
+            $callback = array(
+                'draw'=>$_POST['draw'],
+                'recordsTotal'=>$sql_count,
+                'recordsFiltered'=>$sql_filter_count,
+                'data'=>$data
+            );
+            header('Content-Type: application/json');
+            echo json_encode($callback);
+			            
+		break;
+		
+		case 'service_cart_list':
+		    $search = $_POST['search']['value'];
+            $limit  = $_POST['length'];
+            $start  = $_POST['start'];
+
+            $sql          = mysqli_query($link, "SELECT * FROM `users`");
+            $sql_count    = mysqli_num_rows($sql);
+            
+            $where = '';
+            if(!empty($search)){
+                $where = "AND (`customers`.`first_name` LIKE '%".$search."%' OR `customers`.`last_name` LIKE '%".$search."%' OR `customers`.`email` LIKE '%".$search."%' OR `service_cart`.`sc_cart_order_id` LIKE '%".$search."%')";
+            }
+            
+            $query = 'SELECT *,
+            					CONCAT(`customers`.`first_name`,\' \',`customers`.`last_name`) as name
+            				 , `customers`.`email` as email 
+            				 FROM `service_cart` 
+            				 LEFT JOIN `shopping_cart` ON `shopping_cart`.`cart_order_id` = `service_cart`.`sc_cart_order_id`
+            				 LEFT JOIN `customers` ON `customers`.`id` = `shopping_cart`.`cart_customer_id`
+            				 WHERE `shopping_cart`.`cart_status`=\'1\' '.$where.' ';
+            //echo json_encode($query);
+            $order_field    = $_POST['order'][0]['column'];
+            $order_ascdesc  = $_POST['order'][0]['dir'];
+            $order          = " ORDER BY ".$_POST['columns'][$order_field]['data']." ".$order_ascdesc;
+
+            $sql_data = mysqli_query($link, $query.$order." LIMIT ".$limit." OFFSET ".$start);
+            $sql_filter = mysqli_query($link, $query);
+            $sql_filter_count = mysqli_num_rows($sql_filter);
+
+            $data = mysqli_fetch_all($sql_data, MYSQLI_ASSOC);
+
+            foreach($data as $index => $row)
+            {
+                 $data[$index]['sc_cart_created'] = date('m-d-Y', strtotime($data[$index]['sc_cart_created']));
+            }
             
             $callback = array(
                 'draw'=>$_POST['draw'],
@@ -2154,24 +2336,24 @@ echo json_encode($_POST);
 						if($_GET['schedule']) {
 							
 							if($_SESSION['type'] == 'admin'){
-						      echo 'document.location=\'/staff/\';';
+						      echo 'document.location=\''.root().'/staff/\';';
 							}else{
 							    if(sf($_POST['url']) == '/schedule_sport_repack/'){
-						        echo 'document.location=\'/schedule_sport_repack/\';';
+						        echo 'document.location=\''.root().'/schedule_sport_repack/\';';
     							}else if(sf($_POST['url']) == '/schedule_tandem_repack/'){
-    						        echo 'document.location=\'/schedule_tandem_repack/\';';
+    						        echo 'document.location=\''.root().'/schedule_tandem_repack/\';';
     							}
 
 							}
 						} else {
-							echo 'document.location=\'/repacks/\';';
+							echo 'document.location=\''.root().'/repacks/\';';
 						}
 					}
 					
 					mysqli_query($link, 'UPDATE users SET last_login=NOW() WHERE id=\''.sf($u['id']).'\'');
 					
 					if($_SESSION['type'] == 'admin'){
-					    header('location: '.root().'/staff/');
+					    header('location: '.root().'staff/');
 					}else{
 					    header('location: '.root().'schedule_sport_repack/');
 					}

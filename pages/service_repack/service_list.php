@@ -107,9 +107,9 @@ $_SESSION['repack_type'] = $r;
                     <?php 
 
                         if($r != 'pilot'){
-                            $que = "SELECT * FROM service_list WHERE group_qb_code =".$serv;
+                            $que = "SELECT * FROM service_list WHERE group_qb_code =".$serv." AND status='1'";
                         }else{
-                            $que = "SELECT * FROM service_list WHERE group_qb_code = 8";
+                            $que = "SELECT * FROM service_list WHERE group_qb_code = 8 AND status='1'";
                         }
 
                         /*if($_SESSION['order_id'] != ''){

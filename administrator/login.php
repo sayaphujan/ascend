@@ -32,7 +32,7 @@ function login() {
                 if(result == "error"){
                     $.notify("Sorry this email or password is not valid, please re-check & try again","error")
                 }else{
-                    document.location = '/staff/';
+                    document.location = '<?php echo root();?>staff/';
                 }
             })
 }

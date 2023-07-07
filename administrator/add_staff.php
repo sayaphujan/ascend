@@ -46,12 +46,12 @@ function register() {
                 if(result == "success"){
                     $.notify('Admin succesfully added!', 'success')
                     setTimeout(function () {
-                        document.location = '/staff/';
+                        document.location = '<?php echo root();?>staff/';
                     }, 3000);
                 }else if(result == "update"){
                     $.notify('Data succesfully updated!', 'success')
                     setTimeout(function () {
-                        document.location = '/staff/';
+                        document.location = '<?php echo root();?>staff/';
                     }, 3000);
                 }else if(result == "exist"){
                     $.notify('Email already Exist!', 'error')

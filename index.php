@@ -94,6 +94,26 @@ if (isset($_SESSION['adminid'])) {
     		$page = 'administrator/add_staff.php';
     		$title .= '';
     	break;
+
+        case 'service-options':
+            $page = 'administrator/service_options.php';
+            $title .= '';
+        break;
+
+        case 'service-order':
+            $page = 'administrator/service_order.php';
+            $title .= '';
+        break;
+
+        case 'service-cart-summary':
+            $page = 'administrator/service_cart_summary.php';
+            $title .= '';
+        break;
+
+        case 'add-service-option':
+            $page = 'administrator/add_service_option.php';
+            $title .= '';
+        break;
     	
     	case 'repacks':
     		$page = 'administrator/repacks.php';
@@ -408,10 +428,12 @@ if (isset($_SESSION['adminid'])) {
                                     <li class="nav-item">
                                         <a class="nav-link" href="<?php echo root()?>repacks/">Repacks</a>
                                     </li>
-                                    <!--
                                     <li class="nav-item">
-                                        <a class="nav-link" href="<?php echo root()?>maintenance/">Maintenance</a>
-                                    </li>-->
+                                        <a class="nav-link" href="<?php echo root()?>service-options/">Service Options</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link" href="<?php echo root()?>service-order/">Service Order</a>
+                                    </li>
             						<li class="nav-item">
                                         <a class="nav-link" href="<?php echo root()?>customers/">Customers</a>
                                     </li>
