@@ -34,11 +34,16 @@ $readonly = (isset($_GET['id'])) ? "readonly='readonly'" : '';
                     <input type="text" class="form-control" id="service_item" name="service_item" autocomplete="off" placeholder="Please enter your service item..." required="required"/>
                 </div>
                 <div class="form-group">
-                    <label for="last_name" class="control-label"><strong>Shoprate / MFG:</strong></label>
+                    <label for="last_name" class="control-label"><strong>Shoprate / PER MFR:</strong></label>
                     <select class="form-control dd" id="shoprate_mfg" name="shoprate_mfg">
                         <option value="0">No</option>
-                        <option value="1">Yes</option>
+                        <option value="1">shoprate</option>
+                        <option value="2">PER MFR</option>
                     </select>
+                </div>
+                <div class="form-group shoprate_mfr">
+                    <label for="rphone" class="control-label"><strong><span style="color:red">*Hour(s):</span></strong></label>
+                    <input type="text" class="form-control" id="shoprate_mfg_hour" name="shoprate_mfg_hour" placeholder="Sales Price"/>
                 </div>
                 <div class="form-group">
     				<label for="rphone" class="control-label"><strong>Sales Price:</strong></label>
@@ -96,8 +101,9 @@ function get_data(){
          $('#qb_code').val(res.qb_code);
          $('#group_qb_code').val(res.group_qb_code);
          $('#shoprate_mfg').val(res.shoprate_mfg);
+         $('#shoprate_mfg_hour').val(res.shoprate_mfg_hour);
          $('#service_item').val(res.service_item);
-         $('#sales_price').val(res.sales_pricec);
+         $('#sales_price').val(res.sales_price);
          $('#master_rigger').val(res.master_rigger);
          $('#senior_rigger').val(res.senior_rigger);
          $('#trainee').val(res.trainee);
@@ -110,5 +116,17 @@ $( document ).ready(function() {
     if(id > 0){
         get_data();
     }
+
+/*
+    $(document).on('change', '#shoprate_mfg', function(){
+        var flag = $(this).val();
+
+        if(flag > 0){
+            $(".shoprate_mfr").show();
+        }else{
+            $(".shoprate_mfr").hide();
+        }
+    });*/
+
 });
 </script>

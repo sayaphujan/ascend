@@ -13,30 +13,37 @@
                 <thead>
                       <tr>
                         <!-- Set columns width -->
-                        <th class="text-center py-3 px-4" style="min-width: 50%;">Service Item</th>
-                        <th colspan="2" class="text-center py-3 px-4" style="width: 35%;">Shoprate / MFG</th>
-                        <th class="text-center py-3 px-4" style="width: 10%;">Price</th>
+                        <th class="text-center py-3 px-4">Service Item</th>
+                        <th colspan="2" class="text-center py-3 px-4">Price</th>
                       </tr>
                 </thead>
                 <tbody>         
                         <?php 
-                            $que = 'SELECT * FROM shopping_cart WHERE cart_order_id =\''.sf($_GET['id']).'\' AND cart_status=\'1\'';
+                            $que = 'SELECT * FROM `shopping_cart` WHERE `shopping_cart`.`cart_order_id` =\''.sf($_GET['id']).'\' AND `shopping_cart`.`cart_status` =\'1\'';
                             //echo $que;
                             $q = mysqli_query($link, $que);
                             $total_price = 0;
+                            $flag_shoprate = 0;
+                            $flag_mfr = 0;
+
                             while($res = mysqli_fetch_assoc($q)) {
-                                $shoprate = ($res['cart_shoprate_mfg'] > 0 ) ? $res['cart_shoprate_mfg'] : 1;
+                                $res['cart_service_price'] = ($res['cart_shoprate_mfg'] > 0) ? ($res['cart_shoprate_mfg'] * $res['cart_service_price']) : $res['cart_service_price'];
                         echo '
                         <tr id="tr_'.$res['cart_service_id'].'">
                             <td>'.$res['cart_service_name'].'</td>
-                            <td style="border-right:hidden;width:260px;">
-                                <input type="text" class="shoprate_mfg" id="shoprate_mfg_'.$res['cart_service_id'].'" name="shoprate_mfg_'.$res['cart_service_id'].'" data-id="'.$res['cart_service_id'].'" onkeyup="calculate(shoprate_mfg_'.$res['cart_service_id'].','.$res['cart_service_id'].')" placeholder="insert hour(s)" value="'.$shoprate.'">&nbsp;/hr
+                            <td style="border-right:hidden;width:25%">
+                                <div id="div_'.$res['cart_service_id'].'" style="display:none">
+                                    <input type="text" id="shoprate_mfg_'.$res['cart_service_id'].'" name="shoprate_mfg_'.$res['cart_service_id'].'" data-id="'.$res['cart_service_id'].'" value="'.$res['cart_shoprate_mfg'].'" placeholder="hour(s)" style="width:20%">&nbsp;/hr
+                                
+
+                                    X $ <input type="text" id="price_'.$res['cart_service_id'].'" name="price_'.$res['cart_service_id'].'" value="'.$res['cart_service_price'].'" placeholder="price"  style="width:25%"> = 
+
+                                    <input type="hidden" id="val_service_price'.$res['cart_service_id'].'" name="val_service_price" value="'.$res['cart_service_price'].'">
+                                </div>
                             </td>
-                            <td  style="width: 100px;">
-                                X $'.number_format($res['cart_service_price'],2,".",",").'
-                                <input type="hidden" id="price_'.$res['cart_service_id'].'" name="price_'.$res['cart_service_id'].'" value="'.$res['cart_service_price'].'">
+                            <td>
+                                <span id="cart_service_price_'.$res['cart_service_id'].'" style="float:right;font-size:20px">$'.number_format($res['cart_service_price'],2,".",",").'</span>
                             </td>
-                            <td><span id="cart_service_price" style="float:right">$'.number_format($res['cart_service_price'],2,".",",").'</span></td>
                         </tr>';
                         $total_price +=$res['cart_service_price'];
                             }
@@ -53,7 +60,7 @@
                                <br/>
                                 <span style="font-size:13px">*There will be a $12 re-pack fee automatically added as we will need to un-pack & re-pack your main chute.</span>
                             </td>
-                            <td colspan="3">
+                            <td colspan="2">
                                 <select class="form-control disabled" id="cart_mainchute" name="cart_mainchute" style="float:right;">
                                     <option value="0" <?php if($mainchute['sc_cart_mainchute'] == 0){ echo 'selected'; }?>>No</option>
                                     <option value="12" <?php if($mainchute['sc_cart_mainchute'] == 12){ echo 'selected'; }?>>Yes (+$12)</option>
@@ -64,7 +71,10 @@
                          echo '
                         <tr>
                             <td><h5>Total </h5></td>
-                            <td colspan="3"><h5><span id="total_price" style="float:right">$'.number_format($total_service,2,".",",").'</span></h5></td>
+                            <td colspan="2">
+                                <h4><strong><span id="total_price" style="float:right">$'.number_format($total_service,2,".",",").'</span></strong></h4>
+                                <input type="hidden" id="val_total_price" name="val_total_price" value="'.$total_service.'">
+                            </td>
                         </tr>';
                         ?>
                 	  	
@@ -79,8 +89,8 @@
 <script>
 
 $(document).ready(function() {
-  // Find the input element with the class "shoprate_mfg" and trigger keyup event
-  $('.shoprate_mfg').trigger('keyup');
+
+  check_shop_mfr();
 });
 
 
@@ -107,25 +117,54 @@ function number_format (number, decimals, dec_point, thousands_sep) {
     return s.join(dec);
 }
 
-function calculate (el, id){
+function calculate (id){
     var total = 0;
+    var val_total_service = parseFloat($('#val_total_price').text().replace('$', ''));
+    var val_service_price = parseFloat($('#val_service_price_'+id).val());
+
     var price_hr = parseFloat($('#shoprate_mfg_'+id).val());
     var service_price = parseFloat($('#price_'+id).val());
-    var total_price = parseFloat($('#total_price').text().replace('$', ''));
-    var mainchute = parseFloat($('#cart_mainchute').val());
 
-    if(price_hr < 1){
-        $('#shoprate_mfg_'+id).val(1);
+    console.log(price_hr+','+service_price+','+val_total_service);
+    if(price_hr< 1){
+        price_hr = 0;
+    }
+    if(service_price< 1){
+        service_price = 0;
     }
 
-    if(price_hr > 0){
+
+    if(price_hr>0 && service_price > 0){
         total = price_hr * service_price;
+        console.log(total);
     }
-    total_price = mainchute + total;
+    
+    total_price = (val_total_service - val_service_price) + total;
+    console.log(total_price);
 
-    $.post( "<?php echo root();?>inc/exec.php?act=shoprate_mfg", { 'cart_order_id' : '<?php echo $_GET['id'];?>', 'cart_service_id' : id ,'cart_shoprate_mfg' : price_hr}, '', 'script');
+    $.post( "<?php echo root();?>inc/exec.php?act=shoprate_mfr", { 'cart_order_id' : '<?php echo $_GET['id'];?>', 'cart_service_id' : id ,'cart_shoprate_mfg' : price_hr, 'cart_service_price' : service_price}, '', 'script');
 
-    $('#cart_service_price').html('$'+number_format(total, 2, '.', ','));
-    $('#total_price').html('$'+number_format(total_price, 2, '.', ','));
+    $('#cart_service_price_'+id).html('$'+number_format(total, 2, '.', ','));
+    $('#total_price').html('$'+number_format(total_price, 2, '.', ','));console.log(id);
+}
+
+function check_shop_mfr(){
+    $.ajax({
+        url: "<?php  echo root();?>do/check_flag_shop_mfr/",
+        type: 'GET',
+        dataType: 'json', // added data type
+        success: function(res) {
+            //console.log(res);
+            $.each(res, function (i, val) {
+                $('#shoprate_mfg_'+val.id).addClass('shoprate_mfr');
+                $('#shoprate_mfg_'+val.id).attr('onkeyup','calculate('+val.id+')');
+
+                $('#price_'+val.id).addClass('shoprate_mfr');       
+                $('#price_'+val.id).attr('onkeyup','calculate('+val.id+')');
+
+                $('#div_'+val.id).show();   
+            })
+        }
+    });
 }
 </script>

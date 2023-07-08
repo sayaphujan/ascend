@@ -12,7 +12,7 @@
                     <!-- Set columns width -->
                     <th class="text-right py-3 px-4" style="width: 100px;"></th>
                     <th class="text-center py-3 px-4" style="min-width: 400px;">Service Item</th>
-                    <th class="text-right py-3 px-4" style="width: 100px;">Price</th>
+                    <th class="text-center py-3 px-4" style="width: 100px;">Price</th>
                   </tr>
             </thead>
             <tbody>         
@@ -22,6 +22,7 @@
                         $q = mysqli_query($link, $que);
                         $total_price = 0;
                         while($res = mysqli_fetch_assoc($q)) {
+                            $res['cart_service_price'] = ($res['cart_shoprate_mfg'] > 0) ? ($res['cart_shoprate_mfg'] * $res['cart_service_price']) : $res['cart_service_price'];
                     echo '
                     <tr id="tr_'.$res['cart_service_id'].'">
                         <td><button id="item_'.$res['cart_id'].'" onclick="javascript:remove_cart('.$res['cart_service_id'].','.$res['cart_service_price'].')" type="button" class="btn btn-danger btn-remove" data-id="'.$res['cart_id'].'" data-price="'.$res['cart_service_price'].'" data-service="'.$res['cart_service_name'].'">Remove</button></td>
@@ -93,8 +94,11 @@ function step_service_list(container){
 }
 
 function schedule(container) {
+
+    var stepper = new Stepper(document.querySelector('.bs-stepper'))
+    stepper.to(3);
     
-    $.post( "<?php echo root();?>inc/exec.php?act=service_checkout&ajax=1&schedule=1&s=<?php echo $_GET['s'];?>", { 'cart_order_id' : '<?php echo $_SESSION['order_id'];?>', 'cart_customer_id' : '<?php echo $_SESSION['uid'];?>' ,'existing_container' : container, 'repack_type' : '<?php echo $_GET['repack_type'];?>' }, '', 'script');
+    $('#schedule-part').load('<?php  echo root();?>inc/exec.php?act=service_repack&repack_type=<?php echo $_SESSION['repack_type'];?>&page=schedule&container=<?php echo $_SESSION['repack_container_id'];?>&s=<?php echo $_GET['s'];?>&order_id=<?php echo $_SESSION['order_id'];?>');
 }
 
 function number_format (number, decimals, dec_point, thousands_sep) {

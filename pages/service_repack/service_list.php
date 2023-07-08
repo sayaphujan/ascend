@@ -118,18 +118,18 @@ $_SESSION['repack_type'] = $r;
 
                         $q = mysqli_query($link, $que);
                         while($res = mysqli_fetch_assoc($q)) {
-                            if($res['shoprate_mfg'] == '1'){
+                            /*if($res['shoprate_mfg'] == '1'){
                                 $res['sales_price'] = '0';
-                                $text = "SHOPRATE / MFG";
+                                $text = "$0";
                             }else{
                                 $res['sales_price'] = '$'.number_format($res['sales_price'],2,".",",");
                                 $text = $res['sales_price'];
-                            }
+                            }*/
                     echo '
                     <tr id="tr_'.$res['id'].'">
                         <td><button id="item_'.$res['id'].'" type="button" class="btn btn-success btn-add" data-id="'.$res['id'].'" data-price="'.$res['sales_price'].'" data-service="'.$res['service_item'].'">Add</button></td>
                         <td>'.$res['service_item'].'</td>
-                        <td>'.$text.'</td>
+                        <td>$'.number_format($res['sales_price'],2,".",",").'</td>
                     </tr>';
                         }
                     ?>

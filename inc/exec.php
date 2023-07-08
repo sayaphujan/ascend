@@ -93,7 +93,7 @@ case 'update_staff':
     		    
     		    if(mysqli_num_rows($q)==0)
     			{
-    			    	$insert = 'INSERT INTO `service_list` (`qb_code`, `group_qb_code`,`service_item`,`shoprate_mfg`,`sales_price`,`master_rigger`, `senior_rigger`, `trainee`,`status`,`created`) VALUES (\''.sf($_POST['qb_code']).'\',\''.sf($_POST['group_qb_code']).'\',\''.sf($_POST['service_item']).'\',\''.sf($_POST['shoprate_mfg']).'\',\''.sf($_POST['sales_price']).'\',\''.sf($_POST['master_rigger']).'\',\''.sf($_POST['senior_rigger']).'\',\''.sf($_POST['trainee']).'\', \'1\',NOW())';
+    			    	$insert = 'INSERT INTO `service_list` (`qb_code`, `group_qb_code`,`service_item`,`shoprate_mfg`,`shoprate_mfg_hour`,`sales_price`,`master_rigger`, `senior_rigger`, `trainee`,`status`,`created`) VALUES (\''.sf($_POST['qb_code']).'\',\''.sf($_POST['group_qb_code']).'\',\''.sf($_POST['service_item']).'\',\''.sf($_POST['shoprate_mfg']).'\',\''.sf($_POST['shoprate_mfg_hour']).'\',\''.sf($_POST['sales_price']).'\',\''.sf($_POST['master_rigger']).'\',\''.sf($_POST['senior_rigger']).'\',\''.sf($_POST['trainee']).'\', \'1\',NOW())';
     				mysqli_query($link, $insert);
     			    //echo json_encode($insert);
     			    echo "success";
@@ -1547,11 +1547,27 @@ case 'update_staff':
 					    }
 			break;
 
-		case 'shoprate_mfg':
-					    $query = 'UPDATE `shopping_cart` SET `cart_shoprate_mfg`=\''.sf($_POST['cart_shoprate_mfg']).'\' WHERE `cart_order_id`=\''.sf($_POST['cart_order_id']).'\' AND cart_service_id=\''.sf($_POST['cart_service_id']).'\'';
+		case 'shoprate_mfr':
+					    $query = 'UPDATE `shopping_cart` SET `cart_shoprate_mfg`=\''.sf($_POST['cart_shoprate_mfg']).'\',`cart_service_price`=\''.sf($_POST['cart_service_price']).'\'  WHERE `cart_order_id`=\''.sf($_POST['cart_order_id']).'\' AND cart_service_id=\''.sf($_POST['cart_service_id']).'\'';
 					    echo $query;
 					    $set = mysqli_query($link,$query);
 			break;
+
+		case 'check_flag_shop_mfr':
+
+					    $query = 'SELECT * FROM `service_list` WHERE `shoprate_mfg`!=\'0\'';
+					    
+					    $res = mysqli_query($link,$query);
+					    $data = mysqli_fetch_all($res, MYSQLI_ASSOC);
+            
+			            $callback = array(
+			                'data'=>$data
+			            );
+			            header('Content-Type: application/json');
+			            echo json_encode($callback['data']);
+				    	
+			break;
+
 
 		case 'service_checkout':
 		    if($_POST['cart_order_id'] != ''){
@@ -1899,7 +1915,7 @@ echo json_encode($_POST);
             				 FROM `service_cart` 
             				 LEFT JOIN `shopping_cart` ON `shopping_cart`.`cart_order_id` = `service_cart`.`sc_cart_order_id`
             				 LEFT JOIN `customers` ON `customers`.`id` = `shopping_cart`.`cart_customer_id`
-            				 WHERE `shopping_cart`.`cart_status`=\'1\' '.$where.' ';
+            				 WHERE `shopping_cart`.`cart_status`=\'1\' '.$where.' GROUP BY `service_cart` .`sc_cart_order_id` ';
             //echo json_encode($query);
             $order_field    = $_POST['order'][0]['column'];
             $order_ascdesc  = $_POST['order'][0]['dir'];
@@ -2113,6 +2129,13 @@ echo json_encode($_POST);
 			$price = ($repack_type == 'tandem') ? ($repack_pricing[$speed]+100) : $repack_pricing[$speed];
 			
 			$total = $price;
+
+			if($_POST['cart_order_id'] != ''){
+					    $query = 'UPDATE `shopping_cart` SET `cart_status`=\'0\' WHERE `cart_order_id`=\''.sf($_POST['cart_order_id']).'\'
+					                    AND `cart_customer_id`=\''.sf($_SESSION['uid']).'\'';
+					    
+					    $set = mysqli_query($link,$query);
+		    }
 			
 			$rq = mysqli_query($link,'SELECT * FROM repacks WHERE `customer`=\''.sf($_SESSION['uid']).'\' AND `container`=\''.sf($container).'\'');
             $r = mysqli_fetch_assoc($rq);
