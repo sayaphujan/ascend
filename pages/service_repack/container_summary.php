@@ -1,50 +1,46 @@
 <?php
     $uid = $_SESSION['uid'];
-
-     $cq = mysqli_query($link, 'SELECT * FROM containers WHERE customer=\''.sf($uid).'\' AND service_id=\''.sf($_GET['s']).'\'');
-    if(mysqli_num_rows($cq) == 0){     
-        $_SESSION['repack_container_id'] = 0;
-        $s = $_GET['s'];
-     }else if(mysqli_num_rows($cq) == 1){
-        $res = mysqli_fetch_assoc($cq);
-        $_SESSION['repack_container_id'] = $res['id'];
-        $s = $res['service_id'];
-     }else if(mysqli_num_rows($cq)>1) {
-        while($c = mysqli_fetch_assoc($cq)) {
-            $_SESSION['repack_container_id'] = $c['id'];
-            $s = $c['service_id'];
-            $h = unserialize($c['harness']);
-            $dropdown = '<label for="existing_container" class="control-label"><strong>Pick a previously registered service:</strong></label>
-                        <select class="form-control" id="container" name="container">
-                            <option value="-">-- Select Service --</option>
-                            <option value="0">Register New Service</option>
-                            <option value="'.$c['id'].'">'.$h['make'].' '.$h['model'].''.($h['serial']!=='' ? ' SN: '.$h['serial'] : '').'</option>
-                        </select>';
-
-            ;
-        }
-     }
-
+    $_SESSION['repack_container_id'] = (isset($_SESSION['repack_container_id'])) ? $_SESSION['repack_container_id'] : 0;
+    $s = (isset($_GET['s'])) ? $_GET['s'] : 1;
+    $selected='';
 ?>
     <div class="container-fluid">
 
     <div class="row">
         <h4>Your container information</h4>
+        
     </div>
             <div class="alert alert-warning d-none align-items-center" role="alert" id="containeralert"></div>
     <form id="container_form">
             <div class="col-md-12">
                 <div class="row">
                     <div class="form-group">
+                        <label for="existing_container" class="control-label"><strong>Pick a previously registered service:</strong></label>
+                            <select class="form-control" id="container" name="container">
+                                <option value="-">-- Select Service --</option>
+                                <option value="0">Register New Service</option>
                             <?php
-                            echo $dropdown;
+                                 $cq = mysqli_query($link, 'SELECT * FROM containers WHERE customer=\''.sf($uid).'\' AND service_id=\''.sf($_GET['s']).'\'');
+                                 
+                                 if(mysqli_num_rows($cq)>0) {
+                                    
+                                    while($c = mysqli_fetch_assoc($cq)) {
+                                        $selected = ($_SESSION['repack_container_id'] == $c['id']) ? 'selected' : '';
+                                        $h = unserialize($c['harness']);
+                                        echo '
+                                        <option value="'.$c['id'].'" '.$selected.'>'.$h['make'].' '.$h['model'].''.($h['serial']!=='' ? ' SN: '.$h['serial'] : '').'</option>';
+                                                    
+                                        
+                                        ;
+                                    }
+                                 }
                             ?>
+                            </select>
                     </div>
                 </div>
             </div>
             <hr/>
         <input type="hidden" class="form-control" id="uid" name="uid" value="<?php echo $uid;?>" placeholder="id"/>
-        <input type="hidden" class="form-control" id="existing_container" name="existing_container" value="<?php echo $_SESSION['repack_container_id'];?>"/>
         <input type="hidden" class="form-control" id="s" name="s" value="<?php echo $s;?>" placeholder="service option"/>
             
     		<div class="col-md-12">	
@@ -179,9 +175,8 @@ function add_container() {
 }
 
 function get_data(){
-    var id = $('#existing_container').val();
     $.ajax({
-        url: "<?php echo root();?>do/get_container_data/?id="+id,
+        url: "<?php echo root();?>do/get_container_data/?id="+container_id,
         type: 'GET',
         dataType: 'json', // added data type
         success: function(res) {
@@ -214,33 +209,26 @@ function get_data(){
 }
 
 function step_harness(container){
-    var id = (container > 0) ? container : $("#existing_container").val();
+    var id = (container > 0) ? container : container_id;
 
     document.location='<?php echo root();?>container_information/?id='+id+'&s=<?php echo $s;?>';
 }
 
 $('#container').change(function () {
     var id = $('#container').val();
-    $("#existing_container").val(id);
-    if(id>0){
-        get_data();
+    
+    if(id == 0){
+        document.location='<?php echo root();?>container_information/?id='+id+'&s=<?php echo $s;?>';       
     }else{
-        document.location='<?php echo root();?>container_information/?id='+id;       
+      get_data();
+      
     }
+    
 });
 
+var container_id = '<?php echo $_SESSION['repack_container_id'];?>';
 $( document ).ready(function() {
-    
     $('#container_form input').attr('readonly', 'readonly');
-    var id = $('#existing_container').val();
-    $.session.set('repack_container_id',id);
-    $('#container').val($.session.get('repack_container_id'));
-    //$('#container').trigger('change');
-    
-    if(id>0){
-        get_data();
-    }else{
-        document.location='<?php echo root();?>container_information/?id='+id;       
-    }
+    $("#container").trigger('change');
 });
 </script>

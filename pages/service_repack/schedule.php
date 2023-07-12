@@ -126,7 +126,7 @@ $url = $_GET['repack_type'];
 				<input type="hidden" id="container_id" name="container_id" value="<?php echo $_SESSION['repack_container_id'];?>">
 			</div>
 			
-			<button  class="btn btn-primary" >Continue to Payment</button>
+			<button  class="btn btn-primary" >Finalize Order</button>
 		
 		</div>
 	

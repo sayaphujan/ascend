@@ -41,7 +41,7 @@ $readonly = (isset($_GET['id'])) ? "readonly='readonly'" : '';
                         <option value="2">PER MFR</option>
                     </select>
                 </div>
-                <div class="form-group shoprate_mfr">
+                <div class="form-group shoprate_mfr" style="display:none">
                     <label for="rphone" class="control-label"><strong><span style="color:red">*Hour(s):</span></strong></label>
                     <input type="text" class="form-control" id="shoprate_mfg_hour" name="shoprate_mfg_hour" placeholder="Sales Price"/>
                 </div>

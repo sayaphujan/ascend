@@ -27,7 +27,8 @@
                             $flag_mfr = 0;
 
                             while($res = mysqli_fetch_assoc($q)) {
-                                $res['cart_service_price'] = ($res['cart_shoprate_mfg'] > 0) ? ($res['cart_shoprate_mfg'] * $res['cart_service_price']) : $res['cart_service_price'];
+                                $price = ($res['cart_shoprate_mfg'] > 0) ? $res['cart_shoprate_mfg_price'] : $res['cart_service_price'];
+                                $res['cart_service_price'] = ($res['cart_shoprate_mfg'] > 0) ? ($res['cart_shoprate_mfg_price']*$res['cart_shoprate_mfg']) : $res['cart_service_price'];
                         echo '
                         <tr id="tr_'.$res['cart_service_id'].'">
                             <td>'.$res['cart_service_name'].'</td>
@@ -36,9 +37,9 @@
                                     <input type="text" id="shoprate_mfg_'.$res['cart_service_id'].'" name="shoprate_mfg_'.$res['cart_service_id'].'" data-id="'.$res['cart_service_id'].'" value="'.$res['cart_shoprate_mfg'].'" placeholder="hour(s)" style="width:20%">&nbsp;/hr
                                 
 
-                                    X $ <input type="text" id="price_'.$res['cart_service_id'].'" name="price_'.$res['cart_service_id'].'" value="'.$res['cart_service_price'].'" placeholder="price"  style="width:25%"> = 
+                                    X $ <input type="text" id="price_'.$res['cart_service_id'].'" name="price_'.$res['cart_service_id'].'" value="'.$price.'" placeholder="price"  style="width:25%" data-id="'.$res['cart_service_id'].'"> = 
 
-                                    <input type="hidden" id="val_service_price'.$res['cart_service_id'].'" name="val_service_price" value="'.$res['cart_service_price'].'">
+                                    <input type="hidden" id="val_service_price_'.$res['cart_service_id'].'" name="val_service_price_'.$res['cart_service_id'].'" value="'.$price.'">
                                 </div>
                             </td>
                             <td>
@@ -47,7 +48,6 @@
                         </tr>';
                         $total_price +=$res['cart_service_price'];
                             }
-
                             $total_service = $total_price;
                             $check = mysqli_query($link,'SELECT * FROM service_cart WHERE sc_cart_order_id=\''.sf($_GET['id']).'\'');
 
@@ -87,7 +87,10 @@
 </div>
 
 <script>
-
+var total = 0;
+var price_hr = 0;
+var service_price = 0;
+    
 $(document).ready(function() {
 
   check_shop_mfr();
@@ -117,35 +120,55 @@ function number_format (number, decimals, dec_point, thousands_sep) {
     return s.join(dec);
 }
 
-function calculate (id){
-    var total = 0;
-    var val_total_service = parseFloat($('#val_total_price').text().replace('$', ''));
-    var val_service_price = parseFloat($('#val_service_price_'+id).val());
+var delayTimer;
+$(document).on('keyup', '.shoprate_mfr', function(){
+var lengthkeyup = this.value.length;
+var id = $(this).data('id'); // Retrieve the ID value
+  clearTimeout(delayTimer);
 
+  // Set a new delay timer to execute calculate function after 500 milliseconds (0.5 seconds)
+  delayTimer = setTimeout(function() {
+    if(lengthkeyup >0){
+        console.log('keyup '+id);
+        calculate(id); // Call the calculate function
+    }
+  }, 300);
+});
+
+function calculate (id){
+    var val_total_service = parseFloat($('#val_total_price').val());
+    var shoprate_price    = parseFloat($('#cart_service_price_'+id).text().replace('$', ''));
+    var val_service_price = parseFloat($('#val_service_price_'+id).val());
+    
     var price_hr = parseFloat($('#shoprate_mfg_'+id).val());
     var service_price = parseFloat($('#price_'+id).val());
-
-    console.log(price_hr+','+service_price+','+val_total_service);
-    if(price_hr< 1){
-        price_hr = 0;
-    }
-    if(service_price< 1){
-        service_price = 0;
-    }
-
-
-    if(price_hr>0 && service_price > 0){
-        total = price_hr * service_price;
-        console.log(total);
-    }
     
-    total_price = (val_total_service - val_service_price) + total;
+    
+          // Check if price_hr is less than 1 or empty
+          if (price_hr < 1 || isNaN(price_hr)) {
+            price_hr = 0;
+          }
+        
+          // Check if service_price is less than 1 or empty
+          if (service_price < 1 || isNaN(service_price)) {
+            service_price = 0;
+          }
+          
+    if (price_hr > 0 || service_price > 0) {
+            total = price_hr * service_price;
+    console.log('total_price 1st '+val_total_service);
+    console.log('shoprate price '+shoprate_price);
+    console.log('set price '+total);
+        
+    total_price = (val_total_service - shoprate_price) + total;
     console.log(total_price);
-
-    $.post( "<?php echo root();?>inc/exec.php?act=shoprate_mfr", { 'cart_order_id' : '<?php echo $_GET['id'];?>', 'cart_service_id' : id ,'cart_shoprate_mfg' : price_hr, 'cart_service_price' : service_price}, '', 'script');
-
-    $('#cart_service_price_'+id).html('$'+number_format(total, 2, '.', ','));
-    $('#total_price').html('$'+number_format(total_price, 2, '.', ','));console.log(id);
+    
+        $.post( "<?php echo root();?>inc/exec.php?act=shoprate_mfr", { 'cart_order_id' : '<?php echo $_GET['id'];?>', 'cart_service_id' : id ,'cart_shoprate_mfg' : price_hr, 'cart_service_price' : service_price}, '', 'script');
+    
+        $('#cart_service_price_'+id).html('$'+number_format(total, 2, '.', ','));
+        $('#total_price').html('$'+number_format(total_price, 2, '.', ','));
+        $('#val_total_price').val(total_price);
+    }
 }
 
 function check_shop_mfr(){
@@ -154,13 +177,13 @@ function check_shop_mfr(){
         type: 'GET',
         dataType: 'json', // added data type
         success: function(res) {
-            //console.log(res);
+            console.log(res);
             $.each(res, function (i, val) {
                 $('#shoprate_mfg_'+val.id).addClass('shoprate_mfr');
-                $('#shoprate_mfg_'+val.id).attr('onkeyup','calculate('+val.id+')');
+                //$('#shoprate_mfg_'+val.id).attr('onkeyup','calculate('+val.id+')');
 
                 $('#price_'+val.id).addClass('shoprate_mfr');       
-                $('#price_'+val.id).attr('onkeyup','calculate('+val.id+')');
+                //$('#price_'+val.id).attr('onkeyup','calculate('+val.id+')');
 
                 $('#div_'+val.id).show();   
             })

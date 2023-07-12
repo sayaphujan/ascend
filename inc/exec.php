@@ -288,6 +288,29 @@ case 'update_staff':
 		
 		break;
 		
+		/*case 'get_containers':
+		                        $cq = mysqli_query($link, 'SELECT * FROM containers WHERE customer=\''.sf($uid).'\' AND service_id=\''.sf($_GET['s']).'\'');
+                                if(mysqli_num_rows($cq) == 0){     
+                                    $_SESSION['repack_container_id'] = 0;
+                                    $s = $_GET['s'];
+                                 }else if(mysqli_num_rows($cq) == 1){
+                                    $res = mysqli_fetch_assoc($cq);
+                                    $_SESSION['repack_container_id'] = $res['id'];
+                                    $s = $res['service_id'] = $res['service_id'];
+                                 }else if(mysqli_num_rows($cq)>1) {
+                                    
+                                    while($c = mysqli_fetch_assoc($cq)) {
+                                        $selected = ($_SESSION['repack_container_id'] == $c['id']) ? 'selected' : '';
+                                        $h = unserialize($c['harness']);
+                                        echo '
+                                        <option value="'.$c['id'].'" '.$selected.'>'.$h['make'].' '.$h['model'].''.($h['serial']!=='' ? ' SN: '.$h['serial'] : '').'</option>';
+                                                    
+                                        
+                                        ;
+                                    }
+                                 }
+		    break;*/
+		    
 		case 'get_container_data':
 		    
 		$aq  = mysqli_query($link, 'SELECT * FROM containers WHERE id=\''.sf($_GET['id']).'\'');
@@ -1548,7 +1571,7 @@ case 'update_staff':
 			break;
 
 		case 'shoprate_mfr':
-					    $query = 'UPDATE `shopping_cart` SET `cart_shoprate_mfg`=\''.sf($_POST['cart_shoprate_mfg']).'\',`cart_service_price`=\''.sf($_POST['cart_service_price']).'\'  WHERE `cart_order_id`=\''.sf($_POST['cart_order_id']).'\' AND cart_service_id=\''.sf($_POST['cart_service_id']).'\'';
+					    $query = 'UPDATE `shopping_cart` SET `cart_shoprate_mfg`=\''.sf($_POST['cart_shoprate_mfg']).'\',`cart_shoprate_mfg_price`=\''.sf($_POST['cart_service_price']).'\'  WHERE `cart_order_id`=\''.sf($_POST['cart_order_id']).'\' AND cart_service_id=\''.sf($_POST['cart_service_id']).'\'';
 					    echo $query;
 					    $set = mysqli_query($link,$query);
 			break;
@@ -1901,7 +1924,7 @@ echo json_encode($_POST);
             $limit  = $_POST['length'];
             $start  = $_POST['start'];
 
-            $sql          = mysqli_query($link, "SELECT * FROM `users`");
+            $sql          = mysqli_query($link, "SELECT * FROM `shopping_cart`");
             $sql_count    = mysqli_num_rows($sql);
             
             $where = '';

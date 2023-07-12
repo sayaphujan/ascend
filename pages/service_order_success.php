@@ -27,12 +27,12 @@ if ( empty( $_SESSION[ 'uid' ] ) )header( 'location: /' );
                     if(mysqli_num_rows($aq)>0) {
                             $cq   = mysqli_fetch_assoc($aq);
                             $h   = unserialize($cq['harness']);
-                            $rp  = unserialize($cq['reserve_parachute']);
+                            $r  = unserialize($cq['reserve_parachute']);
                             $a   = unserialize($cq['aad_info']);
-                            $mp  = unserialize($cq['main_parachute']);
+                            $m  = unserialize($cq['main_parachute']);
 
-                            $_SESSION['repack_container_id'] = $c['id'];
-                            $s = $c['service_id'];
+                            $_SESSION['repack_container_id'] = $cq['id'];
+                            $s = $cq['service_id'];
                             
                             echo'<h5>Harness</h5>';
                             echo '<table>
@@ -187,6 +187,7 @@ if ( empty( $_SESSION[ 'uid' ] ) )header( 'location: /' );
                             $total_price = 0;
                             echo '<table>';
                             while($res = mysqli_fetch_assoc($q)) {
+                                $res['cart_service_price'] = ($res['cart_shoprate_mfg'] > 0) ? ($res['cart_shoprate_mfg_price']*$res['cart_shoprate_mfg']) : $res['cart_service_price'];
                                 $total_price +=$res['cart_service_price'];
 
                                 echo'                                
@@ -206,6 +207,9 @@ if ( empty( $_SESSION[ 'uid' ] ) )header( 'location: /' );
                 
                     <div><u><strong>Repack Speed</strong></u></div>
                     <?php 
+                    $rq = mysqli_query( $link, 'SELECT * FROM repacks WHERE id=\'' . sf( $_GET[ 'id' ] ) . '\'' );
+
+            $r = mysqli_fetch_assoc( $rq );
                     if($r['type'] == 'tandem'){
                         $data =  $repack_label[ $r[ 'speed' ] ];
                         $rs_price = '$' . ($repack_pricing[$r[ 'speed' ]]+100) . '.00';
@@ -218,7 +222,8 @@ if ( empty( $_SESSION[ 'uid' ] ) )header( 'location: /' );
                     echo'
                     <table>
                             <tr><td>'.$data.'</td><td>:</td><td>'.$rs_price.'</td></tr>';
-                         $quem = 'SELECT * FROM service_cart WHERE sc_cart_order_id =\''.sf($_SESSION['order_id']).'\'';
+                         $quem = 'SELECT * FROM service_cart WHERE sc_cart_order_id =\''.sf($_GET['order']).'\'';
+                         //echo $quem;
                             $qm = mysqli_query($link, $quem);
                             $resm = mysqli_fetch_assoc($qm);
                             $mainchute = (float)$resm['sc_cart_mainchute'];

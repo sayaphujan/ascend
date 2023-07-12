@@ -1,10 +1,10 @@
-<?php
-/*if($_SERVER['REMOTE_ADDR']!=='114.10.16.126' && $_SERVER['REMOTE_ADDR']!=='103.97.101.1'){
-    echo 'Updates in progress.';
-    exit();
-    header('Location: https://peregrinemfginc.com/', true, 301);
-    die();  
-}*/
+<?
+//if($_SERVER['REMOTE_ADDR']!=='114.10.16.126' && $_SERVER['REMOTE_ADDR']!=='103.97.101.1'){
+//    echo 'Updates in progress.';
+//    exit();
+//    header('Location: https://peregrinemfginc.com/', true, 301);
+//    die();  
+//}
 //if($_SERVER['REMOTE_ADDR']!=='10.0.0.50' && $_SERVER['REMOTE_ADDR']!=='103.97.101.1' && $_SERVER['REMOTE_ADDR'] !== '119.2.52.102' && $_SERVER['REMOTE_ADDR'] !== '103.105.28.149') {
 //echo 'Updates in progress.';
 //exit();
@@ -15,7 +15,7 @@
 $title = 'Ascend Rigging';
 require_once 'inc/functions.php'; 
 
-if ( $_SERVER[ 'SERVER_PORT' ] !== '443' && $_SERVER[ 'SERVER_PORT' ] !== '80' ) {
+if ( $_SERVER[ 'SERVER_PORT' ] !== '443' ) {
     header( 'location: ' . root() );
     exit();
 }
@@ -33,7 +33,7 @@ if (isset($_SESSION['adminid'])) {
     		$page = 'pages/confirmation.php';
     		$title .= '';
     		break;
-    	
+    		
     	case 'container_information':
             $page = 'pages/container_information.php';
             $title .= '';
@@ -48,8 +48,8 @@ if (isset($_SESSION['adminid'])) {
             $page = 'pages/service.php';
             $title .= '';
             break;
-
-        case 'schedule_sport_repack':
+    	
+    	case 'schedule_sport_repack':
     		$page = 'pages/schedule_sport_repack.php';
     		$title .= '';
     		break;
@@ -67,11 +67,6 @@ if (isset($_SESSION['adminid'])) {
     	
     	case 'repack_order_success':
     		$page = 'pages/rigging_order_success.php';
-    		$title .= '';
-    	break;
-    	
-    	case 'service_order_success':
-    		$page = 'pages/service_order_success.php';
     		$title .= '';
     	break;
     	
@@ -94,8 +89,8 @@ if (isset($_SESSION['adminid'])) {
     		$page = 'administrator/add_staff.php';
     		$title .= '';
     	break;
-
-        case 'service-options':
+    	
+    	case 'service-options':
             $page = 'administrator/service_options.php';
             $title .= '';
         break;
@@ -114,6 +109,7 @@ if (isset($_SESSION['adminid'])) {
             $page = 'administrator/add_service_option.php';
             $title .= '';
         break;
+    	
     	
     	case 'repacks':
     		$page = 'administrator/repacks.php';
@@ -178,8 +174,8 @@ if (isset($_SESSION['adminid'])) {
     		$page = 'pages/confirmation.php';
     		$title .= '';
     		break;
-
-        case 'container_information':
+    		
+    	case 'container_information':
             $page = 'pages/container_information.php';
             $title .= '';
             break;
@@ -292,22 +288,6 @@ if (isset($_SESSION['adminid'])) {
     }		
 }else{
     switch ( $_GET[ 'page' ] ) {
-
-        
-        case 'container_information':
-            $page = 'pages/container_information.php';
-            $title .= '';
-            break;
-
-        case 'service_repack':
-            $page = 'pages/service_repack.php';
-            $title .= '';
-            break;
-
-        case 'service':
-            $page = 'pages/service.php';
-            $title .= '';
-            break;
         
         case 'schedule_sport_repack':
     		$page = 'pages/schedule_sport_repack.php';
@@ -345,7 +325,7 @@ if (isset($_SESSION['adminid'])) {
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.1/css/all.css"/>
 	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bs-stepper/dist/css/bs-stepper.min.css" />
 	 <link rel="stylesheet" href="https://cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css" />
-    <link rel="stylesheet" href="<?php echo root();?>master.css"/>
+    <link rel="stylesheet" href="<?=root('master.css'); ?>"/>
     <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
     <script src="https://www.jqueryscript.net/demo/handle-window-session-storage/jquery.session.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
@@ -355,7 +335,7 @@ if (isset($_SESSION['adminid'])) {
 	<script src="https://cdn.jsdelivr.net/npm/bs-stepper/dist/js/bs-stepper.min.js"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/notify/0.4.2/notify.js"></script>
     <title>
-        <?php echo $title; ?>
+        <?=$title; ?>
     </title>
     <style>
         .table {
@@ -377,11 +357,15 @@ if (isset($_SESSION['adminid'])) {
 <body>
     <nav class="navbar navbar-expand-lg fixed-top">
         <div class="container">
-            <a class="navbar-brand" href="<?php echo root(); ?>">
-                <!--<img src="<?php echo root('images/logo.png'); ?>" height="30" alt="">--> Ascend Rigging - Services
+            <a class="navbar-brand" href="<?=root(); ?>">
+                <!--<img src="<?=root('images/logo.png'); ?>" height="30" alt="">--> Ascend Rigging - Services
             </a>
-             
-            <?php
+             <?
+    //echo"<pre>";
+    //print_r($_SESSION);
+    //echo"</pre>";
+    ?>
+            <?
             
             if (isset($_SESSION['uid']) || isset($_SESSION['adminid'])) { ?>
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
@@ -458,22 +442,22 @@ if (isset($_SESSION['adminid'])) {
                         </li>
                     </ul>
                 </div>
-            <?php } else { ?>
+            <? } else { ?>
                 <ul class="navbar-nav ml-auto">
                     <li class="nav-item">
                         
                     </li>
                 </ul>
-            <?php } ?>
+            <? } ?>
         </div>
     </nav>
     <header class="py-5">
-   		<img src="<?php echo root('images/ar-logo.png'); ?>" alt="" class="img-fluid d-block mx-auto" />
+   		<img src="<?=root('images/ar-logo.png'); ?>" alt="" class="img-fluid d-block mx-auto" />
     </header>
 	
 
 
-    <?php 
+    <? 
     if ($_SESSION['error']) {
         echo '<div class="container">'.$_SESSION['error'].'</div>';
         unset($_SESSION['error']);

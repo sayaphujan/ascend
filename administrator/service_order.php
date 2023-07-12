@@ -8,7 +8,7 @@
 <!-- ################# SCHEDULED AND DELIVERED TABLE ####################### -->
 <div class="container">
 	<h3 style="margin-top:20px;margin-bottom:20px">Service Options Order</h3>
-	<a href="<?php  echo root('add-service-option');?>"><button id="add" type="button" class="btn btn-success" style="float:right;">Add</button></a>
+	
 	<div class="row" style="margin-top:60px">
         <div class="service_list w-100 mt-3">
             <table id="service_list" class="table table-striped" cellspacing="0" width="100%">

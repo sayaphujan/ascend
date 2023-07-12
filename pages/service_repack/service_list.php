@@ -35,10 +35,10 @@
     $_SESSION['order_id'] = '';
     $uid = $_SESSION['uid'];
 
-    $cq = mysqli_query($link, 'SELECT * FROM containers WHERE customer=\''.sf($uid).'\' AND service_id=\''.sf($_GET['s']).'\'');
+    $cq = mysqli_query($link, 'SELECT * FROM containers WHERE customer=\''.sf($uid).'\' AND id=\''.$_SESSION['repack_container_id'].'\' AND service_id=\''.sf($_GET['s']).'\'');
     $res = mysqli_fetch_assoc($cq);
-
-    $_SESSION['repack_container_id'] = $res['id'];
+    
+    //$_SESSION['repack_container_id'] = $res['id'];
     $serv = $res['service_id'];
     
 switch ($serv) {
@@ -63,9 +63,12 @@ switch ($serv) {
 		break;
 }
 
-    $cq = mysqli_query($link, 'SELECT * FROM shopping_cart WHERE cart_container_id=\''.sf($_SESSION['repack_container_id']).'\' AND cart_status=\'1\' AND cart_customer_id=\''.sf($uid).'\' ORDER BY cart_id DESC LIMIT 1');
+    $q = 'SELECT * FROM shopping_cart WHERE cart_container_id=\''.sf($_SESSION['repack_container_id']).'\' AND cart_status=\'1\' AND cart_customer_id=\''.sf($uid).'\' ORDER BY cart_id DESC LIMIT 1';
+    //echo $q;
+    $cq = mysqli_query($link, $q);
     if(mysqli_num_rows($cq) > 0){
         $d = mysqli_fetch_assoc($cq);
+        
         $r = $d['cart_repack_type'];
         $_SESSION['order_id'] = $d['cart_order_id'];
     }
@@ -138,7 +141,8 @@ $_SESSION['repack_type'] = $r;
         </table>
         <?php } ?>
         <br/>
-        <button  class="btn btn-primary" id="next_step" style="float: right;" onclick="checkout('<?php echo $_GET['repack_type'];?>');  return false;">Checkout</button>        
+        <button  class="btn btn-primary" style="float: left;" onclick="back_to_container('<?php echo $_GET['repack_type'];?>');  return false;">Back to Container Information</button>        
+        <button  class="btn btn-primary" style="float: right;" onclick="checkout('<?php echo $_GET['repack_type'];?>');  return false;">Checkout</button>        
     	</div>
     </div>
 </div>
@@ -191,6 +195,15 @@ function step_service(r_type) {
 	stepper.to(2);
 	
 	$('#service-part').load('<?php  echo root();?>inc/exec.php?act=service_repack&repack_type='+r_type+'&page=service_list&container=<?php echo $_GET['container'];?>&s=<?php echo $s;?>&cart=true');
+	
+}
+
+function back_to_container(r_type) {
+	
+	var stepper = new Stepper(document.querySelector('.bs-stepper'))
+	stepper.to(1);
+	
+	$('#information-part').load('<?php  echo root();?>inc/exec.php?act=service_repack&repack_type='+r_type+'&page=container_info&container=<?php echo $_GET['container'];?>&s=<?php echo $s;?>');
 	
 }
 

@@ -22,7 +22,7 @@
                         $q = mysqli_query($link, $que);
                         $total_price = 0;
                         while($res = mysqli_fetch_assoc($q)) {
-                            $res['cart_service_price'] = ($res['cart_shoprate_mfg'] > 0) ? ($res['cart_shoprate_mfg'] * $res['cart_service_price']) : $res['cart_service_price'];
+                            $res['cart_service_price'] = ($res['cart_shoprate_mfg'] > 0) ? ($res['cart_shoprate_mfg_price']*$res['cart_shoprate_mfg']) : $res['cart_service_price'];
                     echo '
                     <tr id="tr_'.$res['cart_service_id'].'">
                         <td><button id="item_'.$res['cart_id'].'" onclick="javascript:remove_cart('.$res['cart_service_id'].','.$res['cart_service_price'].')" type="button" class="btn btn-danger btn-remove" data-id="'.$res['cart_id'].'" data-price="'.$res['cart_service_price'].'" data-service="'.$res['cart_service_name'].'">Remove</button></td>
