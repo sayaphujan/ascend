@@ -34,7 +34,8 @@
     $r = '';
     $_SESSION['order_id'] = '';
     $uid = $_SESSION['uid'];
-
+    $_SESSION['repack_container_id'] = (isset($_SESSION['repack_container_id'])) ? $_SESSION['repack_container_id'] : $_GET['container'];
+    
     $cq = mysqli_query($link, 'SELECT * FROM containers WHERE customer=\''.sf($uid).'\' AND id=\''.$_SESSION['repack_container_id'].'\' AND service_id=\''.sf($_GET['s']).'\'');
     $res = mysqli_fetch_assoc($cq);
     
@@ -142,7 +143,7 @@ $_SESSION['repack_type'] = $r;
         <?php } ?>
         <br/>
         <button  class="btn btn-primary" style="float: left;" onclick="back_to_container('<?php echo $_GET['repack_type'];?>');  return false;">Back to Container Information</button>        
-        <button  class="btn btn-primary" style="float: right;" onclick="checkout('<?php echo $_GET['repack_type'];?>');  return false;">Checkout</button>        
+        <button  class="btn btn-primary" style="float: right;" onclick="checkout('<?php echo $_GET['repack_type'];?>');  return false;">Confirm Services</button>        
     	</div>
     </div>
 </div>
@@ -157,7 +158,7 @@ $_SESSION['repack_type'] = $r;
             <tr>
                 <td></td>
                 <td>Total Price</td>
-                <td align="right">$<span id="total_price">0</span></td>
+                <td align="right">$<span id="total_price">0.00</span></td>
             </tr>
         </tfoot>
     </table>
@@ -262,11 +263,11 @@ function show_cart()
     
         $.each(response, function (i, val) {
             $("#tr_"+val.cart_service_id).hide();
-            
-             list_item +=  '<tr id="detail_'+detail_id+'" data-id="'+val.cart_service_id+'" data-price="'+val.cart_service_price+'">'+
+            var formattedPrice = parseFloat(val.cart_service_price).toFixed(2); // Format the price to 2 decimal places
+             list_item +=  '<tr id="detail_'+detail_id+'" data-id="'+val.cart_service_id+'" data-price="'+formattedPrice+'">'+
                             '<td style="cursor: pointer" onclick="javascript:remove_cart('+detail_id+')" width="10%">x</td>'+
                             '<td width="70%">'+val.cart_service_name+'</td>'+
-                            '<td width="20%" align="right">$'+val.cart_service_price+'</td>'+
+                            '<td width="20%" align="right">$'+formattedPrice+'</td>'+
                           '</tr>';
 
             var item = {
@@ -281,7 +282,6 @@ function show_cart()
             //total_price += parseFloat(item.price);
             detail_id++;
         });
-        
         updateCartDetails(list_item, total_price);
       },
       error: function(xhr, status, error) {
@@ -313,22 +313,24 @@ function add_cart(id)
 
     shopping_cart.forEach(function(value, index)
     {
-        list_item +=  '<tr id="detail_'+detail_id+'" data-id="'+value.id+'" data-price="'+value.price+'">'+
+        var formattedPrice = parseFloat(value.price).toFixed(2); // Format the price to 2 decimal places
+        list_item +=  '<tr id="detail_'+detail_id+'" data-id="'+value.id+'" data-price="'+formattedPrice+'">'+
                         '<td style="cursor: pointer" onclick="javascript:remove_cart('+detail_id+')" width="10%">x</td>'+
                         '<td width="70%">'+value.service+'</td>'+
-                        '<td width="20%" align="right">$'+value.price+'</td>'+
+                        '<td width="20%" align="right">$'+formattedPrice+'</td>'+
                       '</tr>';
         
         total_price += parseFloat(value.price);
         detail_id++;
     })
+    
     updateCartDetails(list_item, total_price);
     $("#tr_"+id).hide();
     
     $.ajax({
       url: '<?php echo root();?>do/add_cart/',
       type: 'POST',
-      data: { 'cart_order_id' : $("#order_id").val(), 'cart_service_id' : item.id, 'cart_customer_id' : '<?php echo $_SESSION['uid'];?>', 'cart_service_name' : item.service, 'cart_service_price' : item.price, 'cart_container_id' : '<?php echo $_SESSION['repack_container_id'];?>', 'repack_type' : '<?php echo $r;?>' },
+      data: { 'cart_order_id' : $("#order_id").val(), 'cart_service_id' : item.id, 'cart_customer_id' : '<?php echo $uid;?>', 'cart_service_name' : item.service, 'cart_service_price' : item.price, 'cart_container_id' : '<?php echo $_SESSION['repack_container_id'];?>', 'repack_type' : '<?php echo $r;?>' },
       success: function(response) {
         // Handle the success response here
         console.log(response);
@@ -341,10 +343,13 @@ function add_cart(id)
 }
 
 function updateCartDetails(list_item, total_price){
+    console.log(total_price);
+    
+    var total = parseFloat(total_price).toFixed(2);
     $('#shopping-cart-detail table tbody').html(list_item);
-    $('#total_price').text(total_price);
+    $('#total_price').html(total);
     $('#shopping-cart-value').fadeOut(500, function() {
-        $(this).text(total_price).fadeIn(500); // Update the shopping cart value with 2 decimal places
+        $(this).html(total).fadeIn(500); // Update the shopping cart value with 2 decimal places
     });
 }
 
@@ -364,9 +369,10 @@ function remove_cart(id)
 
         })      
 
-    $('#total_price').html(total_price);
+    var total = parseFloat(total_price).toFixed(2);
+    $('#total_price').html(total);
     $('#shopping-cart-value').fadeOut(500, function() {
-        $(this).text(total_price).fadeIn(500);
+        $(this).html(total).fadeIn(500);
     })
     
     $('#detail_'+id).fadeOut(500, function(){  
@@ -383,7 +389,7 @@ function remove_cart(id)
     $.ajax({
       url: '<?php echo root();?>do/del_item_cart/',
       type: 'POST',
-      data: { 'cart_order_id' : $("#order_id").val(), 'cart_service_id' : item_id, 'cart_customer_id' : '<?php echo $_SESSION['uid'];?>' },
+      data: { 'cart_order_id' : $("#order_id").val(), 'cart_service_id' : item_id, 'cart_customer_id' : '<?php echo $uid;?>' },
       success: function(response) {
         // Handle the success response here
         console.log(response);

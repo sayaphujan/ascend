@@ -1,13 +1,9 @@
 <div class="container">
     <div class="row pt-4">
-        <div class="col-md-5">
-            <p class="display-4">Schedule a Repack </p>
-			<p class="lead">Need a repack? Use our scheduler to make the process simple, fast &amp; easy!</p>
+        <div class="col-md-8">
+            <p class="display-4">Schedule a Service </p>
+			<p class="lead">Use our scheduler to make the process simple, fast &amp; easy!</p>
 			<p>Select an Option:</p>
-            <!--<a href="/schedule_sport_repack/" class="btn btn-large btn-standard d-block text-center mb-2">Schedule Sport Repack</a>
-            
-			<a href="/schedule_tandem_repack/" class="btn btn-large btn-standard d-block text-center mb-2">Schedule Tandem Repack</a>
-			<a href="" class="btn btn-large btn-standard d-block text-center">Other Maintenance</a>-->
             <?php 
             if(isset($_SESSION['uid']) && $_SESSION['uid'] > 0) { 
                 $menu = root().'service_repack/';  
@@ -25,8 +21,8 @@
 	<?php 
 	if (!isset($_SESSION['uid'])) {
 	?>
-        <div class="col-sm-7">
-            <h4>Login</h4>
+        <div class="col-sm-4">
+            <h4>Already have an account?</h4>
             <form id="login_form" onsubmit="login(); return false;">
                 <div class="form-group">
                     <label for="email" class="control-label"><strong>Email:</strong></label>

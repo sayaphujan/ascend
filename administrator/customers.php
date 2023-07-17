@@ -50,10 +50,14 @@
               }
             },
             { "data": "action", "render": function ( data, type, row, meta ){
-                return '<center><div><a href="<?php  echo root();?>container-review/?id='+row.id+'"><button type="button" class="btn btn-primary">View</button></a></div></center>';
+                return '<center><div><a href="<?php  echo root();?>container-review/?id='+row.id+'"><button type="button" class="btn btn-primary">View</button></a><button type="button" class="btn btn-success" onclick="make_session(0,'+row.id+');  return false;">Make Order</button></div></center>';
               }
             }
         ],
     });
-    
+
+function make_session(container, uid){
+	$.post( "<?php echo root();?>inc/exec.php?act=make_session&ajax=1&schedule=1&s=<?php echo $_GET['s'];?>&uid="+uid, { 'uid':uid,'s':'<?php echo $_GET['s'];?>' }, '', 'script');
+}
+
 </script>

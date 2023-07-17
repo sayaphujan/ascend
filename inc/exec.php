@@ -269,6 +269,8 @@ case 'update_staff':
 		case 'container_info':
 			$s = (isset($_GET['s']) && $_GET['s'] > 0) ? $_GET['s'] : 1;
 			$_SESSION['service'] = $s;
+			$uid = (isset($_SESSION['uid'])) ? $_SESSION['uid'] : $_GET['uid'];
+			$_SESSION['repack_container_id'] = (isset($_SESSION['repack_container_id'])) ? $_SESSION['repack_container_id'] : $_GET['id'];
 		    
 			if($_GET['page']=='harness') {
 				include '../pages/container_info/harness.php';
@@ -503,7 +505,7 @@ case 'update_staff':
             
             $where = '';
             if(!empty($search)){
-                $where = "AND (users.first_name LIKE '%".$search."%' OR users.last_name LIKE '%".$search."%' OR containers.manufacturer LIKE '%".$search."%' OR containers.model LIKE '%".$search."%' OR repacks.speed LIKE '%".$search."%' OR repacks.status LIKE '%".$search."%' )";
+                $where = "AND (customers.first_name LIKE '%".$search."%' OR customers.last_name LIKE '%".$search."%' OR containers.manufacturer LIKE '%".$search."%' OR containers.model LIKE '%".$search."%' OR repacks.speed LIKE '%".$search."%' OR repacks.status LIKE '%".$search."%' )";
             }
             
             $id='';
@@ -841,7 +843,9 @@ case 'update_staff':
 		
 	
 		case 'repack_content':
-
+            $r=array();
+            $s=array();
+            $data = array();
 			$query = 'SELECT 
 			              repacks.*
 			            , repacks.id as repack_id
@@ -862,13 +866,10 @@ case 'update_staff':
 			            , containers.manufacturer
 			            , containers.model
 			            , containers.serial
-			            , users.first_name
-			            , users.last_name 
 			            FROM `repacks` 
 			            LEFT JOIN containers ON repacks.container = containers.id 
-			            LEFT JOIN users ON repacks.customer = users.id 
 			            LEFT JOIN work_orders ON repacks.work_order = work_orders.id 
-			            WHERE repacks.id = \''.sf($_GET['id']).'\'';
+			            WHERE repacks.id = \''.sf($_GET['id']).'\' GROUP BY containers.id';
 
 			$rq = mysqli_query($link, $query);
 	            
@@ -877,13 +878,30 @@ case 'update_staff':
 	           $r['wo_pickup'] = date('m-d-Y', strtotime($r['wo_pickup'])); 
 	           $r['wo_schedule'] = date('m-d-Y', strtotime($r['wo_schedule'])); 
 	           
-	           echo json_encode($r, true);
+	           //echo json_encode($r, true);
+	           $que = 'SELECT * FROM `shopping_cart` WHERE `shopping_cart`.`cart_container_id` =\''.sf($r['con_id']).'\' ';
+                            //echo $que;
+                $q = mysqli_query($link, $que);
+                while($sp = mysqli_fetch_assoc($q)){
+                    $s[] = $sp;
+                    $cart_order_id = $sp['cart_order_id'];
+                }
+                
+                $check = mysqli_query($link,'SELECT * FROM service_cart WHERE sc_cart_order_id=\''.sf($cart_order_id).'\'');
+                $mainchute = mysqli_fetch_assoc($check);
+                $r['sc_cart_mainchute'] = $mainchute['sc_cart_mainchute'];
+                
+                $data = array_merge($r,$s);
+               echo json_encode($data, true); 
+                            
 		
 		break;
 		
 		
 		case 'repack_info_content':
-
+		    $r=array();
+            $s=array();
+            $data = array();
 			$query = 'SELECT 
 			              repacks.*
 			            , repacks.id as repack_id
@@ -903,13 +921,10 @@ case 'update_staff':
 			            , containers.manufacturer
 			            , containers.model
 			            , containers.serial
-			            , users.first_name
-			            , users.last_name 
 			            FROM `repacks` 
 			            LEFT JOIN containers ON repacks.container = containers.id 
-			            LEFT JOIN users ON repacks.customer = users.id 
 			            LEFT JOIN work_orders ON repacks.work_order = work_orders.id 
-			            WHERE repacks.id = \''.sf($_GET['id']).'\'';
+			            WHERE repacks.id = \''.sf($_GET['id']).'\' GROUP BY containers.id';
 
 			$rq = mysqli_query($link, $query);
 	            
@@ -918,7 +933,25 @@ case 'update_staff':
 	           $r['wo_pickup'] = date('m-d-Y', strtotime($r['wo_pickup'])); 
 	           $r['wo_schedule'] = date('m-d-Y', strtotime($r['wo_schedule'])); 
 	           
-	           echo json_encode($r, true);
+	           //echo json_encode($r, true);
+	           $que = 'SELECT * FROM `shopping_cart` WHERE `shopping_cart`.`cart_container_id` =\''.sf($r['con_id']).'\' ';
+                            //echo $que;
+                $q = mysqli_query($link, $que);
+                while($sp = mysqli_fetch_assoc($q)){
+                    $s[] = $sp;
+                    $cart_order_id = $sp['cart_order_id'];
+                }
+                
+                $check = mysqli_query($link,'SELECT * FROM service_cart WHERE sc_cart_order_id=\''.sf($cart_order_id).'\'');
+                $mainchute = mysqli_fetch_assoc($check);
+                $r['sc_cart_mainchute'] = $mainchute['sc_cart_mainchute'];
+                
+                $data = array_merge($r,$s);
+               echo json_encode($data, true); 
+                            
+		
+
+		
 		
 		break;
 		
@@ -1205,9 +1238,11 @@ case 'update_staff':
 		break;
 		
 		case 'add_harness':
+		   
 			$harness = serialize($_POST);
-		
-			if($_SESSION['type']=='customer' || $_SESSION['type']=='admin' ) {
+			
+	
+		if($_SESSION['type']=='customer' || $_SESSION['type']=='admin' ) {
 			
 				if($_GET['ajax']) echo '$("#containeralert").removeClass("d-flex").addClass("d-none");'; 
 				
@@ -1217,13 +1252,22 @@ case 'update_staff':
 				
 					//check stuff
 					$cq = mysqli_query($link, 'SELECT * FROM containers WHERE customer=\''.sf($_POST['uid']).'\' AND id=\''.sf($_POST['existing_container']).'\'');
-
+					
 					if(mysqli_num_rows($cq)>0) {
 					   				    
 					    $query = 'UPDATE containers SET `harness`=\''.sf($harness).'\' WHERE id=\''.sf($_POST['existing_container']).'\'';
 					    
 					    $update = mysqli_query($link,$query);
 					    //echo $query;
+					    
+					    
+    				$query = 'UPDATE containers SET 
+					                    `manufacturer`=\''.sf($_POST['make']).'\'
+					                    ,`model`=\''.sf($_POST['model']).'\'
+					                    ,`serial`=\''.sf($_POST['serial']).'\'
+					                     WHERE id=\''.sf($_POST['existing_container']).'\'';
+					 
+					mysqli_query($link, $query);
 					
 						$_SESSION['repack_container_id']=sf($_POST['existing_container']);
 						
@@ -1235,7 +1279,7 @@ case 'update_staff':
 						}else if(sf($_POST['url']) == 'sport'){
 						    echo '$(\'#schedule-part\').load(\''.root().'/inc/exec.php?act=service_repack&page=schedule&repack_type=sport&container='.sf($_POST['existing_container']).'\');';
 						}else if(sf($_POST['url']) == 'container_information' || sf($_POST['url']) == 'container_info' ){
-						    echo '$(\'#reserve-parachute-part\').load(\''.root().'/inc/exec.php?act=container_info&page=reserve_parachute&container='.sf($_POST['existing_container']).'&s='.sf($_GET['s']).'\');';
+						    echo '$(\'#reserve-parachute-part\').load(\''.root().'/inc/exec.php?act=container_info&page=reserve_parachute&container='.sf($_POST['existing_container']).'&s='.sf($_GET['s']).'&uid='.sf($_POST['uid']).'\');';
 						}
 						echo '$(\'#harness_form input[type="text"]\').val(\'\');';
 					}
@@ -1253,11 +1297,21 @@ case 'update_staff':
 				}
 
 				if($_POST['existing_container'] <1){
-				    $query = 'INSERT INTO containers (`customer`, `harness`, `service_id`, `enter_date`) VALUES (\''.sf($_SESSION['uid']).'\',\''.sf($harness).'\', \''.sf($_POST['s']).'\', NOW())';
+				    
+				        $query = 'INSERT INTO containers (`customer`, `harness`, `service_id`, `enter_date`) VALUES (\''.sf($_POST['uid']).'\',\''.sf($harness).'\', \''.sf($_POST['s']).'\', NOW())';
+				    
     				mysqli_query($link, $query);
     				
     				$id = mysqli_insert_id($link);
     				
+    				$query = 'UPDATE containers SET 
+					                    `manufacturer`=\''.sf($_POST['make']).'\'
+					                    ,`model`=\''.sf($_POST['model']).'\'
+					                    ,`serial`=\''.sf($_POST['serial']).'\'
+					                     WHERE id=\''.sf($id).'\'';
+					 
+					mysqli_query($link, $query);
+					
     				$_SESSION['repack_container_id']=$id;
     				$_SESSION['service']=$_POST['s'];
     				
@@ -1272,7 +1326,7 @@ case 'update_staff':
 						}else if(sf($_POST['url']) == 'sport'){
 						    echo '$(\'#schedule-part\').load(\''.root().'/inc/exec.php?act=service_repack&page=schedule&repack_type=sport&container='.$id.'\');';
 						}else if(sf($_POST['url']) == 'container_info' || sf($_POST['url']) == 'container_information' ){
-						    echo '$(\'#reserve-parachute-part\').load(\''.root().'/inc/exec.php?act=container_info&page=reserve_parachute&container='.sf($_POST['existing_container']).'&s='.sf($_GET['s']).'\');';
+						    echo '$(\'#reserve-parachute-part\').load(\''.root().'/inc/exec.php?act=container_info&page=reserve_parachute&container='.sf($_POST['existing_container']).'&s='.sf($_GET['s']).'&uid='.sf($_POST['uid']).'\');';
 						}
 						echo '$(\'#harness_form input[type="text"]\').val(\'\');';
     				
@@ -1297,14 +1351,27 @@ case 'update_staff':
 				if($_POST['existing_container']>0) {
 				
 					//check stuff
-					$cq = mysqli_query($link, 'SELECT * FROM containers WHERE customer=\''.sf($_POST['uid']).'\' AND id=\''.sf($_POST['existing_container']).'\'');
-
+					
+					    $cq = mysqli_query($link, 'SELECT * FROM containers WHERE customer=\''.sf($_POST['uid']).'\' AND id=\''.sf($_POST['existing_container']).'\'');
+					
+					
 					if(mysqli_num_rows($cq)>0) {
 					   				    
 					    $query = 'UPDATE containers SET `aad_info`=\''.sf($harness).'\' WHERE id=\''.sf($_POST['existing_container']).'\'';
 					    
 					    $update = mysqli_query($link,$query);
 					    //echo $query;
+					    
+					    
+    				$query = 'UPDATE containers SET 
+					                    `aad`=\''.sf($_POST['make']).'\'
+					                    ,`aad_serial`=\''.sf($_POST['serial']).'\'
+					                    ,`aad_install`=\''.sf($_POST['mfr']).'\'
+					                    ,`aad_eol`=\''.sf($_POST['mfr']).'\'
+					                    ,`aad_next_maintenance`=\''.sf($_POST['mfr']).'\'
+					                     WHERE id=\''.sf($_POST['existing_container']).'\'';
+					 
+					            mysqli_query($link, $query);
 					
 						$_SESSION['repack_container_id']=sf($_POST['existing_container']);
 						
@@ -1316,7 +1383,7 @@ case 'update_staff':
 						}else if(sf($_POST['url']) == 'sport'){
 						    echo '$(\'#schedule-part\').load(\''.root().'/inc/exec.php?act=service_repack&page=schedule&repack_type=sport&container='.sf($_POST['existing_container']).'\');';
 						}else if(sf($_POST['url']) == 'container_information' || sf($_POST['url']) == 'container_info' ){
-						    echo '$(\'#main-parachute-part\').load(\''.root().'/inc/exec.php?act=container_info&page=main_parachute&container='.sf($_POST['existing_container']).'&s='.sf($_GET['s']).'\');';
+						    echo '$(\'#main-parachute-part\').load(\''.root().'/inc/exec.php?act=container_info&page=main_parachute&container='.sf($_POST['existing_container']).'&s='.sf($_GET['s']).'&uid='.sf($_POST['uid']).'\');';
 						}
 						echo '$(\'#aad_info_form input[type="text"]\').val(\'\');';
 					}
@@ -1354,7 +1421,9 @@ case 'update_staff':
 				if($_POST['existing_container']>0) {
 				
 					//check stuff
-					$cq = mysqli_query($link, 'SELECT * FROM containers WHERE customer=\''.sf($_POST['uid']).'\' AND id=\''.sf($_POST['existing_container']).'\'');
+					
+					    $cq = mysqli_query($link, 'SELECT * FROM containers WHERE customer=\''.sf($_POST['uid']).'\' AND id=\''.sf($_POST['existing_container']).'\'');
+					
 
 					if(mysqli_num_rows($cq)>0) {
 					   				    
@@ -1362,7 +1431,14 @@ case 'update_staff':
 					    
 					    $update = mysqli_query($link,$query);
 					    //echo $query;
-					
+					    	$query = 'UPDATE containers SET 
+					                    `reserve`=\''.sf($_POST['make']).'\'
+					                    ,`reserve_size`=\''.sf($_POST['size']).'\'
+					                    ,`reserve_serial`=\''.sf($_POST['serial']).'\'
+					                     WHERE id=\''.sf($_POST['existing_container']).'\'';
+					 
+					            mysqli_query($link, $query);
+					            
 						$_SESSION['repack_container_id']=sf($_POST['existing_container']);
 						
 						echo 'var stepper = new Stepper(document.querySelector(\'.bs-stepper\'));';
@@ -1373,7 +1449,7 @@ case 'update_staff':
 						}else if(sf($_POST['url']) == 'sport'){
 						    echo '$(\'#schedule-part\').load(\''.root().'/inc/exec.php?act=service_repack&page=schedule&repack_type=sport&container='.sf($_POST['existing_container']).'\');';
 						}else if(sf($_POST['url']) == 'container_info' || sf($_POST['url']) == 'container_information' ){
-						    echo '$(\'#aad-info-part\').load(\''.root().'/inc/exec.php?act=container_info&page=aad_info&container='.sf($_POST['existing_container']).'&s='.sf($_GET['s']).'\');';
+						    echo '$(\'#aad-info-part\').load(\''.root().'/inc/exec.php?act=container_info&page=aad_info&container='.sf($_POST['existing_container']).'&s='.sf($_GET['s']).'&uid='.sf($_POST['uid']).'\');';
 						}
 						echo '$(\'#reserve_parachute_form input[type="text"]\').val(\'\');';
 					}
@@ -1409,17 +1485,25 @@ case 'update_staff':
 				if($_POST['existing_container']>0) {
 				
 					//check stuff
-					$cq = mysqli_query($link, 'SELECT * FROM containers WHERE customer=\''.sf($_POST['uid']).'\' AND id=\''.sf($_POST['existing_container']).'\'');
-
+					
+					    $cq = mysqli_query($link, 'SELECT * FROM containers WHERE customer=\''.sf($_POST['uid']).'\' AND id=\''.sf($_POST['existing_container']).'\'');
+					
+					
 					if(mysqli_num_rows($cq)>0) {
 					   				    
 					    $query = 'UPDATE containers SET `main_parachute`=\''.sf($harness).'\' WHERE id=\''.sf($_POST['existing_container']).'\'';
 					    
 					    $update = mysqli_query($link,$query);
 					    //echo $query;
+					    $query = 'UPDATE containers SET 
+					                    `main`=\''.sf($_POST['make']).'\'
+					                    ,`main_size`=\''.sf($_POST['size']).'\'
+					                     WHERE id=\''.sf($_POST['existing_container']).'\'';
+					 
+					            mysqli_query($link, $query);
 					
 						$_SESSION['repack_container_id']=sf($_POST['existing_container']);
-						
+						$_SESSION['uid'] = sf($_POST['uid']);
 						echo 'var stepper = new Stepper(document.querySelector(\'.bs-stepper\'));';
 						echo 'stepper.to(6);';
 						
@@ -1452,6 +1536,12 @@ case 'update_staff':
 		
 		
 		break;
+		
+		case 'make_session':
+		    $_SESSION['uid'] = sf($_POST['uid']);
+		    //print_r($_POST);
+		    echo 'document.location=\''.root().'container_information/?id=0&s='.sf($_POST['s']).'&uid='.$_POST['uid'].'\';';
+		    break;
 
 		case 'add_container_summary':
 			$harness = serialize($_POST);
@@ -1468,12 +1558,16 @@ case 'update_staff':
 
 				$_POST['amfr'] = dbdate($_POST['amfr']);
 				
+				$_POST['rsize'] = (is_numeric($_POST['rsize'])) ? $_POST['rsize'] : 0;
+				$_POST['msize'] = (is_numeric($_POST['msize'])) ? $_POST['msize'] : 0;
 					    
-				if($_POST['existing_container']>0) {
+				if($_POST['container']>0) {
 				
 					//check stuff
-					$cq = mysqli_query($link, 'SELECT * FROM containers WHERE customer=\''.sf($_POST['uid']).'\' AND id=\''.sf($_POST['existing_container']).'\'');
-
+					
+					    $cq = mysqli_query($link, 'SELECT * FROM containers WHERE customer=\''.sf($_POST['uid']).'\' AND id=\''.sf($_POST['container']).'\'');
+					
+					
 					if(mysqli_num_rows($cq)>0) {
 					   				    
 					    $query = 'UPDATE containers SET 
@@ -1489,12 +1583,12 @@ case 'update_staff':
 					                    ,`aad_serial`=\''.sf($_POST['aserial']).'\'
 					                    ,`aad_install`=\''.sf($_POST['amfr']).'\'
 					                    ,`aad_next_maintenance`=\''.sf($_POST['amfr']).'\'
-					                    ,`aad_eol`=\''.sf($_POST['amfr']).'\' WHERE id=\''.sf($_POST['existing_container']).'\'';
+					                    ,`aad_eol`=\''.sf($_POST['amfr']).'\' WHERE id=\''.sf($_POST['container']).'\'';
 					    
 					    $update = mysqli_query($link,$query);
 					    //echo $query;
 					
-						$_SESSION['repack_container_id']=sf($_POST['existing_container']);
+						$_SESSION['repack_container_id']=sf($_POST['container']);
 						
 						echo 'var stepper = new Stepper(document.querySelector(\'.bs-stepper\'));';
 						echo 'stepper.to(2);';
@@ -1502,9 +1596,9 @@ case 'update_staff':
 						$_POST['url'] = (isset($_POST['url'])) ? $_POST['url'] : $_GET['repack_type'];
 
 						if(sf($_POST['url']) == 'tandem'){
-						    echo '$(\'#service-part\').load(\''.root().'/inc/exec.php?act=service_repack&page=service_list&repack_type=tandem&container='.sf($_POST['existing_container']).'\');';
+						    echo '$(\'#service-part\').load(\''.root().'/inc/exec.php?act=service_repack&page=service_list&repack_type=tandem&container='.sf($_POST['container']).'\');';
 						}else if(sf($_POST['url']) == 'sport'){
-						    echo '$(\'#service-part\').load(\''.root().'/inc/exec.php?act=service_repack&page=service_list&repack_type=sport&container='.sf($_POST['existing_container']).'&s='.sf($_GET['s']).'\');';
+						    echo '$(\'#service-part\').load(\''.root().'/inc/exec.php?act=service_repack&page=service_list&repack_type=sport&container='.sf($_POST['container']).'&s='.sf($_GET['s']).'\');';
 						}
 
 						echo '$(\'#container_form input[type="text"]\').val(\'\');';
@@ -1929,7 +2023,7 @@ echo json_encode($_POST);
             
             $where = '';
             if(!empty($search)){
-                $where = "AND (`customers`.`first_name` LIKE '%".$search."%' OR `customers`.`last_name` LIKE '%".$search."%' OR `customers`.`email` LIKE '%".$search."%' OR `service_cart`.`sc_cart_order_id` LIKE '%".$search."%')";
+                $where = "WHERE (`customers`.`first_name` LIKE '%".$search."%' OR `customers`.`last_name` LIKE '%".$search."%' OR `customers`.`email` LIKE '%".$search."%' OR `service_cart`.`sc_cart_order_id` LIKE '%".$search."%')";
             }
             
             $query = 'SELECT *,
@@ -1938,7 +2032,8 @@ echo json_encode($_POST);
             				 FROM `service_cart` 
             				 LEFT JOIN `shopping_cart` ON `shopping_cart`.`cart_order_id` = `service_cart`.`sc_cart_order_id`
             				 LEFT JOIN `customers` ON `customers`.`id` = `shopping_cart`.`cart_customer_id`
-            				 WHERE `shopping_cart`.`cart_status`=\'1\' '.$where.' GROUP BY `service_cart` .`sc_cart_order_id` ';
+            				 LEFT JOIN `containers` ON `containers`.`id` = `shopping_cart`.`cart_container_id`
+            				 '.$where.' GROUP BY `service_cart` .`sc_cart_order_id` ';
             //echo json_encode($query);
             $order_field    = $_POST['order'][0]['column'];
             $order_ascdesc  = $_POST['order'][0]['dir'];
@@ -2026,7 +2121,7 @@ echo json_encode($_POST);
             }
             
             $query = 'SELECT * FROM `containers` WHERE customer = \''.sf($id).'\' '.$where.' ';
-            
+            //echo $query;
             $order_field    = $_POST['order'][0]['column'];
             $order_ascdesc  = $_POST['order'][0]['dir'];
             $order          = " ORDER BY ".$_POST['columns'][$order_field]['data']." ".$order_ascdesc;
@@ -2439,7 +2534,7 @@ echo json_encode($_POST);
 		$_SESSION['service']=$_POST['s'];
 			$q = mysqli_query($link, 'SELECT * FROM customers WHERE email=\''.sf($_POST['cemail']).'\' AND active=\'1\'');
 			
-			if(mysqli_num_rows($q)>0) {
+				if(mysqli_num_rows($q)>0) {
 				$u = mysqli_fetch_assoc($q);
 				
 				if(password_verify($_POST['cpassword'], $u['password'])) {
@@ -2452,60 +2547,34 @@ echo json_encode($_POST);
 					
 					$_SESSION['previous_login'] = $u['last_login'];
 					
-					$check_new_projects = mysqli_query($link, 'SELECT id FROM projects WHERE started >= \''.sf($_SESSION['previous_login']).'\'');
-					
-					if($_GET['ajax']) {
-						echo 'console.log(\'Login OK\');';
-						if($_GET['schedule']) {
-							
-							if($_SESSION['type'] == 'admin'){
-						      echo 'document.location=\'/staff/\';';
-							}else{
-							    if(sf($_POST['url']) == '/schedule_sport_repack/'){
-						        	echo 'document.location=\''.root().'schedule_sport_repack/\';';
-    							}else if(sf($_POST['url']) == '/schedule_tandem_repack/'){
-    						        echo 'document.location=\''.root().'schedule_tandem_repack/\';';
-    							}else if(sf($_POST['url']) == '/container_information/'){
-    						        echo 'document.location=\''.root().'container_information/?s='.$s.'\';';
-    						        header('location: '.root().'container_information/?s='.$s);
-    						        
-    							}
-
-							}
-						} else {
-							echo 'document.location=\'/repacks-review/\';';
-						}
-						
-					}
-					
+					//$check_new_projects = mysqli_query($link, 'SELECT id FROM projects WHERE started >= \''.sf($_SESSION['previous_login']).'\'');
 					mysqli_query($link, 'UPDATE customers SET last_login=NOW() WHERE id=\''.sf($u['id']).'\'');
 					
-					if($_SESSION['type'] == 'admin'){
-					    header('location: '.root().'staff/');
-					}else{
-					    if($_POST['url'] == '/schedule_sport_repack/'){
-					        echo "/schedule_sport_repack/";
-					    }else if($_POST['url'] == '/schedule_tandem_repack/'){
-					        echo "/schedule_tandem_repack/";
-					    }else if($_POST['url'] == '/container_information/'){
-					        echo "/container_information/";
-					    }
-					}
+					    if($_GET['ajax']) {
+						    echo 'console.log(\'Login OK\');';
+						    echo 'document.location=\''.root().'repacks-review/\';';
+    					
+						} else {
+							//header('location: '.root().'repacks-review');
+							echo "/repacks-review/";
+						}
 					
-					exit();
+				}else{
+				    echo "error";	
 				}
-			}
+			}else{
 			
-			if($_GET['ajax']) {
-				echo 'console.log(\'Login Failed\');';
-				//echo '$("#loginalert").html("Username / Password incorrect");';
-				echo '$("#loginalert").html("Sorry this email or password is not valid, please re-check & try again");';
-				echo '$("#loginalert").removeClass("d-none").addClass("d-flex");';
-				echo '$("#password").val("");';
-				
-			} else {
-			   echo "error";
-				//header('location: '.root().'?error=loginfailed');
+    			if($_GET['ajax']) {
+    				echo 'console.log(\'Login Failed\');';
+    				//echo '$("#loginalert").html("Username / Password incorrect");';
+    				echo '$("#loginalert").html("Sorry this email or password is not valid, please re-check & try again");';
+    				echo '$("#loginalert").removeClass("d-none").addClass("d-flex");';
+    				echo '$("#password").val("");';
+    				
+    			} else {
+    			   echo "error";
+    				//header('location: '.root().'?error=loginfailed');
+    			}
 			}
 			
 		break;
@@ -2547,19 +2616,20 @@ echo json_encode($_POST);
 						echo 'console.log(\'Register OK\');';
 						if($_GET['schedule']) {
 						    
-						        //echo 'step_containerinfo();';
-								echo 'step_harness();';
-							
-    							echo '$("#register_form").html("");';
-    							echo '$("#login_form").html("");';
-    							
-						
 							    if(sf($_POST['url']) == '/schedule_sport_repack/'){
 						        echo 'document.location=\'/schedule_sport_repack/\';';
     							}else if(sf($_POST['url']) == '/schedule_tandem_repack/'){
     						        echo 'document.location=\'/schedule_tandem_repack/\';';
-    							}else if(sf($_POST['url']) == '/container_information/'){
-    						        echo 'document.location=\'/container_information/?s='.$s.'\';';
+    							}else{
+    							    //echo 'document.location=\'/container_information/?id=0&s='.$s.'&uid='.$id.'\';';  
+    						        //echo '$(\'#harness-part\').load(\''.root().'/inc/exec.php?act=container_info&page=harness&container=0&s='.sf($s).'&uid='.sf($id).'\');';
+    						        
+    						        	echo 'var stepper = new Stepper(document.querySelector(\'.bs-stepper\'));';
+                						echo 'stepper.to(2);';
+                						echo '$(\'#harness-part\').load(\''.root().'/inc/exec.php?act=container_info&page=harness&container=0&s='.sf($s).'&uid='.sf($id).'\');';
+                						echo '$(\'#register_form input[type="text"]\').val(\'\');';
+                						echo '$(\'#login_form input[type="text"]\').val(\'\');';
+    						        
     							}
 						} else {
 							echo 'document.location=\'/repacks-review/\';';
@@ -2571,7 +2641,7 @@ echo json_encode($_POST);
 					    }else if($_POST['url'] == '/schedule_tandem_repack/'){
 					        header('location: '.root().'schedule_tandem_repack/');
 					    }else if($_POST['url'] == '/container_information/'){
-					        header('location: '.root().'container_information/');
+					        header('location: '.root().'container_information/?id=0&s='.$s.'&uid='.$id);
 					    }
 					exit();
 				

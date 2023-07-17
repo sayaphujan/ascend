@@ -34,134 +34,139 @@ if ( empty( $_SESSION[ 'uid' ] ) )header( 'location: /' );
                             $_SESSION['repack_container_id'] = $cq['id'];
                             $s = $cq['service_id'];
                             
-                            echo'<h5>Harness</h5>';
-                            echo '<table>
-                                    <tr>
-                                        <td>Make</td>
-                                        <td>:</td>
-                                        <td>'.$h['make'].'</td>
-                                    </tr>
-                                    <tr>
-                                        <td>Model</td>
-                                        <td>:</td>
-                                        <td>'.$h['model'].'</td>
-                                    </tr>
-                                    <tr>
-                                        <td>size</td>
-                                        <td>:</td>
-                                        <td>'.$h['size'].'</td>
-                                    </tr>
-                                    <tr>
-                                        <td>Serial Number</td>
-                                        <td>:</td>
-                                        <td>'.$h['serial'].'</td>
-                                    </tr>
-                                    <tr>
-                                        <td>Date of Mfr</td>
-                                        <td>:</td>
-                                        <td>'.$h['mfr'].'</td>
-                                    </tr>
-                            </table>';
-                            echo'<hr/>';
+	                        echo'<h5>Harness</h5>';
+	                        echo '<table>
+	                        		<tr>
+	                        			<td  align="right">Make</td>
+	                        			<td  align="right">&nbsp;&nbsp;:&nbsp;&nbsp;</td>
+	                        			<td  align="right">'.$h['make'].'</td>
+	                        		</tr>
+	                        		<tr>
+	                        			<td  align="right">Model</td>
+	                        			<td  align="right">&nbsp;&nbsp;:&nbsp;&nbsp;</td>
+	                        			<td  align="right">'.$h['model'].'</td>
+	                        		</tr>
+	                        		<tr>
+	                        			<td  align="right">size</td>
+	                        			<td  align="right">&nbsp;&nbsp;:&nbsp;&nbsp;</td>
+	                        			<td  align="right">'.$h['size'].'</td>
+	                        		</tr>
+	                        		<tr>
+	                        			<td  align="right">Serial Number</td>
+	                        			<td  align="right">&nbsp;&nbsp;:&nbsp;&nbsp;</td>
+	                        			<td  align="right">'.$h['serial'].'</td>
+	                        		</tr>
+	                        		<tr>
+	                        			<td  align="right">Date of Mfr</td>
+	                        			<td  align="right">&nbsp;&nbsp;:&nbsp;&nbsp;</td>
+	                        			<td  align="right">'.$h['mfr'].'</td>
+	                        		</tr>
+	                        </table>';
+							echo'<hr/>';
 
-                            echo'<h5>Reserve / Parachute</h5>';
-                            echo '<table>
-                                    <tr>
-                                        <td>Make</td>
-                                        <td>:</td>
-                                        <td>'.$r['make'].'</td>
-                                    </tr>
-                                    <tr>
-                                        <td>Model</td>
-                                        <td>:</td>
-                                        <td>'.$r['model'].'</td>
-                                    </tr>
-                                    <tr>
-                                        <td>size</td>
-                                        <td>:</td>
-                                        <td>'.$r['size'].'</td>
-                                    </tr>
-                                    <tr>
-                                        <td>Serial Number</td>
-                                        <td>:</td>
-                                        <td>'.$r['serial'].'</td>
-                                    </tr>
-                                    <tr>
-                                        <td>Date of Mfr</td>
-                                        <td>:</td>
-                                        <td>'.$r['mfr'].'</td>
-                                    </tr>
-                                    <tr>
-                                        <td>Fabric</td>
-                                        <td>:</td>
-                                        <td>'.$r['fabric'].'</td>
-                                    </tr>
-                            </table>';
-                            echo'<hr/>';
-                            
-                            echo'<h5>AAD</h5>';
-                            echo '<table>
-                                    <tr>
-                                        <td>Make</td>
-                                        <td>:</td>
-                                        <td>'.$a['make'].'</td>
-                                    </tr>
-                                    <tr>
-                                        <td>Model</td>
-                                        <td>:</td>
-                                        <td>'.$a['model'].'</td>
-                                    </tr>
-                                    <tr>
-                                        <td>size</td>
-                                        <td>:</td>
-                                        <td>'.$a['size'].'</td>
-                                    </tr>
-                                    <tr>
-                                        <td>Serial Number</td>
-                                        <td>:</td>
-                                        <td>'.$a['serial'].'</td>
-                                    </tr>
-                                    <tr>
-                                        <td>Date of Mfr</td>
-                                        <td>:</td>
-                                        <td>'.$a['mfr'].'</td>
-                                    </tr>
-                            </table>';
-                            echo'<hr/>';
+							echo'<h5>Reserve / Parachute</h5>';
+							echo '<table>
+	                        		<tr>
+	                        			<td  align="right">Make</td>
+	                        			<td  align="right">&nbsp;&nbsp;:&nbsp;&nbsp;</td>
+	                        			<td  align="right">'.$r['make'].'</td>
+	                        		</tr>
+	                        		<tr>
+	                        			<td  align="right">Model</td>
+	                        			<td  align="right">&nbsp;&nbsp;:&nbsp;&nbsp;</td>
+	                        			<td  align="right">'.$r['model'].'</td>
+	                        		</tr>
+	                        		<tr>
+	                        			<td  align="right">size</td>
+	                        			<td  align="right">&nbsp;&nbsp;:&nbsp;&nbsp;</td>
+	                        			<td  align="right">'.$r['size'].'</td>
+	                        		</tr>
+	                        		<tr>
+	                        			<td  align="right">Serial Number</td>
+	                        			<td  align="right">&nbsp;&nbsp;:&nbsp;&nbsp;</td>
+	                        			<td  align="right">'.$r['serial'].'</td>
+	                        		</tr>
+	                        		<tr>
+	                        			<td  align="right">Date of Mfr</td>
+	                        			<td  align="right">&nbsp;&nbsp;:&nbsp;&nbsp;</td>
+	                        			<td  align="right">'.$r['mfr'].'</td>
+	                        		</tr>
+	                        		<tr>
+	                        			<td  align="right">Fabric</td>
+	                        			<td  align="right">&nbsp;&nbsp;:&nbsp;&nbsp;</td>
+	                        			<td  align="right">'.$r['fabric'].'</td>
+	                        		</tr>
+	                        </table>';
+							echo'<hr/>';
+							
+							echo'<h5>AAD</h5>';
+							echo '<table>
+	                        		<tr>
+	                        			<td  align="right">Make</td>
+	                        			<td  align="right">&nbsp;&nbsp;:&nbsp;&nbsp;</td>
+	                        			<td  align="right">'.$a['make'].'</td>
+	                        		</tr>
+	                        		<tr>
+	                        			<td  align="right">Model</td>
+	                        			<td  align="right">&nbsp;&nbsp;:&nbsp;&nbsp;</td>
+	                        			<td  align="right">'.$a['model'].'</td>
+	                        		</tr>
+	                        		<tr>
+	                        			<td  align="right">Size</td>
+	                        			<td  align="right">&nbsp;&nbsp;:&nbsp;&nbsp;</td>
+	                        			<td  align="right">'.$a['size'].'</td>
+	                        		</tr>
+	                        		<tr>
+	                        			<td  align="right">Serial Number</td>
+	                        			<td  align="right">&nbsp;&nbsp;:&nbsp;&nbsp;</td>
+	                        			<td  align="right">'.$a['serial'].'</td>
+	                        		</tr>
+	                        		<tr>
+	                        			<td  align="right">Date of Mfr</td>
+	                        			<td  align="right">&nbsp;&nbsp;:&nbsp;&nbsp;</td>
+	                        			<td  align="right">'.$a['mfr'].'</td>
+	                        		</tr>
+	                        </table>';
+							echo'<hr/>';
 
-                            echo'<h5>Main Parachute</h5>';
-                            echo '<table>
-                                    <tr>
-                                        <td>Make</td>
-                                        <td>:</td>
-                                        <td>'.$m['make'].'</td>
-                                    </tr>
-                                    <tr>
-                                        <td>Model</td>
-                                        <td>:</td>
-                                        <td>'.$m['model'].'</td>
-                                    </tr>
-                                    <tr>
-                                        <td>size</td>
-                                        <td>:</td>
-                                        <td>'.$m['size'].'</td>
-                                    </tr>
-                                    <tr>
-                                        <td>Serial Number</td>
-                                        <td>:</td>
-                                        <td>'.$m['serial'].'</td>
-                                    </tr>
-                                    <tr>
-                                        <td>Date of Mfr</td>
-                                        <td>:</td>
-                                        <td>'.$m['mfr'].'</td>
-                                    </tr>
-                                    <tr>
-                                        <td>Fabric</td>
-                                        <td>:</td>
-                                        <td>'.$m['fabric'].'</td>
-                                    </tr>
-                            </table>';
+							echo'<h5>Main Parachute</h5>';
+							echo '<table>
+	                        		<tr>
+	                        			<td  align="right">Make</td>
+	                        			<td  align="right">&nbsp;&nbsp;:&nbsp;&nbsp;</td>
+	                        			<td  align="right">'.$m['make'].'</td>
+	                        		</tr>
+	                        		<tr>
+	                        			<td  align="right">Model</td>
+	                        			<td  align="right">&nbsp;&nbsp;:&nbsp;&nbsp;</td>
+	                        			<td  align="right">'.$m['model'].'</td>
+	                        		</tr>
+	                        		<tr>
+	                        			<td  align="right">Size</td>
+	                        			<td  align="right">&nbsp;&nbsp;:&nbsp;&nbsp;</td>
+	                        			<td  align="right">'.$m['size'].'</td>
+	                        		</tr>
+	                        		<tr>
+	                        			<td  align="right">Serial Number</td>
+	                        			<td  align="right">&nbsp;&nbsp;:&nbsp;&nbsp;</td>
+	                        			<td  align="right">'.$m['serial'].'</td>
+	                        		</tr>
+	                        		<tr>
+	                        			<td  align="right">Date of Mfr</td>
+	                        			<td  align="right">&nbsp;&nbsp;:&nbsp;&nbsp;</td>
+	                        			<td  align="right">'.$m['mfr'].'</td>
+	                        		</tr>
+	                        		<tr>
+	                        			<td  align="right">Fabric</td>
+	                        			<td  align="right">&nbsp;&nbsp;:&nbsp;&nbsp;</td>
+	                        			<td  align="right">'.$m['fabric'].'</td>
+	                        		</tr>
+	                        		<tr>
+	                        			<td  align="right">Line</td>
+	                        			<td  align="right">&nbsp;&nbsp;:&nbsp;&nbsp;</td>
+	                        			<td  align="right">'.$m['line'].'</td>
+	                        		</tr>
+	                        </table>';
                             //echo'<hr/>';
 
                         }
@@ -181,7 +186,7 @@ if ( empty( $_SESSION[ 'uid' ] ) )header( 'location: /' );
                     <div><u><strong>Service</strong></u></div>
                     <h5>Service Item :</h5>
                          <?php 
-                            $que = 'SELECT * FROM shopping_cart WHERE cart_order_id =\''.sf($_GET['order']).'\' AND cart_status=\'0\'';
+                            $que = 'SELECT * FROM shopping_cart WHERE cart_order_id =\''.sf($_GET['order']).'\'';
                             //echo $que;
                             $q = mysqli_query($link, $que);
                             $total_price = 0;

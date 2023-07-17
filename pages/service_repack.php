@@ -1,6 +1,3 @@
-<?php 
-$s = (isset($_GET['s']) && $_GET['s'] > 0) ? $_GET['s'] : $_SESSION['service'];
-?>
 <div class="container">
     <div class="row">
         <div class="col-md-12">
@@ -82,6 +79,12 @@ function step_payment(container) {
 
 $(document).ready(function () {
     var stepper = new Stepper($('.bs-stepper')[0]);
+    
+    <? 
+  if(isset($_GET['uid'])) {
+		echo 'step_containerinfo('.$_GET['id'].');';
+  }
+  ?>
 })
 
 

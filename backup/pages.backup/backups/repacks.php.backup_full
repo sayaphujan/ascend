@@ -1,0 +1,980 @@
+<?
+if ($_SESSION['type']!=='admin') {
+	header('location: /');
+	exit();
+}
+?>
+
+<style>
+    textarea
+    {
+      border:1px solid #999999;
+      width:100%;
+      margin:5px 0;
+      padding:3px;
+    }
+    
+    .boxsizingBorder {
+        -webkit-box-sizing: border-box;
+           -moz-box-sizing: border-box;
+                box-sizing: border-box;
+    }
+
+    #repack_content { color: #fff}
+    
+    .table {
+    	background-color: bebebe;
+    }
+    
+    fieldset {
+        display: none;
+    }
+    
+    fieldset.show {
+        display: block;
+    }
+    
+    select:focus, input:focus {
+        -moz-box-shadow: none !important;
+        -webkit-box-shadow: none !important;
+        box-shadow: none !important;
+        border: 1px solid #2196F3 !important;
+        outline-width: 0 !important;
+        font-weight: 400;
+    }
+    
+    button:focus {
+        -moz-box-shadow: none !important;
+        -webkit-box-shadow: none !important;
+        box-shadow: none !important;
+        outline-width: 0;
+    }
+    
+    .tabs {
+        margin: 2px 5px 0px 5px;
+        padding-bottom: 10px;
+        cursor: pointer;
+    }
+    
+    .tabs:hover, .tabs.active {
+        border-bottom: 1px solid #2196F3;
+    }
+    
+    a:hover {
+        text-decoration: none;
+        color: #1565C0;
+    }
+    
+    .box {
+        margin-bottom: 10px;
+        border-radius: 5px;
+        padding: 10px;
+    }
+    
+    .modal-backdrop { 
+        background-color: #64B5F6;
+    }
+    
+    .line {
+        background-color: #CFD8DC;
+        height: 1px;
+        width: 100%;
+    }
+    
+    @media screen and (max-width: 768px) {
+        .tabs h6 {
+            font-size: 12px;
+        }
+    }
+    
+    .font-weight-bold {
+        color: #fff!important;
+        font-weight: 700!important;
+    }
+    
+    .text-muted  {
+        color: #fff!important;
+    }
+</style>
+        <!-- ################# MODAL ##################################### -->
+        <div id="repack_modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" class="modal fade text-left">
+            <div role="document" class="modal-dialog modal-lg">
+                <div class="modal-content" style="background-color:#1d1e22">
+                    <div class="modal-header row d-flex justify-content-between mx-1 mx-sm-3 mb-0 pb-0 border-0">
+                        <div class="tabs active" id="work_order">
+                            <h6 class="font-weight-bold wo-id">Work Order</h6>
+                        </div>
+                        <div class="tabs active" id="repack" style="display:none">
+                            <h6 class="font-weight-bold rp-id">Repack Info</h6>
+                        </div>
+                        <div class="tabs" id="additional">
+                            <h6 class="text-muted">Additional Work</h6>
+                        </div>
+                        <div class="tabs" id="customer">
+                            <h6 class="text-muted">Customer</h6>
+                        </div>
+                        <div class="tabs" id="container">
+                            <h6 class="text-muted">Container</h6>
+                        </div>
+                    </div>
+                    <div class="line"></div>
+                    <div class="modal-body p-0">
+                        <fieldset  id="tab_work_order">
+                            <form class="form-horizontal" id="step_parts_form" action="" method="post">
+                        		  <div class="modal-body" id="work_order_content">
+                        		    
+                        		    <input type="hidden" class="form-control" id="work_order_id" name="work_order_id" placeholder="Work Order ID"/>
+                        		    <input type="hidden" class="form-control" id="repack_id" name="repack_id" placeholder="Repack ID"/>
+                        		    <input type="hidden" class="form-control" id="wo_type" name="wo_type"/>
+                        		    <input type="hidden" class="form-control" id="wo_customer" name="wo_customer"/>
+                        		    <input type="hidden" class="form-control" id="wo_schedule_date" name="wo_schedule_date"/>
+                        		    
+                        			<div class="form-group">
+                        				<label for="dropoff_date" class="control-label"><strong>Dropoff  Date:</strong></label>
+                        				<input type="text" class="form-control" id="wo_dropoff_date" name="wo_dropoff_date" placeholder="Dropoff Date"/>
+                        			</div>
+                        			<div class="form-group">
+                        				<label for="estimated_pickup" class="control-label"><strong>Estimated Pickup:</strong></label>
+                        				<input type="text" class="form-control" id="wo_estimated_pickup" name="wo_estimated_pickup" placeholder="Estimated Pickup"/>
+                        			</div>
+                        			<div class="form-group">
+                        				<label for="initial_price" class="control-label"><strong>Initial Price:</strong></label>
+                        				<input type="text" class="form-control" id="wo_initial_price" name="wo_initial_price" placeholder="Initial Price" readonly="readonly"/>
+                        			</div>
+                        			<div class="form-group">
+                        				<label for="paid" class="control-label"><strong>Paid Amount:</strong></label>
+                        				<input type="text" class="form-control" id="wo_paid" name="wo_paid" placeholder="Paid Amount" readonly="readonly"/>
+                        			</div>
+                        			<div class="form-group">
+                        				<label for="amount" class="control-label"><strong>Amount Due:</strong></label>
+                        				<input type="text" class="form-control" id="wo_additional_cost" name="wo_additional_cost" placeholder="Additional Cost"/>
+                        			</div>
+                        			<div class="form-group">
+                        				<label for="notes" class="control-label"><strong>Notes:</strong></label>
+                        				<textarea class="form-control" id="wo_notes" name="wo_notes" placeholder="Notes"/></textarea>
+                        			</div>
+                        		  </div>
+                        	  </form>
+                        
+                        </fieldset>
+                        <fieldset id="tab_repack" style="display:none">
+                            <form class="form-horizontal" id="step_parts_form" action="" method="post">
+                        		  <div class="modal-body" id="repack_content">
+                        		    
+                        		    <input type="hidden" class="form-control" id="rp_work_order_id" name="rp_work_order_id" placeholder="Work Order ID"/>
+                        		    <input type="hidden" class="form-control" id="rp_repack_id" name="repack_id" placeholder="Repack ID"/>
+                        		    <input type="hidden" class="form-control" id="rp_customer" name="rp_customer" placeholder="Repack Customer"/>
+                        		    
+                        		    <div class="form-group">
+                        				<label for="type" class="control-label"><strong>Type:</strong></label>
+                        				<input type="text" class="form-control" id="rp_type" name="rp_type" placeholder="Repack Type"/>
+                        			</div>
+                        		    <div class="form-group">
+                        				<label for="schedule_date" class="control-label"><strong>Schedule Date:</strong></label>
+                        				<input type="text" class="form-control" id="rp_schedule_date" name="rp_schedule_date" placeholder="Schedule Date"/>
+                        			</div>
+                        			<div class="form-group">
+                        				<label for="dropoff_date" class="control-label"><strong>Dropoff  Date:</strong></label>
+                        				<input type="text" class="form-control" id="rp_dropoff_date" name="rp_dropoff_date" placeholder="Dropoff Date"/>
+                        			</div>
+                        			<div class="form-group">
+                        				<label for="speed" class="control-label"><strong>Speed:</strong></label>
+                        				<input type="text" class="form-control" id="rp_speed" name="rp_speed" placeholder="Speed"/>
+                        			</div>
+                        			<div class="form-group">
+                        				<label for="initial_price" class="control-label"><strong>Initial Price:</strong></label>
+                        				<input type="text" class="form-control" id="rp_initial_price" name="rp_initial_price" placeholder="Initial Price" readonly="readonly"/>
+                        			</div>
+                        			<div class="form-group">
+                        				<label for="paid" class="control-label"><strong>Paid Amount:</strong></label>
+                        				<input type="text" class="form-control" id="rp_paid" name="rp_paid" placeholder="Paid Amount" readonly="readonly"/>
+                        			</div>
+                        			<div class="form-group">
+                        				<label for="estimated_pickup" class="control-label"><strong>Estimated Pickup:</strong></label>
+                        				<input type="text" class="form-control" id="rp_estimated_pickup" name="rp_estimated_pickup" placeholder="Estimated Pickup"/>
+                        			</div>
+                        			<div class="form-group">
+                        				<label for="notes" class="control-label"><strong>Notes:</strong></label>
+                        				<textarea class="form-control" id="rp_notes" name="rp_notes" placeholder="Notes"/></textarea>
+                        			</div>
+                        		  </div>
+                        	  </form>
+                        </fieldset>
+                        <fieldset id="tab_additional" style="padding:10px">
+                            <br/>
+                            <div class="row" style="margin-left:10px">
+                            	<h4>Additional Work Required</h4>
+                            </div>
+                                <form class="form-horizontal" id="form_additional_work" action="" method="post">
+                                    <input type="hidden" class="form-control" id="aw_repack_id" name="aw_repack_id">
+                                    <input type="hidden" class="form-control" id="aw_wo_id" name="aw_wo_id">
+                                    <button class="btn btn-primary btn-xs" type="button" id="addFields">Add Fields</button><br><br>
+                                        <div id="additional_work_content"></div>
+                                        <div id="fields">
+                                       </div><br><br>
+                                </form>
+                        </fieldset>
+                        <fieldset id="tab_customer">
+                           <br/>
+                           <div class="row" style="margin-left:10px">
+                                <h4>Customer Information</h4>
+                           </div>
+                            <form id="customer_form" action="" method="post">
+                                <input type="hidden" class="form-control" id="acid" name="cid"/>
+                                <input type="hidden" class="form-control" id="auid" name="uid"/>
+                                <div class="row"  style="padding:10px">
+                            	<div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="first_name" class="control-label"><strong>First Name:</strong></label>
+                                        <input type="text" class="form-control" id="afirst_name" name="first_name" autocomplete="off" placeholder="Please enter your first name..." readonly="readonly"/>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="first_name" class="control-label"><strong>Last Name:</strong></label>
+                                        <input type="text" class="form-control" id="alast_name" name="last_name" autocomplete="off" placeholder="Please enter your last_name..." readonly="readonly"/>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="email" class="control-label"><strong>Email:</strong></label>
+                                        <input type="text" class="form-control" id="aemail" name="email" placeholder="Please enter your email..." readonly="readonly"/>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="email" class="control-label"><strong>Phone:</strong></label>
+                                        <input type="text" class="form-control" id="aphone" name="phone" placeholder="Please enter your phone number..."/>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="last_name" class="control-label"><strong>Company:</strong></label>
+                                        <input type="text" class="form-control" id="acompany" name="company" autocomplete="off" placeholder="Please enter your company name..."/>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="last_name" class="control-label"><strong>Address:</strong></label>
+                                        <input type="text" class="form-control" id="aaddress" name="address" autocomplete="off" placeholder="Please enter your Address..."/><br/>
+                                        <input type="text" class="form-control" id="aaddress2" name="address2" autocomplete="off" placeholder="Please enter your Address..."/>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="last_name" class="control-label"><strong>City:</strong></label>
+                                        <input type="text" class="form-control" id="acity" name="city" autocomplete="off" placeholder="Please enter your City..."/>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="last_name" class="control-label"><strong>State:</strong></label>
+                                        <input type="text" class="form-control" id="astate" name="state" autocomplete="off" placeholder="Please enter your State..."/>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="last_name" class="control-label"><strong>Zip:</strong></label>
+                                        <input type="text" class="form-control" id="azip" name="zip" autocomplete="off" placeholder="Please enter your Zip Code..."/>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="last_name" class="control-label"><strong>Country:</strong></label>
+                                        <input type="text" class="form-control" id="acountry" name="country" autocomplete="off" placeholder="Please enter your Country..."/>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="last_name" class="control-label"><strong>Sponsor:</strong></label>
+                                        <input type="text" class="form-control" id="asponsor" name="sponsor" autocomplete="off" placeholder="Please enter your Sponsor..."/>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="last_name" class="control-label"><strong>Notes:</strong></label>
+                                        <textarea class="form-control" id="notes" name="anotes" autocomplete="off" placeholder="Please enter your notes..."/></textarea>
+                                    </div>
+                                </div>
+                              </div>
+                            </form>
+                        </fieldset>
+                        <fieldset id="tab_container" style="padding:10px">
+                            <br/>
+                            <div class="row" style="margin-left:10px">
+                            	<h4>Container Information</h4>
+                            </div>
+                            <form id="container_form" action="" method="post">
+                                 <input type="hidden" class="form-control" id="uid" name="uid" placeholder="customer id"/>
+                                 <input type="hidden" class="form-control" id="existing_container" name="existing_container" placeholder="customer id"/>
+                                <div class="row" id="add_new_container_form">
+                            		<div class="col-md-6">	
+                            			<div class="form-group">
+                            				<label for="manufacturer" class="control-label"><strong>Manufacturer:</strong></label>
+                            				<input type="text" class="form-control" id="manufacturer" name="manufacturer" placeholder="Manufacturer"/>
+                            			</div>
+                            			<div class="form-group">
+                            				<label for="model" class="control-label"><strong>Model:</strong></label>
+                            				<input type="text" class="form-control" id="model" name="model" placeholder="Model"/>
+                            			</div>
+                            			<div class="form-group">
+                            				<label for="serial" class="control-label"><strong>Serial Number:</strong></label>
+                            				<input type="text" class="form-control" id="serial" name="serial" placeholder="Serial Number (located on info card)"/>
+                            			</div>
+                            			<div class="form-group">
+                            				<label for="aad" class="control-label"><strong>AAD:</strong></label>
+                            				<select class="form-control" id="aad" name="aad" >
+                            					
+                            					<option value="Cypress">Cypress2</option>
+                            					
+                            					<option value="Vigil">Vigil</option>
+                            					
+                            					<option value="MARS">MarS m2</option>
+                            					
+                            					<option value="Argus">Argus</option>
+                            					
+                            					<option value="None">None</option>
+                            				</select>
+                            			</div>
+                            			<div class="form-group">
+                            				<label for="serial" class="control-label"><strong>AAD Serial # :</strong></label>
+                            				<input type="text" class="form-control" id="aad_serial" name="aad_serial" placeholder="AAD Serial #"/>
+                            			</div>
+                            			<div class="form-group">
+                            				<label for="serial" class="control-label"><strong>AAD Install Date :</strong></label>
+                            				<input type="text" class="form-control" id="aad_install" name="aad_install" placeholder="yyyy-mm-dd"/>
+                            			</div>
+                            			<div class="form-group">
+                            				<label for="serial" class="control-label"><strong>AAD Next Maintenance :</strong></label>
+                            				<input type="text" class="form-control" id="aad_next_maintenance" name="aad_next_maintenance" placeholder="yyyy-mm-dd"/>
+                            			</div>
+                            			<div class="form-group">
+                            				<label for="serial" class="control-label"><strong>AAD End of Service :</strong></label>
+                            				<input type="text" class="form-control" id="aad_eol" name="aad_eol" placeholder="yyyy-mm-dd"/>
+                            			</div>
+                            		</div>
+                            		<div class="col-md-6">
+                            			<div class="form-group">
+                            				<label for="reserve" class="control-label"><strong>Reserve Canopy:</strong></label>
+                            				<input type="text" class="form-control" id="reserve" name="reserve" placeholder="Reserve Canopy (PDR, SMART, etc)"/>
+                            			</div>
+                            			<div class="form-group">
+                            					<label for="reserve_size" class="control-label"><strong>Reserve Size:</strong></label>
+                            					<input type="text" class="form-control" id="reserve_size" name="reserve_size" placeholder="Reserve Size (sq ft)" style="width:200px"/>
+                            			</div>
+                            			<div class="form-group">
+                            				<label for="main" class="control-label"><strong>Main Canopy:</strong></label>
+                            				<input type="text" class="form-control" id="main" name="main" placeholder="Main Canopy"/>
+                            			</div>
+                            			<div class="form-group">
+                            					<label for="main_size" class="control-label"><strong>Reserve Size:</strong></label>
+                            					<input type="text" class="form-control" id="main_size" name="main_size" placeholder="Main Size (sq ft)" style="width:200px"/>
+                            			</div>
+                            			<div class="form-group">
+                            					<label for="main_size" class="control-label"><strong>Reserve Serial:</strong></label>
+                            					<input type="text" class="form-control" id="reserve_serial" name="reserve_serial" placeholder="Reserve Serial" style="width:200px"/>
+                            			</div>
+                            		</div>
+                            	</div>
+                            </form>
+                        </fieldset>
+                    </div>
+                </div>
+                <div class="line"></div>
+                <div class="modal-footer">
+                		<button type="button" class="btn btn-danger" data-dismiss="modal">Close</button> 
+                		<button type="button" class="btn btn-info" id="modal-save">Save</button>
+                		<button type="button" class="btn btn-success btn-check">Checked-In</button>
+                	</div>
+            </div>
+        </div>
+
+<!-- ################# SCHEDULED AND DELIVERED TABLE ####################### -->
+<div class="container">
+	<h3 style="margin-top:20px;margin-bottom:20px">Scheduled Repacks</h3>
+	
+	<button id="show_delivered" type="button" class="btn btn-primary" style="float:right;margin-bottom:25px">Show Delivered Repacks</button>
+
+        <div class="scheduled_list">
+            <table id="scheduled_list" class="table table-striped table-dark scheduled-repacks" cellspacing="0">
+              <thead>
+                <tr>
+                  <th class="th-sm" scope="col">Workorder#</th>  
+                  <th class="th-sm" scope="col">Customer</th>
+                  <th class="th-sm" scope="col">Speed</th>
+                  <th class="th-sm" scope="col">Container</th>
+                  <th class="th-sm" scope="col">Dropoff</th>
+                  <th class="th-sm" scope="col">Pickup</th>
+                  <th class="th-sm" scope="col">Status</th>
+                  <th class="th-sm" scope="col"></th>
+                </tr>
+              </thead>
+              <tbody>
+              </tbody>
+            </table>
+        </div>
+        <div class="delivered_list">
+            <table id="delivered_list" class="table table-striped table-dark scheduled-repacks-delivered" cellspacing="0">
+              <thead>
+                <tr>
+                  <th class="th-sm" scope="col">Workorder#</th>  
+                  <th class="th-sm" scope="col">Customer</th>
+                  <th class="th-sm" scope="col">Speed</th>
+                  <th class="th-sm" scope="col">Container</th>
+                  <th class="th-sm" scope="col">Dropoff</th>
+                  <th class="th-sm" scope="col">Pickup</th>
+                  <th class="th-sm" scope="col">Status</th>
+                  <th class="th-sm" scope="col"></th>
+                </tr>
+              </thead>
+              <tbody>
+              </tbody>
+            </table>
+        </div>
+</div>
+
+<script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.js"></script>
+<script>
+$( document ).ready(function() {
+    
+    $('.delivered_list_wrapper, .delivered_list').hide();
+    
+    $('#show_delivered').on('click', function (e) {
+        e.preventDefault();
+        $('.scheduled_list_wrapper, .scheduled_list').toggle();
+        $('.delivered_list_wrapper, .delivered_list').toggle();
+        $(this).text(function(i, text){
+          return text === "Show Delivered Repacks" ? "Show Scheduled Repacks" : "Show Delivered Repacks";
+      })
+    });
+    
+    var tabel_delivered = null;
+    
+    tabel_delivered = $('#delivered_list').DataTable({
+        "processing": true,
+        "serverSide": true,
+        "ordering": true,
+        "autoWidth":true,
+        "order": [[ 0, 'asc' ]],
+        "ajax":
+        {
+            "url": "<?=root();?>do/delivered_work_order_list/",
+            "type": "POST"
+        },
+        "deferRender": true,
+        columnDefs: [
+            { "width": "10px", "targets": [0,1,4,5] },     
+        ],
+        "columns": [
+            
+            { "data": "wo_id" },
+            { "data": "name" },
+            { "data": "speed" },
+            { "data": "container_name" },
+            { "data": "wo_dropoff_date", "render": function ( data, type, row, meta ){
+                return '<div style="text-align: center">'+data+'</div>';
+              }
+            },
+            { "data": "wo_estimated_pickup", "render": function ( data, type, row, meta ){
+                return '<div style="text-align: center">'+data+'</div>';
+              }
+            },
+            { "data": "wo_status", "render": function ( data, type, row, meta ){
+                return '<div style="text-align: center">'+data+'</div>';
+              }
+            },
+            { "data": "action", "render": function ( data, type, row, meta ){
+                if(row.wo_status == 'Delivered'){
+                    var btn_class='btn-primary';
+                    var btn_txt = 'Delivered';
+                }
+            
+                return '<div style="text-align: center"><button type="button" data-toggle="modal" data-target="#repack_modal" data-backdrop="static" data-keyboard="false" class="btn btn-' + row.repack_id + ' ' + btn_class + ' repack-btn">' + btn_txt + '</button></div>';
+              }
+            }
+        ],
+    });
+    
+    var tabel = null;
+    
+    tabel = $('#scheduled_list').DataTable({
+        "processing": true,
+        "serverSide": true,
+        "ordering": true,
+        "autoWidth":true,
+        "order": [[ 0, 'asc' ]],
+        "ajax":
+        {
+            "url": "<?=root();?>do/work_order_list/",
+            "type": "POST"
+        },
+        "deferRender": true,
+        columnDefs: [
+            { "width": "10px", "targets": [0,1] },     
+        ],
+        "columns": [
+            
+            { "data": "wo_id" },
+            { "data": "name" },
+            { "data": "speed" },
+            { "data": "container_name" },
+            { "data": "wo_dropoff_date", "render": function ( data, type, row, meta ){
+                return '<div style="text-align: center">'+data+'</div>';
+              }
+            },
+            { "data": "wo_estimated_pickup", "render": function ( data, type, row, meta ){
+                return '<div style="text-align: center">'+data+'</div>';
+              }
+            },
+            { "data": "wo_status", "render": function ( data, type, row, meta ){
+                return '<div style="text-align: center">'+data+'</div>';
+              }
+            },
+            { "data": "action", "render": function ( data, type, row, meta ){
+                if(row.wo_status == 'pending'){
+                    var btn_class='btn-success';
+                    var btn_txt = 'Begin Repack';
+                }
+                if(row.wo_status == 'In-Progress'){
+                    var btn_class='btn-warning';
+                    var btn_txt = 'In-Progress';
+                }
+                if(row.wo_status == 'Checked-In'){
+                    var btn_class='btn-primary';
+                    var btn_txt = 'Checked-In';
+                }
+                if(row.wo_status == 'Completed'){
+                    var btn_class='btn-info';
+                    var btn_txt = 'View';
+                }
+                /*return  '<div style="text-align: center"><button type="button" data-toggle="modal" data-target="#repack_modal"  data-backdrop="static" data-keyboard="false" onclick="repack('+row.repack_id+',\''+row.wo_status+'\')" class="btn btn-'+row.repack_id+' '+btn_class+'">'+btn_txt+'</button></div>';*/
+                
+                return '<div style="text-align: center"><button type="button" data-toggle="modal" data-target="#repack_modal" data-backdrop="static" data-keyboard="false" class="btn btn-' + row.repack_id + ' ' + btn_class + ' repack-btn">' + btn_txt + '</button></div>';
+              }
+            }
+        ],
+    });
+    
+    $(".tabs").click(function(){
+        
+        toggle_tab($(this).attr('id'));
+    
+        $(".tabs").removeClass("active");
+        $(".tabs h6").removeClass("font-weight-bold");    
+        $(".tabs h6").addClass("text-muted");    
+        $(this).children("h6").removeClass("text-muted");
+        $(this).children("h6").addClass("font-weight-bold");
+        $(this).addClass("active");
+    
+        current_fs = $(".active");
+    
+        next_fs = $(this).attr('id');
+        next_fs = "#tab_" + next_fs;
+    
+        $("fieldset").removeClass("show");
+        $(next_fs).addClass("show");
+    
+        current_fs.animate({}, {
+            step: function() {
+                current_fs.css({
+                    'display': 'none',
+                    'position': 'relative'
+                });
+                next_fs.css({
+                    'display': 'block'
+                });
+            }
+        });
+    });
+    
+    $(document).on('click', '.repack-btn', function() {
+        var timer;
+        var row = tabel.row($(this).closest('tr')).data();
+        change_status(row.repack_id, row.wo_status, $(this));
+
+        if(row.wo_status == "Checked-In"){
+            $("#work_order").hide();
+            $("#tab_work_order").hide();
+            $("#tab_work_order").removeClass();
+            $("#repack").show();
+            $("#tab_repack").show();
+            $("#tab_repack").addClass('show');
+            $("#modal-save").click(save_repack);
+            
+                clearTimeout(timer);
+                timer = setTimeout(function() {
+                  repack_info(row.repack_id, row.wo_status); //data from repack
+                }, 500);
+            
+        }else{
+            $("#work_order").show();
+            $("#tab_work_order").show();
+            $("#tab_work_order").addClass('show');
+            $("#repack").hide();
+            $("#tab_repack").hide();
+            $("#tab_repack").removeClass();
+            $("#modal-save").click(save_work_order);
+            
+            clearTimeout(timer);
+                timer = setTimeout(function() {
+                  repack(row.repack_id, row.wo_status); //data from work_order
+                }, 500);
+            
+            
+        }
+    });
+    
+    $(document).on('click', '.btn-check', function() {
+        var id = $(this).attr('data-check');
+        var status = $(this).attr('data-text');
+        
+        change_status(id,status,$(this));
+    });
+
+}); 
+    var timer;
+    
+    /* Remove the active class from all tabs and panes when the modal is hidden
+    $("#repack_modal").on('hidden.bs.modal', function (event) {
+      var tabs = $(event.target).find('.tabs');
+      var panes = $(event.target).find('.modal-body > fieldset');
+      tabs.removeClass('active');
+      panes.removeClass('show');
+    });
+*/
+
+/*    function toggle_tab(id){
+        
+        if(id != 'work_order'){
+            $("#tab_work_order").hide();
+        }else{
+            $("#tab_work_order").show();
+        }
+        
+        if(id != 'repack'){
+            $("#tab_repack").hide();
+        }else{
+            $("#tab_repack").show();
+        }
+        
+    }*/
+    
+    /*function change_status(id,status,el){
+         
+         $.ajax({
+            url: '<?=root();?>do/update_status_repack/',
+            type: 'POST',
+            dataType: 'json', 
+            data: {'status':status, 'repack_id': id},
+            encode: true,
+            success: function(res){
+                if(res != ''){
+                    console.log(el+' - '+res);
+                    $(".btn-"+el).html(res);
+                    $('#scheduled_list').DataTable().ajax.reload(function(json){
+                        if (json.error) {
+                            console.log(json.error);
+                        }
+                    });
+                    
+                }
+            }
+        });
+    }*/
+    
+    /* ################# WORK ORDER
+    
+    function repack(id,status) {
+        
+    	$('#repack_modal').modal({backdrop: 'static', keyboard: false});
+    	
+    	$.ajax({
+            url: '<?=root();?>do/repack_content/?id='+id+'&load=1',
+            type: 'GET',
+            dataType: 'json', // added data type
+            success: function(res) {
+                $('#additional, #customer, #container').attr('data-repack-id',res.repack_id);
+                $('#additional, #customer, #container').attr('data-wo-id',res.work_order_id);
+                $('#additional, #customer, #container').attr('data-cust-id',res.wo_customer);
+                $('#additional, #customer, #container').attr('data-cont-id',res.con_id);
+                $('.wo-id').html('Work Order #'+res.work_order_id);
+                $('.rp-id').html('Repack Info #'+res.repack_id);
+                $('.btn-check').attr('data-check',res.repack_id);
+                $('.btn-check').attr('data-text','Checked-In');
+                $('input[name="work_order_id"]').val(res.work_order_id);
+                $('input[name="repack_id"]').val(res.repack_id);
+                $('input[name="wo_type"]').val(res.wo_type);
+                $('input[name="wo_customer"]').val(res.wo_customer);
+                $('input[name="wo_dropoff_date"]').val(res.wo_dropoff);
+                $('input[name="wo_estimated_pickup"]').val(res.wo_pickup);
+                $('input[name="wo_schedule_date"]').val(res.wo_schedule);
+                $('input[name="wo_initial_price"]').val(res.wo_initial_price);
+                $('input[name="wo_paid"]').val(res.wo_paid);
+                $('input[name="wo_additional_cost"]').val(res.wo_additional_cost);
+                $('textarea[name="wo_notes"]').val(res.wo_notes);
+            },
+             error: function(jqXHR, textStatus, errorThrown) {
+                setTimeout(function() {$('#repack_modal').modal('hide');}, 200);
+                alert("error");
+            }
+        });
+    }
+    
+    function save_work_order(){
+        var formData = {
+          repack_id             : $("#repack_id").val(),
+          wo_id                 : $("#work_order_id").val(),
+          wo_type               : $("#wo_type").val(),
+          wo_customer           : $("#wo_customer").val(),
+          wo_dropoff_date       : $("#wo_dropoff_date").val(),
+          wo_estimated_pickup   : $("#wo_estimated_pickup").val(),
+          wo_initial_price      : $("#wo_initial_price").val(),
+          wo_paid               : $("#wo_paid").val(),
+          wo_additional_cost    : $("#wo_additional_cost").val(),
+          wo_notes              : $("#wo_notes").val(),
+          wo_schedule_date      : $("#wo_schedule_date").val(),
+          work_order_id         : $("#work_order_id").val(),
+        };
+        
+        $.ajax({
+            url: '<?=root();?>do/update_work_order/',
+            type: 'POST',
+            dataType: 'json', 
+            data: formData,
+            encode: true,
+            success: function(res){
+                if(res == 1){
+                    $('#scheduled_list').DataTable().ajax.reload(function(json){
+                        if (json.error) {
+                            console.log(json.error);
+                        }
+                    });
+                }
+            }
+        });
+    }
+    
+    $("#wo_dropoff_date, #wo_estimated_pickup, #wo_intial_price, #wo_paid, #wo_additional_cost, #wo_notes").keyup(function() {
+        clearTimeout(timer);
+        timer = setTimeout(function() {
+          save_work_order();
+        }, 300);
+    }); */
+    
+    /* ################# REPACK 
+    
+    function repack_info(id,status) {
+        
+    	$('#repack_modal').modal({backdrop: 'static', keyboard: false});
+    	
+    	$.ajax({
+            url: '<?=root();?>do/repack_info_content/?id='+id+'&load=1',
+            type: 'GET',
+            dataType: 'json', // added data type
+            success: function(res) {
+                $('#additional, #customer, #container').attr('data-repack-id',res.repack_id);
+                $('#additional, #customer, #container').attr('data-wo-id',res.work_order_id);
+                $('#additional, #customer, #container').attr('data-cust-id',res.repack_customer);
+                $('#additional, #customer, #container').attr('data-cont-id',res.con_id);
+                $('.wo-id').html('Work Order #'+res.work_order_id);
+                $('.rp-id').html('Repack Info #'+res.repack_id);
+                $('.btn-check').attr('data-check',res.repack_id);
+                $('.btn-check').attr('data-text','Checked-In');
+                $('input[name="rp_work_order_id"]').val(res.work_order_id);
+                $('input[name="repack_id"]').val(res.repack_id);
+                $('input[name="rp_type"]').val(res.repack_type);
+                $('input[name="rp_customer"]').val(res.repack_customer);
+                $('input[name="rp_dropoff_date"]').val(res.repack_dropoff);
+                $('input[name="rp_estimated_pickup"]').val(res.repack_pickup);
+                $('input[name="rp_schedule_date"]').val(res.repack_schedule);
+                $('textarea[name="rp_notes"]').val(res.repack_notes);
+                $('input[name="rp_speed"]').val(res.repack_speed);
+                $('input[name="rp_initial_price"]').val(res.wo_initial_price);
+                $('input[name="rp_paid"]').val(res.wo_paid);
+            },
+             error: function(jqXHR, textStatus, errorThrown) {
+                setTimeout(function() {$('#repack_modal').modal('hide');}, 200);
+                alert("error");
+            }
+        });
+    }
+    
+    function save_repack(){
+        var formData = {
+          repack_id             : $("#rp_repack_id").val(),
+          wo_id                 : $("#rp_work_order_id").val(),
+          rp_customer           : $("#rp_customer").val(),
+          rp_type               : $("#rp_type").val(),
+          rp_schedule_date      : $("#rp_schedule_date").val(),
+          rp_dropoff_date       : $("#rp_dropoff_date").val(),
+          rp_estimated_pickup   : $("#rp_estimated_pickup").val(),
+          rp_notes              : $("#rp_notes").val(),
+          rp_speed              : $("#rp_speed").val(),
+        };
+        
+        $.ajax({
+            url: '<?=root();?>do/update_repack/',
+            type: 'POST',
+            dataType: 'json', 
+            data: formData,
+            encode: true,
+            success: function(res){
+                if(res == 1){
+                    $('#scheduled_list').DataTable().ajax.reload(function(json){
+                        if (json.error) {
+                            console.log(json.error);
+                        }
+                    });
+                }
+            }
+        });
+    }
+    
+    $("#rp_type, #rp_schedule_date, #rp_dropoff_date, #rp_estimated_pickup, #rp_speed, #rp_notes").keyup(function() {
+        clearTimeout(timer);
+        timer = setTimeout(function() {
+          save_repack();
+        }, 300);
+    });*/
+    
+    /* ################# ADDITIONAL WORK 
+    
+    $(document).on('click', '#additional', function() {
+        var repack_id = $(this).attr('data-repack-id');
+    	$.ajax({
+            url: '<?=root();?>do/additional_work_content/?id='+repack_id+'&load=1',
+            type: 'GET',
+            dataType: 'json', // added data type
+            success: function(res) {
+                $('input[name="aw_wo_id"]').val(res.wo_id);
+                $('input[name="aw_repack_id"]').val(res.repack_id);
+                $("#additional_work_content").html(res.content);
+            },
+             error: function(jqXHR, textStatus, errorThrown) {
+                setTimeout(function() {$('#repack_modal').modal('hide');}, 200);
+                alert("error");
+            }
+        });
+    });
+    
+    $(document).on('click', '#addFields', function() {
+      var max_fields = 10;
+      var wrapper = $("#fields");
+      var add_button = $("#addFields");
+      
+      var x = 1;
+      $(add_button).click(function(e) {
+        e.preventDefault();
+        
+        if (x < max_fields) {
+          x++;
+          
+          $.ajax({
+            url: '<?=root();?>do/add_additional_work/',
+            type: 'POST',
+            dataType: 'json', 
+            data: {'repack_id' : $("#aw_repack_id").val(), 'wo_id' : $("#aw_wo_id").val(), },
+            encode: true,
+            success: function(res){
+                if(res > 0){
+                     $(wrapper).append('<div class="row"><div class="col-md-4"><div class="form-group"><label for="qb_code" class="control-label">QB Code:</label><input type="text" class="form-control qb_code" id="qb_code_'+res+'" name="qb_code_'+res+'" onblur="save_aw('+res+')"></div></div><div class="col-md-6"><div class="form-group"><label for="description" class="control-label">Description:</label><br/><textarea class="form-control boxsizingBorder description" id="description_'+res+'" name="description_'+res+'" onblur="save_aw('+res+')"></textarea></div></div><a href="#" class="remove_field" data-id="'+res+'">Remove</a></div>');
+                }
+            }
+        });
+    
+        }
+      });
+     
+      $(wrapper).on("click", ".remove_field", function(e) {
+        e.preventDefault();
+        var id = $(this).attr("data-id");
+                $.ajax({
+                      type: "GET",
+                      url: "<?=root();?>do/delete_additional_work/?id="+id,   
+                      dataType:'JSON', 
+    	        });
+        $(this).parent('div').remove();   
+        x--;
+      });
+    });
+
+    function save_aw(id){
+        var qb_code = $('#qb_code_'+id).val();
+    	var description = $('#description_'+id).val();
+    	
+    	        $.ajax({
+                      type: "POST",
+                      url: "<?=root();?>do/save_additional_work/?id="+id,   
+                      data: { 'qb_code' : qb_code, 'description' : description},
+                      dataType:'JSON', 
+                      success: function (result) {
+                          
+                      }
+    	        });
+    }*/
+    
+    /* ################# CUSTOMER 
+    
+    $(document).on('click', '#customer', function() {
+        var cust_id = $(this).attr('data-cust-id');
+    	$.ajax({
+            url: "<?=root();?>do/get_customer_data/?id="+cust_id,
+            type: 'GET',
+            dataType: 'json', // added data type
+            success: function(res) {
+                console.log(res);
+                 $('#acid').val(res.cid);
+                 $('#auid').val(res.uid);
+                 $('#afirst_name').val(res.first_name);
+                 $('#alast_name').val(res.last_name);
+                 $('#aemail').val(res.email);
+                 $('#aphone').val(res.phone);
+                 $('#acompany').val(res.company);
+                 $('#aaddress').val(res.address);
+                 $('#aaddress2').val(res.address_2);
+                 $('#acity').val(res.city);
+                 $('#astate').val(res.state);
+                 $('#azip').val(res.zip);
+                 $('#acountry').val(res.country);
+                 $('#asponsor').val(res.sponsor);
+                 $('#anotes').val(res.notes);
+            },
+             error: function(jqXHR, textStatus, errorThrown) {
+                setTimeout(function() {$('#repack_modal').modal('hide');}, 200);
+                alert("error");
+            }
+        });
+    });
+
+    function customer() {
+    	$.post( "/inc/exec.php?act=update_customer&ajax=1&schedule=1", $('#customer_form').serialize(), '', 'script');
+    }
+    
+    $("#acid, #auid, #afirst_name, #alast_name, #aemail, #aphone, #acompany, #aaddress, #aaddress2, #acity, #astate, #azip, #acountry, #asponsor, #anotes").keyup(function() {
+        clearTimeout(timer);
+        timer = setTimeout(function() {
+          customer();
+        }, 300);
+    });*/
+    
+    /* ################# CONTAINER 
+    
+    $(document).on('click', '#container', function() {
+        var id = $(this).attr('data-cont-id');
+        $.ajax({
+            url: "<?=root();?>do/get_container_data/?id="+id,
+            type: 'GET',
+            dataType: 'json', // added data type
+            success: function(res) {
+                console.log(res);
+                 $('#uid').val(res.customer);
+                 $('#existing_container').val(res.id);
+                 $('#manufacturer').val(res.manufacturer);
+                 $('#model').val(res.model);
+                 $('#serial').val(res.serial);
+                 $('#aad').val(res.aad);
+                 $('#aad_serial').val(res.aad_serial);
+                 $('#aad_install').val(res.aad_install);
+                 $('#aad_next_maintenance').val(res.aad_next_maintenance);
+                 $('#aad_eol').val(res.aad_eol);
+                 $('#reserve').val(res.reserve);
+                 $('#reserve_size').val(res.reserve_size);
+                 $('#reserve_serial').val(res.reserve_serial);
+                 $('#main').val(res.main);
+                 $('#main_size').val(res.main_size);
+            }
+        });
+    });
+    
+    function add_container() {
+    	$.post( "/inc/exec.php?act=add_container&ajax=1&schedule=1", $('#container_form').serialize(), '', 'script');
+    }
+    
+    $("#manufacturer, #model, #serial, #aad, #aad_serial, #aad, #aad_install, #aad_next_maintenance, #aad_eol, #reserve, #reserve_size, #reserve_serial, #main, #main_size").keyup(function() {
+        clearTimeout(timer);
+        timer = setTimeout(function() {
+          add_container();
+        }, 300);
+    });
+    */
+</script>

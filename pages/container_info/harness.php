@@ -1,8 +1,16 @@
 <?php
-       
-    $uid = $_SESSION['uid'];
     $url = (isset($_GET['id'])) ? 'container_info' : $_GET['act'];  
     $s = (isset($_GET['s']) && $_GET['s'] > 0) ? $_GET['s'] : $_SESSION['service'];
+    $uid = (isset($_SESSION['uid']) && $_SESSION['uid'] > 0) ? $_SESSION['uid'] : $_GET['uid'];
+    
+    /*if(isset($_SESSION['repack_container_id']) && $_SESSION['repack_container_id'] > 0) {
+        $_SESSION['repack_container_id'] = $_SESSION['repack_container_id'];   
+    }else if(isset($_GET['id']) && $_GET['id'] > 0) {
+        $_SESSION['repack_container_id'] = $_GET['id'];
+    }else{
+        $_SESSION['repack_container_id'] = 0;
+    }*/
+ $_SESSION['repack_container_id'] = $_GET['container'];
 ?>
 <div class="container-fluid">
 
@@ -12,6 +20,7 @@
     		<div class="alert alert-warning d-none align-items-center" role="alert" id="containeralert"></div>
     <form id="harness_form">
     <input type="hidden" name="url" value="<?php echo $url;?>">
+    <input type="hidden" class="form-control" id="s_type" name="s_type" value="<?php echo $_SESSION['type'];?>" placeholder="id"/>
     <input type="hidden" class="form-control" id="uid" name="uid" value="<?php echo $uid;?>" placeholder="id"/>
     <input type="hidden" class="form-control" id="existing_container" name="existing_container" value="<?php echo $_SESSION['repack_container_id'];?>" placeholder="id"/>
     <input type="hidden" class="form-control" id="s" name="s" value="<?php echo $s;?>" placeholder="service option"/>
@@ -46,11 +55,12 @@
 </div>
 <script>
 function add_harness() {
-	$.post( "<?php echo root();?>inc/exec.php?act=add_harness&ajax=1&schedule=1&s=<?php echo $s;?>", $('#harness_form').serialize(), '', 'script');
+	$.post( "<?php echo root();?>inc/exec.php?act=add_harness&ajax=1&schedule=1&s=<?php echo $s;?>&uid=<?php echo $uid;?>", $('#harness_form').serialize(), '', 'script');
 }
 
 function get_data(){
     var id = $('#existing_container').val();
+    var is_admin = $('#is_admin').val();
     $.ajax({
         url: "<?php echo root();?>do/get_container_data/?id="+id,
         type: 'GET',

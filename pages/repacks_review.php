@@ -38,6 +38,17 @@ if($_SESSION['type'] == 'customer'){
 }
 ?>
 <style>
+    #shopping-cart{
+        padding: 5px 10px;
+        border-radius: 5px;
+    }
+    #shopping-cart-detail{
+        padding: 5px;
+        border-radius: 3px;   
+    }
+    #shopping-cart-detail table td{
+        border-bottom: 1px dashed #ccc
+    }
     .dataTables_filter { display : none; }
     .form-control:disabled, .form-control[readonly]{
         background-color: #adb2b7;
@@ -175,11 +186,23 @@ if($_SESSION['type'] == 'customer'){
                         				<label for="estimated_pickup" class="control-label"><strong>Estimated Pickup:</strong></label>
                         				<input type="text" class="form-control" id="wo_estimated_pickup" name="wo_estimated_pickup" placeholder="Estimated Pickup"/>
                         			</div>
-                        			<div class="form-group">
-                        				<label for="initial_price" class="control-label"><strong>Initial Price:</strong></label>
+                        		    <div class="form-group" id="shopping-cart-detail" style=>
+                        		        <label for="estimated_pickup" class="control-label"><strong>Service Option List:</strong></label>
+                        		        <table>
+                                            <tbody>
+                                            </tbody>
+                                            <tfoot>
+                                                <tr>
+                                                    <td>Total Price</td>
+                                                    <td align="right">$<span id="total_price">0.00</span></td>
+                                                </tr>
+                                            </tfoot>
+                                        </table>
+                        		    </div>
+                        		    <div class="form-group">
+                        				<label for="speed" class="control-label"><strong>Initial Price:</strong></label>
                         				<input type="text" class="form-control" id="wo_initial_price" name="wo_initial_price" placeholder="Initial Price" readonly="readonly"/>
                         			</div>
-                        			
                         			<div class="form-group">
                         				<label for="paid" class="control-label"><strong>Paid Amount:</strong></label>
                         				<input type="text" class="form-control" id="wo_paid" name="wo_paid" placeholder="Paid Amount" readonly="readonly"/>
@@ -226,8 +249,21 @@ if($_SESSION['type'] == 'customer'){
                         				<label for="speed" class="control-label"><strong>Speed:</strong></label>
                         				<input type="text" class="form-control" id="rp_speed" name="rp_speed" placeholder="Speed"/>
                         			</div>
-                        			<div class="form-group">
-                        				<label for="initial_price" class="control-label"><strong>Initial Price:</strong></label>
+                        			<div class="form-group" id="shopping-cart-detail-repack" style=>
+                        			    <label for="estimated_pickup" class="control-label"><strong>Service Option List:</strong></label>
+                        		        <table>
+                                            <tbody>
+                                            </tbody>
+                                            <tfoot>
+                                                <tr>
+                                                    <td>Total Price</td>
+                                                    <td align="right">$<span id="total_price_repack">0.00</span></td>
+                                                </tr>
+                                            </tfoot>
+                                        </table>
+                        		    </div>
+                        		    <div class="form-group">
+                        				<label for="speed" class="control-label"><strong>Initial Price:</strong></label>
                         				<input type="text" class="form-control" id="rp_initial_price" name="rp_initial_price" placeholder="Initial Price" readonly="readonly"/>
                         			</div>
                         			<div class="form-group">
@@ -332,6 +368,7 @@ if($_SESSION['type'] == 'customer'){
                                  <input type="hidden" class="form-control" id="uid" name="uid" placeholder="customer id"/>
                                  <input type="hidden" class="form-control" id="existing_container" name="existing_container" placeholder="customer id"/>
                                 <div class="row" id="add_new_container_form">
+                            		<!--
                             		<div class="col-md-6">	
                             			<div class="form-group">
                             				<label for="manufacturer" class="control-label"><strong>Manufacturer:</strong></label>
@@ -398,6 +435,126 @@ if($_SESSION['type'] == 'customer'){
                             					<label for="main_size" class="control-label"><strong>Reserve Serial:</strong></label>
                             					<input type="text" class="form-control" id="reserve_serial" name="reserve_serial" placeholder="Reserve Serial" style="width:200px"/>
                             			</div>
+                            		</div>
+                            		-->
+                            		<div class="col-md-12">	
+                                        <div class="row">
+                                            <div class="col-md-3"><h5>Harness / Container</h5></div>
+                                            <div class="col-md-3"><h5>Reserve Parachute</h5></div>
+                                            <div class="col-md-3"><h5>AAD</h5></div>
+                                            <div class="col-md-3"><h5>Main Parachute</h5></div>
+                                        </div>
+                                        <hr/>
+                                        <div class="row">
+                                            <div class="col-md-3">
+                                                <!-- HARNESS -->
+                                                
+                                                <div class="form-group">
+                                                    <label for="make" class="control-label"><strong>Make:</strong></label>
+                                                    <input type="text" class="form-control" id="make" name="hmake" placeholder="Manufacturer" />
+                                                </div>
+                                                <div class="form-group">
+                                                    <label for="model" class="control-label"><strong>Model:</strong></label>
+                                                    <input type="text" class="form-control" id="model" name="hmodel" placeholder="Model" />
+                                                </div>
+                                                <div class="form-group">
+                                                    <label for="size" class="control-label"><strong>Size:</strong></label>
+                                                    <input type="text" class="form-control" id="size" name="hsize" placeholder="Size" />
+                                                </div>
+                                                <div class="form-group">
+                                                    <label for="serial" class="control-label"><strong>Serial Number:</strong></label>
+                                                    <input type="text" class="form-control" id="serial" name="hserial" placeholder="Serial Number (located on info card)" />
+                                                </div>
+                                                <div class="form-group">
+                                                    <label for="mfr" class="control-label"><strong>Date of Mfr:</strong></label>
+                                                    <input type="text" class="form-control" id="mfr" name="hmfr" placeholder="Date of Mfr" />
+                                                </div>
+                                            </div>
+                                            <div class="col-md-3">
+                                                <!-- RESERVE -->
+                                                
+                                                <div class="form-group">
+                                                    <label for="make" class="control-label"><strong>Make:</strong></label>
+                                                    <input type="text" class="form-control" id="rpmake" name="rmake" placeholder="Manufacturer" />
+                                                </div>
+                                                <div class="form-group">
+                                                    <label for="model" class="control-label"><strong>Model:</strong></label>
+                                                    <input type="text" class="form-control" id="rpmodel" name="rmodel" placeholder="Model" />
+                                                </div>
+                                                <div class="form-group">
+                                                    <label for="size" class="control-label"><strong>Size:</strong></label>
+                                                    <input type="text" class="form-control" id="rpsize" name="rsize" placeholder="Size" />
+                                                </div>
+                                                <div class="form-group">
+                                                    <label for="serial" class="control-label"><strong>Serial Number:</strong></label>
+                                                    <input type="text" class="form-control" id="rpserial" name="rserial" placeholder="Serial Number (located on info card)" />
+                                                </div>
+                                                <div class="form-group">
+                                                    <label for="mfr" class="control-label"><strong>Date of Mfr:</strong></label>
+                                                    <input type="text" class="form-control" id="rpmfr" name="rmfr" placeholder="Date of Mfr" />
+                                                </div>
+                                                 <div class="form-group">
+                                                    <label for="fabric" class="control-label"><strong>Fabric:</strong></label>
+                                                    <input type="text" class="form-control" id="rpfabric" name="rfabric" placeholder="Fabric" />
+                                                </div>
+                                            </div>
+                                            <div class="col-md-3">
+                                                <!-- AAD -->
+                                                
+                                                <div class="form-group">
+                                                    <label for="make" class="control-label"><strong>Make:</strong></label>
+                                                    <input type="text" class="form-control" id="amake" name="amake" placeholder="Manufacturer" />
+                                                </div>
+                                                <div class="form-group">
+                                                    <label for="model" class="control-label"><strong>Model:</strong></label>
+                                                    <input type="text" class="form-control" id="amodel" name="amodel" placeholder="Model" />
+                                                </div>
+                                                <div class="form-group">
+                                                    <label for="size" class="control-label"><strong>Size:</strong></label>
+                                                    <input type="text" class="form-control" id="asize" name="asize" placeholder="Size" />
+                                                </div>
+                                                <div class="form-group">
+                                                    <label for="serial" class="control-label"><strong>Serial Number:</strong></label>
+                                                    <input type="text" class="form-control" id="aserial" name="aserial" placeholder="Serial Number (located on info card)" />
+                                                </div>
+                                                <div class="form-group">
+                                                    <label for="mfr" class="control-label"><strong>Date of Mfr:</strong></label>
+                                                    <input type="text" class="form-control" id="amfr" name="amfr" placeholder="Date of Mfr" />
+                                                </div>
+                                            </div>
+                                            <div class="col-md-3">
+                                                <!-- MAIN -->
+                                                
+                                                <div class="form-group">
+                                                    <label for="make" class="control-label"><strong>Make:</strong></label>
+                                                    <input type="text" class="form-control" id="mpmake" name="mmake" placeholder="Manufacturer" />
+                                                </div>
+                                                <div class="form-group">
+                                                    <label for="model" class="control-label"><strong>Model:</strong></label>
+                                                    <input type="text" class="form-control" id="mpmodel" name="mmodel" placeholder="Model" />
+                                                </div>
+                                                <div class="form-group">
+                                                    <label for="size" class="control-label"><strong>Size:</strong></label>
+                                                    <input type="text" class="form-control" id="mpsize" name="msize" placeholder="Size" />
+                                                </div>
+                                                <div class="form-group">
+                                                    <label for="serial" class="control-label"><strong>Serial Number:</strong></label>
+                                                    <input type="text" class="form-control" id="mpserial" name="mserial" placeholder="Serial Number (located on info card)" />
+                                                </div>
+                                                <div class="form-group">
+                                                    <label for="mfr" class="control-label"><strong>Date of Mfr:</strong></label>
+                                                    <input type="text" class="form-control" id="mpmfr" name="mmfr" placeholder="Date of Mfr" />
+                                                </div>
+                                                 <div class="form-group">
+                                                    <label for="fabric" class="control-label"><strong>Fabric:</strong></label>
+                                                    <input type="text" class="form-control" id="mpfabric" name="mfabric" placeholder="Fabric Type" />
+                                                </div>
+                                                <div class="form-group">
+                                                    <label for="line" class="control-label"><strong>Line:</strong></label>
+                                                    <input type="text" class="form-control" id="mpline" name="mline" placeholder="Line Type" />
+                                                </div>
+                                            </div>
+                                        </div>
                             		</div>
                             	</div>
                             </form>
@@ -670,6 +827,10 @@ $( document ).ready(function() {
     /* ################# WORK ORDER */
     
     function repack(id) {
+        var item = [];
+        var list_item = '';
+        var detail_id = 0;
+        var total_price = 0;
         
     	$('#repack_modal').modal({backdrop: 'static', keyboard: false});
     	
@@ -695,9 +856,46 @@ $( document ).ready(function() {
                 $('input[name="wo_schedule_date"]').val(res.wo_schedule);
                 $('input[name="wo_initial_price"]').val(res.wo_initial_price);
                 $('input[name="wo_paid"]').val(res.wo_paid);
-                $('input[name="wo_total_cost"]').val(res.wo_total_cost);
                 $('input[name="wo_additional_cost"]').val(res.wo_additional_cost);
                 $('textarea[name="wo_notes"]').val(res.wo_notes);
+                
+                $.each(res, function(i, val) {
+                  if (val && typeof val.cart_service_name !== 'undefined') {
+                      var formattedPrice = parseFloat(val.cart_service_price).toFixed(2); // Format the price to 2 decimal places
+                    list_item += '<tr>'+
+                                    '<td width="70%">'+val.cart_service_name+'</td>'+
+                                    '<td width="20%" align="right">$'+formattedPrice+'</td>'+
+                                  '</tr>';
+                                  
+                    total_price += parseFloat(val.cart_service_price);
+                  }
+                  
+                });
+                
+                var initial_price = parseFloat(res.wo_initial_price).toFixed(2);
+                var mainchute = parseFloat(res.sc_cart_mainchute).toFixed(2);
+                var total_price_item = parseFloat(total_price).toFixed(2);
+                
+                /*list_item += '<tr>'+
+                                    '<td width="70%">Repack Speed</td>'+
+                                    '<td width="20%" align="right">$'+initial_price+'</td>'+
+                                  '</tr>';*/
+                list_item += '<tr>'+
+                                    '<td width="70%">Mainchute</td>'+
+                                    '<td width="20%" align="right">$'+mainchute+'</td>'+
+                                  '</tr>';
+                 
+                console.log(total_price_item+' -- '+initial_price+' -- '+mainchute);
+                
+                var sum = parseFloat(total_price_item) + parseFloat(initial_price) + parseFloat(mainchute);
+                var sum_text = parseFloat(total_price_item) + parseFloat(mainchute);
+                
+                var total = parseFloat(sum).toFixed(2);
+                var total_text = parseFloat(sum_text).toFixed(2);
+                
+                $('input[name="wo_total_cost"]').val(total);
+                $('#shopping-cart-detail table tbody').html(list_item);
+                $('#total_price').html(total_text);
             },
              error: function(jqXHR, textStatus, errorThrown) {
                 setTimeout(function() {$('#repack_modal').modal('hide');}, 200);
@@ -710,6 +908,12 @@ $( document ).ready(function() {
     /* ################# REPACK */
     
     function repack_info(id) {
+        var item = [];
+        var list_item = '';
+        var detail_id = 0;
+        var total_price = 0;
+        
+
         
     	$('#repack_modal').modal({backdrop: 'static', keyboard: false});
     	
@@ -737,6 +941,43 @@ $( document ).ready(function() {
                 $('input[name="rp_speed"]').val(res.repack_speed);
                 $('input[name="rp_initial_price"]').val(res.wo_initial_price);
                 $('input[name="rp_paid"]').val(res.wo_paid);
+                
+                $.each(res, function(i, val) {
+                  if (val && typeof val.cart_service_name !== 'undefined') {
+                      var formattedPrice = parseFloat(val.cart_service_price).toFixed(2); // Format the price to 2 decimal places
+                    list_item += '<tr>'+
+                                    '<td width="70%">'+val.cart_service_name+'</td>'+
+                                    '<td width="20%" align="right">$'+formattedPrice+'</td>'+
+                                  '</tr>';
+                                  
+                    total_price += parseFloat(val.cart_service_price);
+                  }
+                  
+                });
+                
+                var initial_price = parseFloat(res.wo_initial_price).toFixed(2);
+                var mainchute = parseFloat(res.sc_cart_mainchute).toFixed(2);
+                var total_price_item = parseFloat(total_price).toFixed(2);
+                
+                /*list_item += '<tr>'+
+                                    '<td width="70%">Repack Speed</td>'+
+                                    '<td width="20%" align="right">$'+initial_price+'</td>'+
+                                  '</tr>';*/
+                list_item += '<tr>'+
+                                    '<td width="70%">Mainchute</td>'+
+                                    '<td width="20%" align="right">$'+mainchute+'</td>'+
+                                  '</tr>';
+                 
+                console.log(total_price_item+' -- '+initial_price+' -- '+mainchute);
+                
+                var sum = parseFloat(total_price_item) + parseFloat(initial_price) + parseFloat(mainchute);
+                var sum_text = parseFloat(total_price_item) + parseFloat(mainchute);
+                
+                var total = parseFloat(sum).toFixed(2);
+                var total_text = parseFloat(sum_text).toFixed(2);
+                
+                $('#shopping-cart-detail-repack table tbody').html(list_item);
+                $('#total_price_repack').html(total_text);
             },
              error: function(jqXHR, textStatus, errorThrown) {
                 setTimeout(function() {$('#repack_modal').modal('hide');}, 200);
@@ -811,7 +1052,7 @@ $( document ).ready(function() {
                 console.log(res);
                  $('#uid').val(res.customer);
                  $('#existing_container').val(res.id);
-                 $('#manufacturer').val(res.manufacturer);
+                 /*$('#manufacturer').val(res.manufacturer);
                  $('#model').val(res.model);
                  $('#serial').val(res.serial);
                  $('#aad').val(res.aad);
@@ -824,6 +1065,30 @@ $( document ).ready(function() {
                  $('#reserve_serial').val(res.reserve_serial);
                  $('#main').val(res.main);
                  $('#main_size').val(res.main_size);
+                 */
+                 $('#make').val(res.hmake);
+                 $('#model').val(res.hmodel);
+                 $('#size').val(res.hsize);
+                 $('#serial').val(res.hserial);
+                 $('#mfr').val(res.hmfr);
+                 $('#rpmake').val(res.rpmake);
+                 $('#rpmodel').val(res.rpmodel);
+                 $('#rpsize').val(res.rpsize);
+                 $('#rpserial').val(res.rpserial);
+                 $('#rpmfr').val(res.rpmfr);
+                 $('#rpfabric').val(res.rpfabric);
+                 $('#amake').val(res.amake);
+                 $('#amodel').val(res.amodel);
+                 $('#asize').val(res.asize);
+                 $('#aserial').val(res.aserial);
+                 $('#amfr').val(res.amfr);
+                 $('#mpmake').val(res.mpmake);
+                 $('#mpmodel').val(res.mpmodel);
+                 $('#mpsize').val(res.mpsize);
+                 $('#mpserial').val(res.mpserial);
+                 $('#mpmfr').val(res.mpmfr);
+                 $('#mpfabric').val(res.mpfabric);
+                 $('#mpline').val(res.mpline);
             }
         });
     });

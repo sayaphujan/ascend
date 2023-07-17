@@ -1,16 +1,10 @@
 <?
-//if($_SERVER['REMOTE_ADDR']!=='114.10.16.126' && $_SERVER['REMOTE_ADDR']!=='103.97.101.1'){
+
+//if($_SERVER['REMOTE_ADDR'] !=='36.68.55.110' && $_SERVER['REMOTE_ADDR'] !=='103.97.101.1' && $_SERVER['REMOTE_ADDR'] !=='104.3.122.245' && $_SERVER['REMOTE_ADDR'] != '89.187.163.184' && $_SERVER['REMOTE_ADDR'] != '182.2.52.54'){
 //    echo 'Updates in progress.';
 //    exit();
-//    header('Location: https://peregrinemfginc.com/', true, 301);
-//    die();  
 //}
-//if($_SERVER['REMOTE_ADDR']!=='10.0.0.50' && $_SERVER['REMOTE_ADDR']!=='103.97.101.1' && $_SERVER['REMOTE_ADDR'] !== '119.2.52.102' && $_SERVER['REMOTE_ADDR'] !== '103.105.28.149') {
-//echo 'Updates in progress.';
-//exit();
-//header('Location: https://peregrinemfginc.com/', true, 301);
-//die();
-//}
+
 
 $title = 'Ascend Rigging';
 require_once 'inc/functions.php'; 
@@ -23,6 +17,11 @@ if ( $_SERVER[ 'SERVER_PORT' ] !== '443' ) {
 if (isset($_SESSION['adminid'])) {
 
     switch ( $_GET[ 'page' ] ) {
+        
+        case 'service_order_success':
+    		$page = 'pages/service_order_success.php';
+    		$title .= '';
+    	break;
     
     	case 'checkout':
     		$page = 'pages/checkout.php';
@@ -161,7 +160,7 @@ if (isset($_SESSION['adminid'])) {
     		$title .= '';
     		break;
     }		
-}else if (isset($_SESSION['uid'])) {
+} else if (isset($_SESSION['uid'])) {
 
     switch ( $_GET[ 'page' ] ) {
     
@@ -288,7 +287,12 @@ if (isset($_SESSION['adminid'])) {
     }		
 }else{
     switch ( $_GET[ 'page' ] ) {
-        
+			
+        case 'container_information':
+            $page = 'pages/container_information.php';
+            $title .= '';
+            break;
+
         case 'schedule_sport_repack':
     		$page = 'pages/schedule_sport_repack.php';
     		$title .= '';

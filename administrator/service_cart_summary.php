@@ -19,7 +19,7 @@
                 </thead>
                 <tbody>         
                         <?php 
-                            $que = 'SELECT * FROM `shopping_cart` WHERE `shopping_cart`.`cart_order_id` =\''.sf($_GET['id']).'\' AND `shopping_cart`.`cart_status` =\'1\'';
+                            $que = 'SELECT * FROM `shopping_cart` WHERE `shopping_cart`.`cart_order_id` =\''.sf($_GET['id']).'\' ';
                             //echo $que;
                             $q = mysqli_query($link, $que);
                             $total_price = 0;

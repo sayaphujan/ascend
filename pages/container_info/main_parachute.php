@@ -1,7 +1,17 @@
 <?php
- $uid = $_SESSION['uid'];
+ $uid = (isset($_SESSION['uid']) && $_SESSION['uid'] > 0) ? $_SESSION['uid'] : $_GET['uid'];
  $url = $_GET['act'];  
  $s = (isset($_GET['s']) && $_GET['s'] > 0) ? $_GET['s'] : $_SESSION['service'];
+ 
+     if(isset($_SESSION['repack_container_id']) && $_SESSION['repack_container_id'] > 0) {
+        $_SESSION['repack_container_id'] = $_SESSION['repack_container_id'];   
+    }else if(isset($_GET['id']) && $_GET['id'] > 0) {
+        $_SESSION['repack_container_id'] = $_GET['id'];
+    }else{
+        $_SESSION['repack_container_id'] = 0;
+    }
+  
+
 ?>
 <div class="row">
 	<h4>Main Parachute</h4>
@@ -54,7 +64,7 @@
 <script>
 function add_main_parachute() {
 
-	$.post( "<?php  echo root();?>inc/exec.php?act=add_main_parachute&ajax=1&schedule=1&s=<?php echo $_GET['s'];?>", $('#main_parachute_form').serialize(), '', 'script');
+	$.post( "<?php  echo root();?>inc/exec.php?act=add_main_parachute&ajax=1&schedule=1&s=<?php echo $_GET['s'];?>&uid=<?php echo $uid;?>", $('#main_parachute_form').serialize(), '', 'script');
 }
 
 function get_data(){
@@ -80,7 +90,7 @@ function step_aad(container){
     var stepper = new Stepper(document.querySelector('.bs-stepper'))
     stepper.to(4);
     
-    $('#aad-info-part').load('<?php  echo root();?>inc/exec.php?act=container_info&page=aad_info&container='+container+'&s=<?php echo $_GET['s'];?>');
+    $('#aad-info-part').load('<?php  echo root();?>inc/exec.php?act=container_info&page=aad_info&container='+container+'&s=<?php echo $_GET['s'];?>&uid=<?php echo $uid;?>');
 }
 
 $( document ).ready(function() {

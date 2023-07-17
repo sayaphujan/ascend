@@ -1,9 +1,12 @@
 <?php
+    $admin = isset($_SESSION['adminid']) ? $_SESSION['adminid'] : 0;
+    $_SESSION['uid'] = (isset($_SESSION['uid'])) ? $_SESSION['uid'] : $_GET['uid'];
     $uid = $_SESSION['uid'];
-    $_SESSION['repack_container_id'] = (isset($_SESSION['repack_container_id'])) ? $_SESSION['repack_container_id'] : 0;
-    $s = (isset($_GET['s'])) ? $_GET['s'] : 1;
+    $_SESSION['repack_container_id'] = (isset($_SESSION['repack_container_id'])) ? $_SESSION['repack_container_id'] : $_GET['container'];
+    $s = (isset($_GET['s']) && $_GET['s'] > 0) ? $_GET['s'] : $_SESSION['service'];
     $selected='';
 ?>
+
     <div class="container-fluid">
 
     <div class="row">
@@ -15,12 +18,12 @@
             <div class="col-md-12">
                 <div class="row">
                     <div class="form-group">
-                        <label for="existing_container" class="control-label"><strong>Pick a previously registered service:</strong></label>
+                        <label for="existing_container" class="control-label"><strong>Pick a previously registered container:</strong></label>
                             <select class="form-control" id="container" name="container">
-                                <option value="-">-- Select Service --</option>
-                                <option value="0">Register New Service</option>
+                                <option value="-">-- Select Container --</option>
+                                <option value="0">Register New Container</option>
                             <?php
-                                 $cq = mysqli_query($link, 'SELECT * FROM containers WHERE customer=\''.sf($uid).'\' AND service_id=\''.sf($_GET['s']).'\'');
+                                    $cq = mysqli_query($link, 'SELECT * FROM containers WHERE customer=\''.sf($uid).'\' AND service_id=\''.sf($_GET['s']).'\'');
                                  
                                  if(mysqli_num_rows($cq)>0) {
                                     
@@ -163,7 +166,7 @@
                 </div>
                 <hr/>
                 <p>Please confirm the information you have written. It is important that this information is accurate.</p>
-            <button  class="btn btn-primary" id="prev_step" style="float: left;" onclick="step_harness(<?php echo $_SESSION['repack_container_id'];?>);  return false;">Back to Harness</button>        
+            <button  class="btn btn-primary" id="prev_step" style="float: left;display:none">Back to Harness</button>        
             <button  class="btn btn-primary" id="next_step" style="float: right;" onclick="add_container();  return false;">Verify My Rig</button>        
     		</div>
     </div>
@@ -174,9 +177,9 @@ function add_container() {
     $.post( "<?php echo root();?>inc/exec.php?act=add_container_summary&repack_type=sport&ajax=1&schedule=1&s=<?php echo $s;?>", $('#container_form').serialize(), '', 'script');
 }
 
-function get_data(){
+function get_data(id){
     $.ajax({
-        url: "<?php echo root();?>do/get_container_data/?id="+container_id,
+        url: "<?php echo root();?>do/get_container_data/?id="+id,
         type: 'GET',
         dataType: 'json', // added data type
         success: function(res) {
@@ -209,26 +212,36 @@ function get_data(){
 }
 
 function step_harness(container){
-    var id = (container > 0) ? container : container_id;
-
-    document.location='<?php echo root();?>container_information/?id='+id+'&s=<?php echo $s;?>';
+    document.location='<?php echo root();?>container_information/?id='+container+'&container='+container+'&s=<?php echo $s;?>&uid=<?php echo $uid;?>';
 }
 
 $('#container').change(function () {
     var id = $('#container').val();
+    $("#prev_step").hide();
     
     if(id == 0){
-        document.location='<?php echo root();?>container_information/?id='+id+'&s=<?php echo $s;?>';       
+        if(admin > 0){
+            document.location='<?php echo root();?>customers/?s=<?php echo $s;?>';          
+        }else{
+            document.location='<?php echo root();?>container_information/?id='+id+'&s=<?php echo $s;?>';       
+        }
     }else{
-      get_data();
-      
+      get_data(id);
+      $("#prev_step").removeAttr('onclick');
+      $("#prev_step").attr('onclick','step_harness('+id+');  return false;'); 
+      $("#prev_step").show();
+      container_id = id;
     }
     
 });
 
 var container_id = '<?php echo $_SESSION['repack_container_id'];?>';
+var admin = '<?php echo $admin;?>';
 $( document ).ready(function() {
     $('#container_form input').attr('readonly', 'readonly');
-    $("#container").trigger('change');
+    
+    var id = $('#container').val();
+    
+    if(id > 0) { $("#container").trigger('change'); }
 });
 </script>

@@ -1,14 +1,3 @@
-<?php
-    if(isset($_SESSION['repack_container_id']) && $_SESSION['repack_container_id'] > 0) {
-        $_SESSION['repack_container_id'] = $_SESSION['repack_container_id'];   
-    }else if(isset($_GET['id']) && $_GET['id'] > 0) {
-        $_SESSION['repack_container_id'] = $_GET['id'];
-    }else{
-        $_SESSION['repack_container_id'] = 0;
-    }
-  
-  $s = (isset($_GET['s']) && $_GET['s'] > 0) ? $_GET['s'] : $_SESSION['service'];
-?>
 <div class="container">
     <div class="row">
         <div class="col-md-12">
@@ -49,44 +38,42 @@
 </div>
 <script>
 
-function step_harness(container) {
+function step_harness(container,uid) {
 	 
 	var stepper = new Stepper(document.querySelector('.bs-stepper'))
 	stepper.to(2);
 	
-	$('#harness-part').load('<?php  echo root();?>inc/exec.php?act=container_info&page=harness&container='+container+'&s=<?php echo $s;?>');
+	$('#harness-part').load('<?php  echo root();?>inc/exec.php?act=container_info&page=harness&container='+container+'&s=<?php echo $s;?>&uid='+uid);
 }
 
-function step_reserve_parachute(container) {
+function step_reserve_parachute(container,uid) {
 	
 	var stepper = new Stepper(document.querySelector('.bs-stepper'))
 	stepper.to(3);
 	
-	$('#reserve-parachute-part').load('<?php  echo root();?>inc/exec.php?act=container_info&page=reserve_parachute&container='+container+'&s=<?php echo $s;?>');
+	$('#reserve-parachute-part').load('<?php  echo root();?>inc/exec.php?act=container_info&page=reserve_parachute&container='+container+'&s=<?php echo $s;?>&uid='+uid);
 	
 }
 
-function step_aad_info(container) {
+function step_aad_info(container,uid) {
 	
 	var stepper = new Stepper(document.querySelector('.bs-stepper'))
 	stepper.to(4);
 	
-	$('#aad-info-part').load('<?php  echo root();?>inc/exec.php?act=container_info&page=aad_info&container='+container+'&s=<?php echo $s;?>');
+	$('#aad-info-part').load('<?php  echo root();?>inc/exec.php?act=container_info&page=aad_info&container='+container+'&s=<?php echo $s;?>&uid='+uid);
 	
 }
 
-
 $(document).ready(function () {
   var stepper = new Stepper($('.bs-stepper')[0]);
+  
   <?php  
-  if(isset($_GET['id']) || $_SESSION['uid']>0) {
+  if(isset($_GET['id']) || $_GET['uid']>0) {
 	//if($_SESSION['repack_container_id']) {
-		echo 'step_harness('.$_SESSION['repack_container_id'].');';
+		echo 'step_harness('.$_GET['id'].','.$_GET['uid'].');';
 	//}
   }
   ?>
 })
-
-
 
 </script>

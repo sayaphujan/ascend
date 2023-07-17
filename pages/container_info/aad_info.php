@@ -1,7 +1,17 @@
 <?php
-    $uid = $_SESSION['uid'];
+    $uid = (isset($_SESSION['uid']) && $_SESSION['uid'] > 0) ? $_SESSION['uid'] : $_GET['uid'];
     $url = $_GET['act'];  
     $s = (isset($_GET['s']) && $_GET['s'] > 0) ? $_GET['s'] : $_SESSION['service'];
+    
+        if(isset($_SESSION['repack_container_id']) && $_SESSION['repack_container_id'] > 0) {
+        $_SESSION['repack_container_id'] = $_SESSION['repack_container_id'];   
+    }else if(isset($_GET['id']) && $_GET['id'] > 0) {
+        $_SESSION['repack_container_id'] = $_GET['id'];
+    }else{
+        $_SESSION['repack_container_id'] = 0;
+    }
+  
+
 ?>
 <div class="container-fluid">
 
@@ -14,8 +24,7 @@
     <input type="hidden" class="form-control" id="uid" name="uid" value="<?php echo $uid;?>" placeholder="id"/>
     <input type="hidden" class="form-control" id="existing_container" name="existing_container" value="<?php echo $_SESSION['repack_container_id'];?>" placeholder="id"/>
     <input type="hidden" class="form-control" id="s" name="s" value="<?php echo $s;?>" placeholder="service option"/>
-    <div class="row" id="add_new_aad_info_form">
-    	
+    <div class="row" id="add_new_aad_info_form">    	
     		<div class="col-md-12">	
     			<div class="form-group">
     				<label for="make" class="control-label"><strong>Make:</strong></label>
@@ -45,7 +54,7 @@
 </div>
 <script>
 function add_aad() {
-	$.post( "<?php echo root();?>inc/exec.php?act=add_aad&ajax=1&schedule=1&s=<?php echo $_GET['s'];?>", $('#aad_info_form').serialize(), '', 'script');
+	$.post( "<?php echo root();?>inc/exec.php?act=add_aad&ajax=1&schedule=1&s=<?php echo $_GET['s'];?>&uid=<?php echo $uid;?>", $('#aad_info_form').serialize(), '', 'script');
 }
 
 function get_data(){
@@ -69,7 +78,7 @@ function step_reserve_parachute(container){
     var stepper = new Stepper(document.querySelector('.bs-stepper'))
     stepper.to(3);
     
-    $('#reserve-parachute-part').load('<?php  echo root();?>inc/exec.php?act=container_info&page=reserve_parachute&container='+container+'&s=<?php echo $_GET['s'];?>');
+    $('#reserve-parachute-part').load('<?php  echo root();?>inc/exec.php?act=container_info&page=reserve_parachute&container='+container+'&s=<?php echo $_GET['s'];?>&uid=<?php echo $uid;?>');
 }
 
 $( document ).ready(function() {

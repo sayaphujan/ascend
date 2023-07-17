@@ -15,12 +15,12 @@
             }else{
                 $menu = root().'container_information/';
             }
-                echo '<a href="'.$menu.'" class="btn btn-large btn-standard d-block text-center mb-2">Assemblies, Repacks, Inspections</a>';
+                /*echo '<a href="'.$menu.'" class="btn btn-large btn-standard d-block text-center mb-2">Assemblies, Repacks, Inspections</a>';
                 echo '<a href="'.$menu.'" class="btn btn-large btn-standard d-block text-center mb-2">Common Maintenance Items</a>';
                 echo '<a href="'.$menu.'" class="btn btn-large btn-standard d-block text-center mb-2">Tandem Maintenance</a>';
                 echo '<a href="'.$menu.'" class="btn btn-large btn-standard d-block text-center mb-2">Canopy Sewing</a>';
                 echo '<a href="'.$menu.'" class="btn btn-large btn-standard d-block text-center mb-2">Harness Work</a>';
-            
+            */
             ?>
 		</div>
     </div>

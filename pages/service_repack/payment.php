@@ -165,6 +165,11 @@ td {
 	                        			<td  align="right">&nbsp;&nbsp;:&nbsp;&nbsp;</td>
 	                        			<td  align="right">'.$m['fabric'].'</td>
 	                        		</tr>
+	                        		<tr>
+	                        			<td  align="right">Line</td>
+	                        			<td  align="right">&nbsp;&nbsp;:&nbsp;&nbsp;</td>
+	                        			<td  align="right">'.$m['line'].'</td>
+	                        		</tr>
 	                        </table>';
 							echo'<hr/>';
 

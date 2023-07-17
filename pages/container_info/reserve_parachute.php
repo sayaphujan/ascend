@@ -1,7 +1,17 @@
 <?php
- $uid = $_SESSION['uid'];
+$uid = (isset($_SESSION['uid']) && $_SESSION['uid'] > 0) ? $_SESSION['uid'] : $_GET['uid'];
  $url = $_GET['act'];  
  $s = (isset($_GET['s']) && $_GET['s'] > 0) ? $_GET['s'] : $_SESSION['service'];
+ 
+     if(isset($_SESSION['repack_container_id']) && $_SESSION['repack_container_id'] > 0) {
+        $_SESSION['repack_container_id'] = $_SESSION['repack_container_id'];   
+    }else if(isset($_GET['id']) && $_GET['id'] > 0) {
+        $_SESSION['repack_container_id'] = $_GET['id'];
+    }else{
+        $_SESSION['repack_container_id'] = 0;
+    }
+  
+
 ?>
 <div class="row">
 	<h4>Reserve Parachute</h4>
@@ -51,7 +61,7 @@
 <script>
 function add_reserve_parachute() {
 
-	$.post( "<?php echo root();?>inc/exec.php?act=add_reserve_parachute&ajax=1&schedule=1&s=<?php echo $_GET['s'];?>", $('#reserve_parachute_form').serialize(), '', 'script');
+	$.post( "<?php echo root();?>inc/exec.php?act=add_reserve_parachute&ajax=1&schedule=1&s=<?php echo $_GET['s'];?>&uid=<?php echo $uid;?>", $('#reserve_parachute_form').serialize(), '', 'script');
 }
 
 function get_data(){
@@ -76,7 +86,7 @@ function step_harness(container){
     var stepper = new Stepper(document.querySelector('.bs-stepper'))
     stepper.to(2);
     
-    $('#harness-part').load('<?php  echo root();?>inc/exec.php?act=container_info&page=harness&container='+container+'&s=<?php echo $_GET['s'];?>');
+    $('#harness-part').load('<?php  echo root();?>inc/exec.php?act=container_info&page=harness&container='+container+'&s=<?php echo $_GET['s'];?>&uid=<?php echo $uid;?>');
 }
 
 $( document ).ready(function() {
