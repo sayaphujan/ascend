@@ -16,7 +16,7 @@ $repack_label['tandem']='Tamdem Reserve Repack';
 
 //error_reporting(0);
 
-$link = mysqli_connect('localhost','ascendloft_db','bke5qmwivc1l','ascendloft_db');
+$link = mysqli_connect('localhost','root','','ascend');
 if ( mysqli_connect_error() ) {
     $emsg = 'MySQL Error: ' . mysqli_connect_error();
     die( $emsg );
@@ -29,8 +29,8 @@ function mysqli_result( $res, $row, $field = 0 ) {
 }
 
 function root( $var = '' ) {
-    $pro = 'https';
-    $dom = 'loft.ascendrigging.com';
+    $pro = 'http';
+    $dom = '127.0.0.1/ascend/';
     $fol = '';
 
     if ( !empty( $_SERVER[ 'HTTPS' ] ) && $_SERVER[ 'HTTPS' ] != 'off' ) {
@@ -119,84 +119,6 @@ function month( $num ) {
     $month = array( '', 'January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December' );
     return $month[ $num ];
 }
-
-function sendHTML($email,$subject,$message) {
-	$dom = root('dom');
-	$headers  = "From: <info@peregrine.ndevix.com>\r\n"; 
-	$headers .= "To: <{$email}>\r\n";
-	$headers .= "Subject: {$subject}\r\n";
-	$headers .= "Date: ".date("r")."\r\n";
-	$headers .= "Organization: Organization\r\n";
-	$headers .= "User-Agent: NDX Mail/1.0\r\n";
-	$headers .= "MIME-Version: 1.0\r\n";
-	$headers .= "Reply-To: info@peregrinemfginc.com\r\n";
-	$headers .= "Content-Type: text/html; charset=iso-8859-1\r\n";
-	$headers .= "Content-Transfer-Encoding: 7bit\r\n";
-	$headers .= "Content-Disposition: inline\r\n";
-	$headers .= "Message-Id: <".date("mdY").time().".email@peregrine.ndevix.com>";
-	
-	$socket = pfsockopen('mail.ndevix.com', 25, $errno, $errstr);
-	if ($socket){
-		fputs($socket, "HELO s106.ndevix.com\r\n");
-		fgets($socket, 256);
-		fputs($socket, "AUTH LOGIN\r\n");
-		fgets($socket, 256);
-		fputs($socket, base64_encode("peregrinecontainers@ndevix.com")."\r\n");
-		fgets($socket, 256);
-		fputs($socket, base64_encode("i2pptpxzzi")."\r\n");
-		fgets($socket, 256);
-		fputs($socket, "MAIL FROM:<info@peregrine.ndevix.com>\r\n");
-		fgets($socket, 256);
-		fputs($socket, "RCPT TO:<{$email}>\r\n");
-		fgets($socket, 256);
-		fputs($socket, "DATA\r\n");
-		fgets($socket, 256);
-		fputs($socket, "{$headers}\n\n{$message}\r\n");
-		fputs($socket, ".\r\n");
-		fgets($socket, 256);
-		fputs($socket, "QUIT\r\n");
-		fgets($socket, 256);
-		fclose($socket);
-	} else {
-		echo 'Our servers are temporarily offline. Please try back in a few minutes';
-	}
-}
-
-function smtpemail($email,$subject,$message) {
-
-$headers = 'From: Peregrine Manufacturing Inc <info@peregrine.ndevix.com>
-To: <'.$email.'>
-Subject: '.$subject.'
-Date: '.date('r').'
-User-Agent: nDX Mail/1.0
-MIME-Version: 1.0
-Content-Type: text/plain;
- charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-Message-Id: <'.date('mdY').time().'.email@s106.ndevix.com>';
-
-$socket = pfsockopen('s105.ndevix.com', 25, $timeout);
-	if(!$socket){
-	echo("Our email services are temporarily offline. Please try back in a few minutes.");
-	} else {
-	fputs($socket, "HELO s106.ndevix.com\r\n");
-	fgets($socket, 256);
-	fputs($socket, "MAIL FROM:<".$from.">\r\n");
-	fgets($socket, 256);
-	fputs($socket, "RCPT TO:<".$email.">\r\n");
-	fgets($socket, 256);
-	fputs($socket, "DATA\r\n");
-	fgets($socket, 256);
-	fputs($socket, "".$headers."\n\n".stripslashes($message)."\r\n");
-	fputs($socket, ".\r\n");
-	fgets($socket, 256);
-	fputs($socket, "QUIT\r\n");
-	fgets($socket, 256);
-	fclose($socket);
-	}
-}
-
 
 function random_alphanum_string($length) {
     $key = '';
