@@ -116,11 +116,6 @@ td {
 	                        			<td  align="right">'.$a['model'].'</td>
 	                        		</tr>
 	                        		<tr>
-	                        			<td  align="right">Size</td>
-	                        			<td  align="right">&nbsp;&nbsp;:&nbsp;&nbsp;</td>
-	                        			<td  align="right">'.$a['size'].'</td>
-	                        		</tr>
-	                        		<tr>
 	                        			<td  align="right">Serial Number</td>
 	                        			<td  align="right">&nbsp;&nbsp;:&nbsp;&nbsp;</td>
 	                        			<td  align="right">'.$a['serial'].'</td>

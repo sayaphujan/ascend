@@ -50,7 +50,7 @@
               }
             },
             { "data": "action", "render": function ( data, type, row, meta ){
-                return '<center><div><a href="<?php  echo root();?>container-review/?id='+row.id+'"><button type="button" class="btn btn-primary">View</button></a><button type="button" class="btn btn-success" onclick="make_session(0,'+row.id+');  return false;">Make Order</button></div></center>';
+                return '<center><div><a href="<?php  echo root();?>container-review/?id='+row.id+'"><button type="button" class="btn btn-primary" title="View Order"><i class="fa fa-eye"></i></button></a><button type="button" class="btn btn-success"  title="Make Order" onclick="make_session(0,'+row.id+');  return false;"><i class="fa fa-plus"></i></button></div></center>';
               }
             }
         ],

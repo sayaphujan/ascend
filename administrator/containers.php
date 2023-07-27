@@ -145,7 +145,7 @@
             { "data": "serial" },
             { "data": "aad" },
             { "data": "action", "render": function ( data, type, row, meta ){
-                return '<div><a href="<?php  echo root();?>repacks-review/?id='+row.id+'"><button type="button" class="btn btn-primary">View</button></a></div>';
+                return '<div><a href="<?php  echo root();?>repacks-review/?id='+row.id+'"><button type="button" class="btn btn-primary" title="View Order"><i class="fa fa-eye"></i></button></a><a href="<?php  echo root();?>print-order/?container='+row.id+'"><button type="button" class="btn btn-primary"  title="Print Order"><i class="fa fa-print"></i></button></a></div>';
               }
             }
         ],

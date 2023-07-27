@@ -3,13 +3,15 @@
  $url = $_GET['act'];  
  $s = (isset($_GET['s']) && $_GET['s'] > 0) ? $_GET['s'] : $_SESSION['service'];
  
-     if(isset($_SESSION['repack_container_id']) && $_SESSION['repack_container_id'] > 0) {
+    /*if(isset($_SESSION['repack_container_id']) && $_SESSION['repack_container_id'] > 0) {
         $_SESSION['repack_container_id'] = $_SESSION['repack_container_id'];   
     }else if(isset($_GET['id']) && $_GET['id'] > 0) {
         $_SESSION['repack_container_id'] = $_GET['id'];
     }else{
         $_SESSION['repack_container_id'] = 0;
-    }
+    }*/
+  
+$_SESSION['repack_container_id'] = $_GET['container'];
   
 
 ?>

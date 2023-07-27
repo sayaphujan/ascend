@@ -35,7 +35,7 @@
                     </div>
                     <button type="submit" class="btn btn-standard" name="submit">Submit</button>
                     <?php  } ?>
-                <button type="button" class="btn btn-standard" name="forgot">Forgot My Password</button>
+                <a href="<?php echo root();?>forgot"><button type="button" class="btn btn-standard" name="forgot">Forgot My Password</button></a>
             </form>
         </div>
     <?php  } ?>

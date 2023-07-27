@@ -515,10 +515,10 @@ if ($_SESSION['type']!=='admin') {
                                                     <label for="model" class="control-label"><strong>Model:</strong></label>
                                                     <input type="text" class="form-control" id="amodel" name="amodel" placeholder="Model" />
                                                 </div>
-                                                <div class="form-group">
+                                                <!--<div class="form-group">
                                                     <label for="size" class="control-label"><strong>Size:</strong></label>
                                                     <input type="text" class="form-control" id="asize" name="asize" placeholder="Size" />
-                                                </div>
+                                                </div>-->
                                                 <div class="form-group">
                                                     <label for="serial" class="control-label"><strong>Serial Number:</strong></label>
                                                     <input type="text" class="form-control" id="aserial" name="aserial" placeholder="Serial Number (located on info card)" />
@@ -1740,7 +1740,7 @@ $( document ).ready(function() {
                  $('#rpfabric').val(res.rpfabric);
                  $('#amake').val(res.amake);
                  $('#amodel').val(res.amodel);
-                 $('#asize').val(res.asize);
+                 //$('#asize').val(res.asize);
                  $('#aserial').val(res.aserial);
                  $('#amfr').val(res.amfr);
                  $('#mpmake').val(res.mpmake);

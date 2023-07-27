@@ -10,7 +10,7 @@ if ( empty( $_SESSION[ 'uid' ] ) )header( 'location: /' );
         <p class="lead">Thank you for scheduling your rigging appointment.<br />
             Below is a summary of your order. </p>
         <?php 
-        if ( $_GET[ 'page' ] == 'service_order_success' ) {
+        if ( $_GET[ 'page' ] == 'service_order_success') {
 
             $rq = mysqli_query( $link, 'SELECT * FROM repacks WHERE id=\'' . sf( $_GET[ 'id' ] ) . '\'' );
 
@@ -110,11 +110,6 @@ if ( empty( $_SESSION[ 'uid' ] ) )header( 'location: /' );
 	                        			<td  align="right">Model</td>
 	                        			<td  align="right">&nbsp;&nbsp;:&nbsp;&nbsp;</td>
 	                        			<td  align="right">'.$a['model'].'</td>
-	                        		</tr>
-	                        		<tr>
-	                        			<td  align="right">Size</td>
-	                        			<td  align="right">&nbsp;&nbsp;:&nbsp;&nbsp;</td>
-	                        			<td  align="right">'.$a['size'].'</td>
 	                        		</tr>
 	                        		<tr>
 	                        			<td  align="right">Serial Number</td>

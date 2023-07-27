@@ -5,7 +5,9 @@ require_once( 'functions.php' );
 if($_SESSION['uid']>0 && $_SESSION['type']=='customer' || $_SESSION['type']=='admin') {
 
 	switch ($_GET['act']) {
-	    
+	    case 'sesi':
+	        echo "sesi";
+	        break;
 	    case 'remove-staff':
             $id = sf($_POST['id']);
         
@@ -336,7 +338,7 @@ case 'update_staff':
 
 					'amake' 	=> $a['make'],
 					'amodel' 	=> $a['model'],
-					'asize' 	=> $a['size'],
+					//'asize' 	=> $a['size'],
 					'aserial' 	=> $a['serial'],
 					'amfr' 		=> $a['mfr'],
 
@@ -897,6 +899,203 @@ case 'update_staff':
 		
 		break;
 		
+		case 'container_service':
+			$query = 'SELECT * FROM `containers` WHERE containers.id = \''.sf($_GET['id']).'\'';
+			    $rq = mysqli_query($link, $query);
+	            $r = mysqli_fetch_assoc($rq);
+	            $h   = unserialize($r['harness']);
+        		$rp  = unserialize($r['reserve_parachute']);
+		        $a   = unserialize($r['aad_info']);
+		        $mp  = unserialize($r['main_parachute']);
+		        
+		        $container_content = '    <div><u><strong><h5>CONTAINER</h5></strong></u></div>
+                                        <h5>Harness</h5>
+            	                        <table>
+            	                        		<tr>
+            	                        			<td  align="right">Make</td>
+            	                        			<td  align="right">&nbsp;&nbsp;:&nbsp;&nbsp;</td>
+            	                        			<td  align="right">'.$h['make'].'</td>
+            	                        		</tr>
+            	                        		<tr>
+            	                        			<td  align="right">Model</td>
+            	                        			<td  align="right">&nbsp;&nbsp;:&nbsp;&nbsp;</td>
+            	                        			<td  align="right">'.$h['model'].'</td>
+            	                        		</tr>
+            	                        		<tr>
+            	                        			<td  align="right">size</td>
+            	                        			<td  align="right">&nbsp;&nbsp;:&nbsp;&nbsp;</td>
+            	                        			<td  align="right">'.$h['size'].'</td>
+            	                        		</tr>
+            	                        		<tr>
+            	                        			<td  align="right">Serial Number</td>
+            	                        			<td  align="right">&nbsp;&nbsp;:&nbsp;&nbsp;</td>
+            	                        			<td  align="right">'.$h['serial'].'</td>
+            	                        		</tr>
+            	                        		<tr>
+            	                        			<td  align="right">Date of Mfr</td>
+            	                        			<td  align="right">&nbsp;&nbsp;:&nbsp;&nbsp;</td>
+            	                        			<td  align="right">'.$h['mfr'].'</td>
+            	                        		</tr>
+            	                        </table>
+            							<hr/>
+
+            							<h5>Reserve / Parachute</h5>
+            							<table>
+            	                        		<tr>
+            	                        			<td  align="right">Make</td>
+            	                        			<td  align="right">&nbsp;&nbsp;:&nbsp;&nbsp;</td>
+            	                        			<td  align="right">'.$rp['make'].'</td>
+            	                        		</tr>
+            	                        		<tr>
+            	                        			<td  align="right">Model</td>
+            	                        			<td  align="right">&nbsp;&nbsp;:&nbsp;&nbsp;</td>
+            	                        			<td  align="right">'.$rp['model'].'</td>
+            	                        		</tr>
+            	                        		<tr>
+            	                        			<td  align="right">size</td>
+            	                        			<td  align="right">&nbsp;&nbsp;:&nbsp;&nbsp;</td>
+            	                        			<td  align="right">'.$rp['size'].'</td>
+            	                        		</tr>
+            	                        		<tr>
+            	                        			<td  align="right">Serial Number</td>
+            	                        			<td  align="right">&nbsp;&nbsp;:&nbsp;&nbsp;</td>
+            	                        			<td  align="right">'.$rp['serial'].'</td>
+            	                        		</tr>
+            	                        		<tr>
+            	                        			<td  align="right">Date of Mfr</td>
+            	                        			<td  align="right">&nbsp;&nbsp;:&nbsp;&nbsp;</td>
+            	                        			<td  align="right">'.$rp['mfr'].'</td>
+            	                        		</tr>
+            	                        		<tr>
+            	                        			<td  align="right">Fabric</td>
+            	                        			<td  align="right">&nbsp;&nbsp;:&nbsp;&nbsp;</td>
+            	                        			<td  align="right">'.$rp['fabric'].'</td>
+            	                        		</tr>
+            	                        </table>
+            							<hr/>
+							
+            							<h5>AAD</h5>
+            							<table>
+            	                        		<tr>
+            	                        			<td  align="right">Make</td>
+            	                        			<td  align="right">&nbsp;&nbsp;:&nbsp;&nbsp;</td>
+            	                        			<td  align="right">'.$a['make'].'</td>
+            	                        		</tr>
+            	                        		<tr>
+            	                        			<td  align="right">Model</td>
+            	                        			<td  align="right">&nbsp;&nbsp;:&nbsp;&nbsp;</td>
+            	                        			<td  align="right">'.$a['model'].'</td>
+            	                        		</tr>
+            	                        		<tr>
+            	                        			<td  align="right">Serial Number</td>
+            	                        			<td  align="right">&nbsp;&nbsp;:&nbsp;&nbsp;</td>
+            	                        			<td  align="right">'.$a['serial'].'</td>
+            	                        		</tr>
+            	                        		<tr>
+            	                        			<td  align="right">Date of Mfr</td>
+            	                        			<td  align="right">&nbsp;&nbsp;:&nbsp;&nbsp;</td>
+            	                        			<td  align="right">'.$a['mfr'].'</td>
+            	                        		</tr>
+            	                        </table>
+            							<hr/>
+
+            							<h5>Main Parachute</h5>
+            							    <table>
+            	                        		<tr>
+            	                        			<td  align="right">Make</td>
+            	                        			<td  align="right">&nbsp;&nbsp;:&nbsp;&nbsp;</td>
+            	                        			<td  align="right">'.$mp['make'].'</td>
+            	                        		</tr>
+            	                        		<tr>
+            	                        			<td  align="right">Model</td>
+            	                        			<td  align="right">&nbsp;&nbsp;:&nbsp;&nbsp;</td>
+            	                        			<td  align="right">'.$mp['model'].'</td>
+            	                        		</tr>
+            	                        		<tr>
+            	                        			<td  align="right">Size</td>
+            	                        			<td  align="right">&nbsp;&nbsp;:&nbsp;&nbsp;</td>
+            	                        			<td  align="right">'.$mp['size'].'</td>
+            	                        		</tr>
+            	                        		<tr>
+            	                        			<td  align="right">Serial Number</td>
+            	                        			<td  align="right">&nbsp;&nbsp;:&nbsp;&nbsp;</td>
+            	                        			<td  align="right">'.$mp['serial'].'</td>
+            	                        		</tr>
+            	                        		<tr>
+            	                        			<td  align="right">Date of Mfr</td>
+            	                        			<td  align="right">&nbsp;&nbsp;:&nbsp;&nbsp;</td>
+            	                        			<td  align="right">'.$mp['mfr'].'</td>
+            	                        		</tr>
+            	                        		<tr>
+            	                        			<td  align="right">Fabric</td>
+            	                        			<td  align="right">&nbsp;&nbsp;:&nbsp;&nbsp;</td>
+            	                        			<td  align="right">'.$mp['fabric'].'</td>
+            	                        		</tr>
+            	                        		<tr>
+            	                        			<td  align="right">Line</td>
+            	                        			<td  align="right">&nbsp;&nbsp;:&nbsp;&nbsp;</td>
+            	                        			<td  align="right">'.$mp['line'].'</td>
+            	                        		</tr>
+            	                        </table>';
+	                                
+	                                $service_content .='    <div><u><strong><h5>SERVICE</h5></strong></u></div>
+                                        <h5>Service Item :</h5>
+                                        <table>';
+                                        $total_price = 0;
+                                        $que = 'SELECT * FROM `shopping_cart` WHERE `shopping_cart`.`cart_container_id` =\''.sf($r['id']).'\' ';
+                                        $q = mysqli_query($link, $que);
+                                        while($sp = mysqli_fetch_assoc($q)){
+                                            $cart_order_id = $sp['cart_order_id'];
+                                            $sp['cart_service_price'] = ($sp['cart_shoprate_mfg'] > 0) ? ($sp['cart_shoprate_mfg_price']*$sp['cart_shoprate_mfg']) : $sp['cart_service_price'];
+                                            $total_price +=$sp['cart_service_price'];
+
+                                            $service_content .='<tr>
+                                                                <td  align="right">'.$sp['cart_service_name'].'</td>
+                        	                        			<td  align="right">&nbsp;&nbsp;:&nbsp;&nbsp;</td>
+                        	                        			<td  align="right">$'.number_format($sp['cart_service_price'],2,".",",").'</td>
+                                                                </tr>';
+                                        }
+                                        $service_content .='
+                                            <tr>
+                                                <td><h4><strong>Total Service </h4></strong></td>
+                                                <td>:</td>
+                                                <td><h4><strong>$'.number_format($total_price,2,".",",").'</h4></strong></td>
+                                            </tr>
+                                            </table>
+                                            <h5>Repack Speed :</h5>';
+                                            $rep = mysqli_query( $link, 'SELECT * FROM repacks WHERE container=\'' . sf( $_GET[ 'id' ] ) . '\'' );
+                                            $repq = mysqli_fetch_assoc( $rep );
+                                            $data = $repack_label[ $repq[ 'speed' ] ];
+                                            $rs_price = '$' . $repack_pricing[$repq[ 'speed' ]] . '';
+                                            $total = 0;
+                                        $service_content .='<table>
+                                                            <tr><td>'.$data.'</td><td>:</td><td>'.$rs_price.'</td></tr>';
+                                                            $quem = 'SELECT * FROM service_cart JOIN WHERE sc_cart_order_id =\''.sf($cart_order_id).'\'';
+                                                            $qm = mysqli_query($link, $quem);
+                                                            $resm = mysqli_fetch_assoc($qm);
+                                                            $mainchute = (float)$resm['sc_cart_mainchute'];
+                                                            $total = (float)$total_price+$mainchute+(float)$repack_pricing[$repq[ 'speed' ]];
+                
+                                                            $resm['sc_cart_mainchute'] = ($resm['sc_cart_mainchute'] > 0 ) ? 'Yes ($'.$resm['sc_cart_mainchute'].')' : 'No';
+
+                                        $service_content .='<tr><td>Mainchute</td><td>:</td><td>'.$resm['sc_cart_mainchute'].'</td></tr>';
+                                        $service_content .='<tr><td><h4><strong>Total </h4></strong></td><td>:</td><td><h4><strong>$'.number_format($total,2,".",",").'</strong></h4></td></tr></table>';
+                                        $service_content .='<h5>Dropoff Date : </h5><table><tr><td><h4>'.date('m-d-Y', strtotime($repq['dropoff_date'])).'</h4> </td></tr></table>';
+                                        $service_content .='<h5>Estimated Pickup : </h5><table><tr><td><h4>'.date('m-d-Y', strtotime($repq['estimated_pickup'])).'</h4> </td></tr></table>';
+/*	                                       
+	            
+                $check = mysqli_query($link,'SELECT * FROM service_cart WHERE sc_cart_order_id=\''.sf($cart_order_id).'\'');
+                $mainchute = mysqli_fetch_assoc($check);
+                $r['sc_cart_mainchute'] = $mainchute['sc_cart_mainchute'];
+                
+                $data = array_merge($r,$s,$cont);
+               //echo json_encode($content, true); */
+               
+               echo json_encode(array("container" => $container_content, "service" => $service_content));
+                            
+		
+		break;
+		
 		
 		case 'repack_info_content':
 		    $r=array();
@@ -1391,7 +1590,7 @@ case 'update_staff':
 				}
 				
 				
-				if(!blankCheck(['make','model','size','serial','mfr','fabric'])) {
+				if(!blankCheck(['make','model','serial','mfr','fabric'])) {
 				
 					echo '$("#containeralert").html("Please fill out all required fields");';
 					echo '$("#containeralert").removeClass("d-none").addClass("d-flex");';
@@ -2441,7 +2640,6 @@ echo json_encode($_POST);
 } elseif($_SESSION['type']=='admin' || $_SESSION['type']=='staff') {
 	
 	switch ($_GET['act']) {
-	    
 	    case 'ok':
 	        echo "ok";
 	        break;
@@ -2464,7 +2662,61 @@ echo json_encode($_POST);
 } else {
 	
 	switch ($_GET['act']) {
-
+	    
+	    case 'nologin':
+	        echo "nologin";
+	        break;
+	        
+	   
+	     case 'forgot_password':
+	        $uniqueString = random_alphanum_string(8);
+	         // Concatenate the value and unique string
+            $combinedString = $_POST['cemail'] . $uniqueString;
+        
+            // Generate an MD5 hash of the combined string
+            $md5Hash = md5($combinedString);
+        
+            // Take the first 8 characters of the hash
+            $alphanumericString = substr($md5Hash, 0, 8);
+	         
+            $password = $alphanumericString;
+            $hash = password_hash($password, PASSWORD_DEFAULT);
+            
+            $to = $_POST[ 'cemail' ];
+            $subject = "Peregrine Manufacturing, Inc. | Password Reset";
+            $message = "
+            <html>
+            <head>
+            <title>Peregrine Manufacturing, Inc.</title>
+            </head>
+            <body>
+            <p>Hi,</p>
+            <p>We have successfully generate new password for your account!</p>
+            <p>Detail Information:<p>
+            <p>Login Email: " . make_safe( $_POST[ 'cemail' ] ) . "</p>
+            <p>Login Password: " . make_safe( $password ) . "</p>
+            <p>Thank You!</p>
+            <p>--</p>
+            <p>Peregrine Manufacturing, Inc.</p>
+            </body>
+            </html>";
+            
+            $sql = "UPDATE customers SET password = '" . make_safe( $hash ) . "'
+                                    WHERE email = '" . make_safe( $_POST[ 'cemail' ] ) . "'";
+                                    //echo $sql."<br>";
+            mysqli_query($link, $sql);
+            
+            
+            echo "To : ".$to."<br>";
+            echo "Subject : ".$subject."<br>";
+            echo $message."<br>";
+            
+            sendHTML($to, $subject, $message);
+            smtpemail($to, $subject, $message);
+            
+            header( 'Location: '.root().'/forgot_password_success/' );
+            exit();
+            break;
         case 'admin_login':
 			$q = mysqli_query($link, 'SELECT * FROM users WHERE email=\''.sf($_POST['cemail']).'\' AND active=\'1\'');
 			
@@ -2546,14 +2798,49 @@ echo json_encode($_POST);
 					$_SESSION['email'] = sf($_POST['cemail']);
 					
 					$_SESSION['previous_login'] = $u['last_login'];
-					
-					//$check_new_projects = mysqli_query($link, 'SELECT id FROM projects WHERE started >= \''.sf($_SESSION['previous_login']).'\'');
 					mysqli_query($link, 'UPDATE customers SET last_login=NOW() WHERE id=\''.sf($u['id']).'\'');
 					
 					    if($_GET['ajax']) {
 						    echo 'console.log(\'Login OK\');';
-						    echo 'document.location=\''.root().'repacks-review/\';';
-    					
+						    
+						    $check = mysqli_query($link, 'SELECT * FROM containers WHERE customer =\''.sf($_SESSION['uid']).'\' ORDER BY id DESC LIMIT 1');
+						    if(mysqli_num_rows($check) > 0){
+						        $cont = mysqli_fetch_assoc($check);
+						        
+						        if(!empty($cont['harness'])){
+						            if(!empty($cont['reserve_parachute'])){
+						                if(!empty($cont['aad_info'])){
+						                    if(!empty($cont['main_parachute'])){
+						                        echo 'document.location=\''.root().'service_repack/?s='.sf($_GET['s']).'\';';
+						                    }else{
+						                        //$step = 'main';
+						                        echo 'var stepper = new Stepper(document.querySelector(\'.bs-stepper\'));';
+                        						echo 'stepper.to(5);';
+                        						echo '$(\'#main-parachute-part\').load(\''.root().'/inc/exec.php?act=container_info&page=main_parachute&container='.sf($cont['id']).'&s='.sf($_GET['s']).'&uid='.sf($uid).'\');';
+						                    }
+						                }else{
+						                    //$step = 'aad';    
+						                    echo 'var stepper = new Stepper(document.querySelector(\'.bs-stepper\'));';
+                    						echo 'stepper.to(4);';
+                    						echo '$(\'#aad-info-part\').load(\''.root().'/inc/exec.php?act=container_info&page=aad_info&container='.sf($cont['id']).'&s='.sf($_GET['s']).'&uid='.sf($uid).'\');';
+						                }
+						            }else{
+						                //$step = 'reserve_parachute';    
+						                echo 'var stepper = new Stepper(document.querySelector(\'.bs-stepper\'));';
+                        						echo 'stepper.to(3);';
+                        						echo '$(\'#reserve-parachute-part\').load(\''.root().'/inc/exec.php?act=container_info&page=reserve_parachute&container='.sf($cont['id']).'&s='.sf($_GET['s']).'&uid='.sf($uid).'\');';
+						            }
+						        }else{
+						            //$step = 'harness';
+						            echo 'var stepper = new Stepper(document.querySelector(\'.bs-stepper\'));';
+                        						echo 'stepper.to(2);';
+                        						echo '$(\'#harness-part\').load(\''.root().'/inc/exec.php?act=container_info&page=harness&container='.sf($cont['id']).'&s='.sf($_GET['s']).'&uid='.sf($uid).'\');';
+						        }
+						    }else{
+						         echo 'var stepper = new Stepper(document.querySelector(\'.bs-stepper\'));';
+                        						echo 'stepper.to(2);';
+                        						echo '$(\'#harness-part\').load(\''.root().'/inc/exec.php?act=container_info&page=harness&container=0&s='.sf($_GET['s']).'&uid='.sf($uid).'\');';
+						    }
 						} else {
 							//header('location: '.root().'repacks-review');
 							echo "/repacks-review/";

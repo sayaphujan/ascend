@@ -3,13 +3,15 @@
     $url = $_GET['act'];  
     $s = (isset($_GET['s']) && $_GET['s'] > 0) ? $_GET['s'] : $_SESSION['service'];
     
-        if(isset($_SESSION['repack_container_id']) && $_SESSION['repack_container_id'] > 0) {
+        /*if(isset($_SESSION['repack_container_id']) && $_SESSION['repack_container_id'] > 0) {
         $_SESSION['repack_container_id'] = $_SESSION['repack_container_id'];   
     }else if(isset($_GET['id']) && $_GET['id'] > 0) {
         $_SESSION['repack_container_id'] = $_GET['id'];
     }else{
         $_SESSION['repack_container_id'] = 0;
-    }
+    }*/
+  
+$_SESSION['repack_container_id'] = $_GET['container'];
   
 
 ?>
@@ -34,10 +36,11 @@
     				<label for="model" class="control-label"><strong>Model:</strong></label>
     				<input type="text" class="form-control" id="amodel" name="model" placeholder="Model" />
     			</div>
+    			<!--
                 <div class="form-group">
                     <label for="size" class="control-label"><strong>Size:</strong></label>
                     <input type="text" class="form-control" id="asize" name="size" placeholder="Size" />
-                </div>
+                </div>-->
     			<div class="form-group">
     				<label for="serial" class="control-label"><strong>Serial Number:</strong></label>
     				<input type="text" class="form-control" id="aserial" name="serial" placeholder="Serial Number (located on info card)" />
@@ -67,7 +70,7 @@ function get_data(){
             console.log(res);
          $('#amake').val(res.amake);
          $('#amodel').val(res.amodel);
-         $('#asize').val(res.asize);
+         //$('#asize').val(res.asize);
          $('#aserial').val(res.aserial);
          $('#amfr').val(res.amfr);
         }

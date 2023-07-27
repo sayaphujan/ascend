@@ -288,16 +288,6 @@ if (isset($_SESSION['adminid'])) {
 }else{
     switch ( $_GET[ 'page' ] ) {
 			
-        case 'forgot':
-            $page = 'pages/forgot_password.php';
-            $title .= '';
-            break;
-            
-        case 'forgot_password_success':
-            $page = 'pages/forgot_password_success.php';
-            $title .= '';
-            break;
-        
         case 'container_information':
             $page = 'pages/container_information.php';
             $title .= '';
@@ -458,7 +448,9 @@ if (isset($_SESSION['adminid'])) {
                 </div>
             <? } else { ?>
                 <ul class="navbar-nav ml-auto">
-
+                    <li class="nav-item">
+                        
+                    </li>
                 </ul>
             <? } ?>
         </div>
